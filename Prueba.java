@@ -1,6 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Prueba extends JPanel implements Runnable{
 
@@ -19,11 +19,9 @@ public class Prueba extends JPanel implements Runnable{
 	public Prueba() {
 		super();
 		
-		this.WINDOW_WIDTH = 1080;
+		this.WINDOW_WIDTH = 1077;
 		this.WINDOW_HEIGHT = 720;
 		this.DELAY = 1000;
-		
-		this.setSize(this.WINDOW_WIDTH, this.WINDOW_HEIGHT);
 		
 		this.cellSize = 10;
 		this.cols = this.WINDOW_WIDTH/this.cellSize;
@@ -35,33 +33,43 @@ public class Prueba extends JPanel implements Runnable{
 		
 		this.animator = new Thread(this);
 	    this.animator.start();
-		
-		this.setVisible(true);
+	    
 	}
 	
 	public void paint(Graphics g) {
 		super.paint(g);
+		this.setBackground(Color.WHITE);
+		this.pintaGrid(g);
 		this.paintVirus(g);
+	}
+	
+	private void pintaGrid(Graphics g) {
+		g.setColor(new Color(230, 230, 230));
+		for (int i = 0; i < this.cols; i++) {
+			g.drawLine(i*this.cellSize, 0, i*this.cellSize, this.WINDOW_HEIGHT);
+		}
+		
+		for (int i = 0; i < this.rows; i++) {
+			g.drawLine(0, i*this.cellSize, this.WINDOW_WIDTH, i*this.cellSize);
+		}
 	}
 	
 	public void paintVirus(Graphics g) {
 		int x, y;
+		g.setColor(new Color(0, 0, 0));
 		for (int i = 0; i < this.cols; i++) {
 			for (int j = 0; j < this.rows; j++) {
 				if(grid[i][j] == 1) {
-					g.setColor(new Color(0, 0, 0));
-				} else {
-					g.setColor(new Color(240, 240, 240));
-				}
-				x = this.cellSize*i;
-				y = this.cellSize*j;
-				g.fillRect(x, y, this.cellSize, this.cellSize);
+					x = this.cellSize*i;
+					y = this.cellSize*j;
+					g.fillRect(x, y, this.cellSize, this.cellSize);
+				} 
 			}
 		}
 	}
 	
 	public void updateGrid() {
-		ArrayList<int[]> cellsToChange = new ArrayList<>();
+		LinkedList<int[]> cellsToChange = new LinkedList<>();
 		for(int i=1; i<this.cols-1; i++) {
     		for(int j=1; j<this.rows-1; j++) {
     			if(grid[i+1][j] == 1 || grid[i-1][j] == 1 || grid[i][j+1] == 1 || grid[i][j-1] == 1) {
@@ -70,8 +78,11 @@ public class Prueba extends JPanel implements Runnable{
     			}
     		}
     	}
-		for(int i=0; i<cellsToChange.size(); i++) {
-			this.grid[cellsToChange.get(i)[0]][cellsToChange.get(i)[1]] = 1;
+
+		for (int[] i : cellsToChange) {
+			int x = i[0];
+			int y = i[1];
+			grid[x][y] = 1;
 		}
 	}
 	
@@ -89,6 +100,7 @@ public class Prueba extends JPanel implements Runnable{
             if (sleep < 0) {
                 sleep = 2;
             }
+            
             try {
                 Thread.sleep(sleep);
                 this.updateGrid();
@@ -108,8 +120,9 @@ public class Prueba extends JPanel implements Runnable{
 		JFrame jf = new JFrame();
 		
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jf.setSize(1077, 721);
+		jf.setSize(p.WINDOW_WIDTH, p.WINDOW_HEIGHT);
 		jf.setVisible(true);
+		jf.setResizable(false);
 		jf.add(p);
 
 	}
