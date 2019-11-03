@@ -32,15 +32,17 @@ public class Prueba extends JFrame {
 	}
 	
 	public void paint(Graphics g) {
-		g.setColor(new Color(240, 240, 240));
+		g.setColor(new Color(120, 120, 120));
 		int x, y;
+		
 		for (int i = 0; i < this.cols; i++) {
-			for (int j = 0; j < this.rows; j++) {
-				x = 8+this.cellSize*i;
-				y = 12+this.cellSize*j;
-				g.drawRect(x, y, this.cellSize, this.cellSize);
-			}
+			g.drawLine(this.cellSize*i+8, 0, this.cellSize*i+8, this.WINDOW_HEIGHT);
 		}
+		
+		for (int j = 0; j < this.rows; j++) {
+			g.drawLine(0, this.cellSize*j+11, this.WINDOW_WIDTH, this.cellSize*j+11);
+		}
+		
 	}
 	
 	
