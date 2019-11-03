@@ -16,7 +16,7 @@ public class Prueba extends JFrame {
 		super();
 		
 		this.WINDOW_WIDTH = 1077;
-		this.WINDOW_HEIGHT = 720;
+		this.WINDOW_HEIGHT = 721;
 		
 		this.setSize(this.WINDOW_WIDTH, this.WINDOW_HEIGHT);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -32,11 +32,12 @@ public class Prueba extends JFrame {
 	}
 	
 	public void paint(Graphics g) {
+		g.setColor(new Color(240, 240, 240));
 		int x, y;
 		for (int i = 0; i < this.cols; i++) {
 			for (int j = 0; j < this.rows; j++) {
 				x = 8+this.cellSize*i;
-				y = 11+this.cellSize*j;
+				y = 12+this.cellSize*j;
 				g.drawRect(x, y, this.cellSize, this.cellSize);
 			}
 		}
