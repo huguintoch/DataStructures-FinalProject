@@ -110,9 +110,6 @@ public class Game extends JPanel implements Runnable, MouseListener{
 			grid[x][y] = -1;
 		}
 		
-		
-		
-		
 	}
 	
 
@@ -152,7 +149,7 @@ public class Game extends JPanel implements Runnable, MouseListener{
 		int x = e.getX()/Game.CELL_SIZE;
 		int y = e.getY()/Game.CELL_SIZE;
 		if(grid[x][y] == 0) {
-			this.walls.put(Integer.valueOf(this.walls.size()+2), new Wall(this.walls.size()+2, x, y, this));
+			this.walls.put(Integer.valueOf(this.walls.size()+1), new Wall(this.walls.size()+1, x, y, this));
 		} else {
 			grid[x][y] = 0;
 		}
