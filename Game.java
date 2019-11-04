@@ -16,6 +16,8 @@ public class Game extends JPanel implements Runnable, MouseListener{
 	
 	private Thread animator;
 	
+	private Resource r;
+	
 	public Game() {
 		super();
 		
@@ -25,6 +27,7 @@ public class Game extends JPanel implements Runnable, MouseListener{
 		this.ROWS = Window.HEIGHT/Game.CELL_SIZE;
 		
 		this.grid = new byte[this.COLS][this.ROWS];
+		this.r = new Resource(50, 50);
 	
 		this.addMouseListener(this);
 		
@@ -37,6 +40,7 @@ public class Game extends JPanel implements Runnable, MouseListener{
 		super.paint(g);
 		this.setBackground(Color.WHITE);
 		this.paintGrid(g);
+		this.r.paintResource(g);
 		this.paintVirus(g);
 	}
 	
