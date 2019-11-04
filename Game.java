@@ -12,6 +12,8 @@ public class Game extends JPanel implements Runnable, MouseListener{
 					  COLS,
 					  ROWS;
 	
+	private int state;
+	
 	private int[][] grid;
 	
 	private Hashtable<Integer, Wall> walls;
@@ -26,6 +28,7 @@ public class Game extends JPanel implements Runnable, MouseListener{
 		this.COLS = Window.WIDTH/Game.CELL_SIZE;
 		this.ROWS = Window.HEIGHT/Game.CELL_SIZE;
 		
+		this.state = 2;
 		this.grid = new int[this.COLS][this.ROWS];
 		this.grid[40][40] = -1;
 		this.walls = new Hashtable<>();
@@ -50,7 +53,6 @@ public class Game extends JPanel implements Runnable, MouseListener{
 		for (int i = 0; i < this.COLS; i++) {
 			g.drawLine(i*Game.CELL_SIZE, 0, i*Game.CELL_SIZE, Window.HEIGHT);
 		}
-		
 		for (int i = 0; i < this.ROWS; i++) {
 			g.drawLine(0, i*Game.CELL_SIZE, Window.WIDTH, i*Game.CELL_SIZE);
 		}
@@ -148,11 +150,24 @@ public class Game extends JPanel implements Runnable, MouseListener{
 	public void mouseClicked(MouseEvent e) {
 		int x = e.getX()/Game.CELL_SIZE;
 		int y = e.getY()/Game.CELL_SIZE;
-		if(grid[x][y] == 0) {
-			this.walls.put(Integer.valueOf(this.walls.size()+1), new Wall(this.walls.size()+1, x, y, this));
-		} else {
-			grid[x][y] = 0;
+		
+		switch (this.state) {
+		case 1:
+			if(grid[x][y] == 0) {
+				grid[x][y] = -1;
+			}else {
+				grid[x][y] = 0;
+			}
+			break;
+		case 2:
+			if(grid[x][y] == 0) {
+				this.walls.put(Integer.valueOf(this.walls.size()+1), new Wall(this.walls.size()+1, x, y, this));
+			}
+			break;
+		default:
+			break;
 		}
+		
 	}
 
 	@Override
@@ -174,7 +189,7 @@ public class Game extends JPanel implements Runnable, MouseListener{
 	//Setters and Getters
 	
 	public void setGridCell(int[] cell, int val) {
-		this.grid[cell[0]][cell[1]] = val;
+		grid[cell[0]][cell[1]] = val;
 	}
 
 }

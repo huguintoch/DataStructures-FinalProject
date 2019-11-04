@@ -7,7 +7,7 @@ public class Wall {
 	
 	public Wall(int wallId, int x, int y, Game game) {
 		
-		this.life = 10;
+		this.life = 5;
 		this.wallId = wallId;
 	
 		int[] block1 = {x,y};
