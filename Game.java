@@ -64,8 +64,8 @@ public class Game extends JPanel implements Runnable, MouseListener{
 		for (int i = 0; i < this.COLS; i++) {
 			for (int j = 0; j < this.ROWS; j++) {
 				if(grid[i][j] == -1) {
-					x = Game.CELL_SIZE*i;
-					y = Game.CELL_SIZE*j;
+					x = Game.CELL_SIZE*i+1;
+					y = Game.CELL_SIZE*j+1;
 					g.fillRect(x, y, Game.CELL_SIZE, Game.CELL_SIZE);
 				} 
 			}
@@ -75,11 +75,12 @@ public class Game extends JPanel implements Runnable, MouseListener{
 	public void paintWalls(Graphics g) {
 		int x, y;
 		g.setColor(new Color(0, 0, 255, 150));
+		System.out.println(walls.size());
 		for (int i = 0; i < this.COLS; i++) {
 			for (int j = 0; j < this.ROWS; j++) {
-				if(grid[i][j] > 1) {
-					x = Game.CELL_SIZE*i;
-					y = Game.CELL_SIZE*j;
+				if(grid[i][j] >= 1) {
+					x = Game.CELL_SIZE*i+1;
+					y = Game.CELL_SIZE*j+1;
 					g.fillRect(x, y, Game.CELL_SIZE, Game.CELL_SIZE);
 				} 
 			}
@@ -160,7 +161,7 @@ public class Game extends JPanel implements Runnable, MouseListener{
 			}
 			break;
 		case 2:
-			if(grid[x][y] == 0) {
+			if(grid[x][y] == 0 && grid[x+1][y] == 0 && grid[x][y+1] == 0 && grid[x+1][y+1] == 0) {
 				this.walls.put(Integer.valueOf(this.walls.size()+1), new Wall(this.walls.size()+1, x, y, this));
 			}
 			break;
@@ -188,7 +189,7 @@ public class Game extends JPanel implements Runnable, MouseListener{
 	
 	//Setters and Getters
 	
-	public void setGridCell(int[] cell, int val) {
+	public void setGrid(int[] cell, int val) {
 		grid[cell[0]][cell[1]] = val;
 	}
 

@@ -24,9 +24,11 @@ public class Wall {
 	
 	public void updateGrid(Game game, int value) {
 		for(int[] cell : this.gridCells) {
-			game.setGridCell(cell, value);
+			game.setGrid(cell, value);
 		}
 	}
+	
+	//Setters and Getters
 	
 	public void setLife(int damage) {
 		this.life += damage;
@@ -34,6 +36,10 @@ public class Wall {
 	
 	public int getLife() {
 		return this.life;
+	}
+	
+	public int[][] getGridCells(){
+		return this.gridCells;
 	}
 	
 }
