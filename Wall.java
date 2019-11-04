@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class Wall {
 	
 	private int life,
@@ -7,7 +5,7 @@ public class Wall {
 	
 	private int[][] gridCells = new int[4][2];
 	
-	public Wall(int wallId, int x, int y) {
+	public Wall(int wallId, int x, int y, Game game) {
 		
 		this.life = 10;
 		this.wallId = wallId;
@@ -20,12 +18,13 @@ public class Wall {
 		this.gridCells[2] = block3;
 		int[] block4 = {x+1,y+1};
 		this.gridCells[3] = block4;
-	
+		
+		this.updateGrid(game, this.wallId);
 	}
 	
-	private updateGrid() {
-		for() {
-			
+	public void updateGrid(Game game, int value) {
+		for(int[] cell : this.gridCells) {
+			game.setGridCell(cell, value);
 		}
 	}
 	
@@ -33,8 +32,8 @@ public class Wall {
 		this.life += damage;
 	}
 	
-	public static void main(String[] args) {		
-		
+	public int getLife() {
+		return this.life;
 	}
 	
 }

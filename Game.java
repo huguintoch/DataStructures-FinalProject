@@ -12,19 +12,23 @@ public class Game extends JPanel implements Runnable, MouseListener{
 					  COLS,
 					  ROWS;
 	
-	private byte[][] grid;
+	private int[][] grid;
+	
+	private Hashtable<Integer, Wall> walls;
 	
 	private Thread animator;
 	
 	public Game() {
 		super();
 		
-		this.DELAY = 100;
+		this.DELAY = 50;
 		
 		this.COLS = Window.WIDTH/Game.CELL_SIZE;
 		this.ROWS = Window.HEIGHT/Game.CELL_SIZE;
 		
-		this.grid = new byte[this.COLS][this.ROWS];
+		this.grid = new int[this.COLS][this.ROWS];
+		this.grid[40][40] = -1;
+		this.walls = new Hashtable<>();
 	
 		this.addMouseListener(this);
 		
@@ -38,6 +42,7 @@ public class Game extends JPanel implements Runnable, MouseListener{
 		this.setBackground(Color.WHITE);
 		this.paintGrid(g);
 		this.paintVirus(g);
+		this.paintWalls(g);
 	}
 	
 	private void paintGrid(Graphics g) {
@@ -56,7 +61,21 @@ public class Game extends JPanel implements Runnable, MouseListener{
 		g.setColor(new Color(0, 0, 0, 150));
 		for (int i = 0; i < this.COLS; i++) {
 			for (int j = 0; j < this.ROWS; j++) {
-				if(grid[i][j] == 1) {
+				if(grid[i][j] == -1) {
+					x = Game.CELL_SIZE*i;
+					y = Game.CELL_SIZE*j;
+					g.fillRect(x, y, Game.CELL_SIZE, Game.CELL_SIZE);
+				} 
+			}
+		}
+	}
+	
+	public void paintWalls(Graphics g) {
+		int x, y;
+		g.setColor(new Color(0, 0, 255, 150));
+		for (int i = 0; i < this.COLS; i++) {
+			for (int j = 0; j < this.ROWS; j++) {
+				if(grid[i][j] > 1) {
 					x = Game.CELL_SIZE*i;
 					y = Game.CELL_SIZE*j;
 					g.fillRect(x, y, Game.CELL_SIZE, Game.CELL_SIZE);
@@ -69,9 +88,18 @@ public class Game extends JPanel implements Runnable, MouseListener{
 		LinkedList<int[]> cellsToChange = new LinkedList<>();
 		for(int i=1; i<this.COLS-1; i++) {
     		for(int j=1; j<this.ROWS-1; j++) {
-    			if((grid[i+1][j] == 1 || grid[i-1][j] == 1 || grid[i][j+1] == 1 || grid[i][j-1] == 1) && grid[i][j] != 1) {
-    				int[] toAdd = {i,j}; 
-    				cellsToChange.add(toAdd);
+    			if((grid[i+1][j] == -1 || grid[i-1][j] == -1 || grid[i][j+1] == -1 || grid[i][j-1] == -1) && grid[i][j] != -1) {
+    				if(grid[i][j]<1) {
+    					int[] toAdd = {i,j}; 
+        				cellsToChange.add(toAdd);
+    				}else {
+    					this.walls.get(grid[i][j]).setLife(-1);
+    					if(this.walls.get(grid[i][j]).getLife() == 0) {
+    						this.walls.get(grid[i][j]).updateGrid(this,0);
+    						this.walls.remove(grid[i][j]);
+    					}
+    				}
+    				
     			}
     		}
     	}
@@ -79,8 +107,12 @@ public class Game extends JPanel implements Runnable, MouseListener{
 		for (int[] i : cellsToChange) {
 			int x = i[0];
 			int y = i[1];
-			grid[x][y] = 1;
+			grid[x][y] = -1;
 		}
+		
+		
+		
+		
 	}
 	
 
@@ -120,7 +152,7 @@ public class Game extends JPanel implements Runnable, MouseListener{
 		int x = e.getX()/Game.CELL_SIZE;
 		int y = e.getY()/Game.CELL_SIZE;
 		if(grid[x][y] == 0) {
-			grid[x][y] = 1;
+			this.walls.put(Integer.valueOf(this.walls.size()+2), new Wall(this.walls.size()+2, x, y, this));
 		} else {
 			grid[x][y] = 0;
 		}
@@ -140,6 +172,12 @@ public class Game extends JPanel implements Runnable, MouseListener{
 
 	@Override
 	public void mouseExited(MouseEvent e) {
+	}
+	
+	//Setters and Getters
+	
+	public void setGridCell(int[] cell, int val) {
+		this.grid[cell[0]][cell[1]] = val;
 	}
 
 }
