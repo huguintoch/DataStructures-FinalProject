@@ -1,28 +1,30 @@
 import javax.swing.*;
 
-import jdk.nashorn.api.tree.ForOfLoopTree;
-
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.*;
 
-public class Game extends JPanel implements Runnable, MouseListener{
+public class Game extends JPanel implements Runnable, MouseListener, KeyListener{
 
 	public static final int CELL_SIZE = 10,
 							COLS = (Window.WIDTH-10)/Game.CELL_SIZE, 
-							ROWS = (Window.HEIGHT-10)/Game.CELL_SIZE;
+							ROWS = (Window.HEIGHT-10)/Game.CELL_SIZE-3;
 	
 	private final int DELAY;
 					  
 	private int state;
 	private int[][] grid;
+	
+	private int money;
 
 	private Hashtable<Integer, Wall> walls;
 	private Resource[] resources;
 	private LinkedList<Collector> collectors;
 	
-	private int money;
+	private JButton keyInput;
 
 	private Thread animator;
 	
@@ -33,11 +35,11 @@ public class Game extends JPanel implements Runnable, MouseListener{
 		
 		this.state = 3;
 		this.grid = new int[COLS][ROWS];
-		this.grid[40][40] = -1;
+		this.grid[105][67] = -1;
 		
 		this.walls = new Hashtable<>();
 		
-		this.resources = new Resource[20];
+		this.resources = new Resource[1];
 	    Random rand = new Random();
 	    int x, y;
 	    for (int i = 0; i < this.resources.length; i++) {
@@ -52,12 +54,11 @@ public class Game extends JPanel implements Runnable, MouseListener{
 	    this.money = 0;
 
 		this.addMouseListener(this);
+		this.addKeyListener(this);
+		this.setFocusable(true);
 
 		this.animator = new Thread(this);
 	    this.animator.start();
-	    
-	    
-
 	}
 
 	public void paint(Graphics g) {
@@ -82,7 +83,7 @@ public class Game extends JPanel implements Runnable, MouseListener{
 
 	public void paintVirus(Graphics g) {
 		int x, y;
-		g.setColor(new Color(0, 0, 0, 150));
+		g.setColor(new Color(0, 0, 0, 100));
 		for (int i = 0; i < COLS; i++) {
 			for (int j = 0; j < ROWS; j++) {
 				if(grid[i][j] == -1) {
@@ -110,7 +111,7 @@ public class Game extends JPanel implements Runnable, MouseListener{
 	}
 	
 	public void paintResources(Graphics g) {
-		g.setColor(new Color(255, 255, 0, 150));
+		g.setColor(new Color(255, 255, 0, 170));
 		int cell[][];
 		int x, y;
 		for (int i = 0; i < this.resources.length; i++) {
@@ -123,8 +124,7 @@ public class Game extends JPanel implements Runnable, MouseListener{
 		}	
 	}
 	
-	public void paintCollectors(Graphics g) {
-		g.setColor(new Color(0, 255, 150, 150));
+	public void paintCollectors(Graphics g) {	
 		int x, y;
 		int[][] cells;
 		
@@ -132,6 +132,7 @@ public class Game extends JPanel implements Runnable, MouseListener{
 			c.paintCollectorArea(g);
 			cells = c.getGridCells();
 			for(int[] cell : cells) {
+				g.setColor(new Color(255, 0, 255, 150));
 				x = CELL_SIZE*cell[0];
 				y = CELL_SIZE*cell[1];
 				g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
@@ -141,21 +142,44 @@ public class Game extends JPanel implements Runnable, MouseListener{
 
 	public void updateGrid() {
 		LinkedList<int[]> cellsToChange = new LinkedList<>();
-		for(int i=1; i<COLS-1; i++) {
-    		for(int j=1; j<ROWS-1; j++) {
-    			if((grid[i+1][j] == -1 || grid[i-1][j] == -1 || grid[i][j+1] == -1 || grid[i][j-1] == -1) && grid[i][j] != -1) {
-    				if(grid[i][j]<1) {
-    					int[] toAdd = {i,j};
-        				cellsToChange.add(toAdd);
-    				}else {
-    					this.walls.get(grid[i][j]).setLife(-1);
-    					if(this.walls.get(grid[i][j]).getLife() == 0) {
-    						int tmp = grid[i][j];
-    						this.walls.get(grid[i][j]).updateGrid(this,0);
-    						this.walls.remove(tmp);
-    					}
-    				}
-
+		for(int i=0; i<COLS; i++) {
+    		for(int j=0; j<ROWS; j++) {
+    			if(i == 0 && j == 0) {
+    				if((grid[i+1][j] == -1 || grid[i][j+1] == -1) && grid[i][j] != -1) {
+        				this.update(i, j, cellsToChange);
+        			}
+    			} else if(i == 0 && j == ROWS-1) {
+    				if((grid[i+1][j] == -1 || grid[i][j-1] == -1) && grid[i][j] != -1) {
+        				this.update(i, j, cellsToChange);
+        			}
+    			} else if (i == COLS-1 && j == 0) {
+    				if((grid[i-1][j] == -1 || grid[i][j+1] == -1) && grid[i][j] != -1) {
+        				this.update(i, j, cellsToChange);
+        			}
+    			} else if (i == COLS-1 && j == ROWS-1) {
+    				if((grid[i-1][j] == -1 || grid[i][j-1] == -1) && grid[i][j] != -1) {
+    					this.update(i, j, cellsToChange);
+        			}
+    			} else if (i == 0) {
+    				if((grid[i+1][j] == -1 || grid[i][j+1] == -1 || grid[i][j-1] == -1) && grid[i][j] != -1) {
+    					this.update(i, j, cellsToChange);
+        			}
+    			} else if (j == 0) {
+    				if((grid[i+1][j] == -1 || grid[i-1][j] == -1 || grid[i][j+1] == -1) && grid[i][j] != -1) {
+    					this.update(i, j, cellsToChange);
+        			}
+    			} else if (i == COLS-1) {
+    				if((grid[i-1][j] == -1 || grid[i][j+1] == -1 || grid[i][j-1] == -1) && grid[i][j] != -1) {
+    					this.update(i, j, cellsToChange);
+        			}
+    			} else if (j == ROWS-1) {
+    				if((grid[i+1][j] == -1 || grid[i-1][j] == -1 || grid[i][j-1] == -1) && grid[i][j] != -1) {
+    					this.update(i, j, cellsToChange);
+        			}
+    			} else {
+    				if((grid[i+1][j] == -1 || grid[i-1][j] == -1 || grid[i][j+1] == -1 || grid[i][j-1] == -1) && grid[i][j] != -1) {
+    					this.update(i, j, cellsToChange);
+        			}
     			}
     		}
     	}
@@ -165,7 +189,20 @@ public class Game extends JPanel implements Runnable, MouseListener{
 			int y = i[1];
 			grid[x][y] = -1;
 		}
-
+	}
+	
+	public void update(int i, int j, LinkedList<int[]> cellsToChange) {
+		if(grid[i][j]<1) {
+			int[] toAdd = {i,j};
+			cellsToChange.add(toAdd);
+		} else {
+			this.walls.get(grid[i][j]).setLife(-1);
+			if(this.walls.get(grid[i][j]).getLife() == 0) {
+				int tmp = grid[i][j];
+				this.walls.get(grid[i][j]).updateGrid(this,0);
+				this.walls.remove(tmp);
+			}
+		}
 	}
 
 
@@ -192,7 +229,7 @@ public class Game extends JPanel implements Runnable, MouseListener{
                 	for (Collector c : this.collectors) {
 						this.money += c.collect(this);
 					}
-                	System.out.println(this.money);
+                	//System.out.println(this.money);
                 	this.updateGrid();
                 }
                 this.repaint();
@@ -204,6 +241,7 @@ public class Game extends JPanel implements Runnable, MouseListener{
         }
     }
 
+    //MouseListener
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		int x = e.getX()/CELL_SIZE;
@@ -218,14 +256,18 @@ public class Game extends JPanel implements Runnable, MouseListener{
 			}
 			break;
 		case 2:
-			if(grid[x][y] == 0 && grid[x+1][y] == 0 && grid[x][y+1] == 0 && grid[x+1][y+1] == 0) {
-				this.walls.put(Integer.valueOf(this.walls.size()+1), new Wall(this.walls.size()+1, x, y, this));
+			if(x+1 < COLS && y+1 < ROWS) {
+				if(grid[x][y] == 0 && grid[x+1][y] == 0 && grid[x][y+1] == 0 && grid[x+1][y+1] == 0) {
+					this.walls.put(Integer.valueOf(this.walls.size()+1), new Wall(this.walls.size()+1, x, y, this));
+				}
 			}
 			break;
 		case 3:
-			if(grid[x][y] == 0 && grid[x+1][y] == 0 && grid[x][y+1] == 0 && grid[x+1][y+1] == 0) {
-				this.collectors.add(new Collector(x, y, this));
-			}
+			if(x+1 < COLS && y+1 < ROWS) {
+				if(grid[x][y] == 0 && grid[x+1][y] == 0 && grid[x][y+1] == 0 && grid[x+1][y+1] == 0) {
+					this.collectors.add(new Collector(x, y, this));
+				}
+			}	
 			break;
 		default:
 			break;
@@ -249,11 +291,32 @@ public class Game extends JPanel implements Runnable, MouseListener{
 	public void mouseExited(MouseEvent e) {
 	}
 
+	//KeyListener
+	@Override
+	public void keyTyped(KeyEvent e) {
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		int key = e.getKeyCode();
+		if(key == KeyEvent.VK_1) {
+			this.state = 1;
+		} else if(key == KeyEvent.VK_2) {
+			this.state = 2;
+		} else if(key == KeyEvent.VK_3) {
+			this.state = 3;
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {		
+	}
+	
 	//Setters and Getters
 	public void setGrid(int[] cell, int val) {
 		grid[cell[0]][cell[1]] = val;
 	}
-	
+
 	public int getGrid(int[] cell) {
 		return grid[cell[0]][cell[1]];
 	}

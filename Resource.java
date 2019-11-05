@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Resource {
 
-	public int size;
+	private int size;
 	
 	private int[][] pos;
 	

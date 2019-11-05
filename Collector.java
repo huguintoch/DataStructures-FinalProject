@@ -24,7 +24,7 @@ public class Collector {
 	}
 	
 	public void paintCollectorArea(Graphics g) {
-		g.setColor(new Color(0, 255, 150));
+		g.setColor(new Color(255, 0, 255));
 		int x_ = this.x*Game.CELL_SIZE - Game.CELL_SIZE*3;
 		int y_ = this.y*Game.CELL_SIZE - Game.CELL_SIZE*3;
 		g.drawRect(x_, y_, Game.CELL_SIZE*8, Game.CELL_SIZE*8);
@@ -37,8 +37,10 @@ public class Collector {
 			for (int j = y-3; j < y+5; j++) {
 				cell[0] = i;
 				cell[1] = j;
-				if(game.getGrid(cell) == -2) {
-					sum++;
+				if((cell[0] >= 0 && cell[0] < Game.COLS) && (cell[1] >= 0 && cell[1] < Game.ROWS)) {
+					if(game.getGrid(cell) == -2) {
+						sum++;
+					}
 				}
 			}
 		}
