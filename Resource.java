@@ -3,52 +3,56 @@ import java.util.*;
 
 public class Resource {
 
-	private int x,
-				y,
-				size;
+	public int size;
 	
 	private int[][] pos;
 	
 	private Random rand;
 	
-	public Resource(int x, int y) {
-		this.x = x;
-		this.y = y;
-		
+	public Resource() {
 		this.rand = new Random();
 		this.size = 4+rand.nextInt(5);
 		
 		this.pos = new int[this.size][2];
-
-		this.generateResource(this.x, this.y, 0);
 	}
 	
-	public void paintResource(Graphics g) {
-		g.setColor(Color.GREEN);
-  
-		for (int i = 0; i < this.size; i++) {
-			g.fillRect(this.pos[i][0], this.pos[i][1], Game.CELL_SIZE, Game.CELL_SIZE);
-		}
-	}
-	
-	public void generateResource(int x, int y, int n) {
-		if(n < this.size-1) {
+	public void generateResource(Game game, int x, int y, int n) {
+		if(n < this.size) {
+			int[] block = {x, y};
+			pos[n][0] = block[0];
+			pos[n][1] = block[1];
+			
+			game.setGrid(block, -2);
 			int dir = rand.nextInt(4);
 			switch(dir) {
 				case 0:
-					
+					block[0] = (x+1)%Game.COLS;
+					block[1] = y;
 					break;
 				case 1:
-					
+					block[0] = x;
+					block[1] = (y+1)%Game.ROWS;
 					break;
 				case 2:
-					
+					block[0] = (x+Game.COLS-1)%Game.COLS;
+					block[1] = y;
 					break;
 				case 3:
-					
+					block[0] = x;
+					block[1] = (y+Game.ROWS-1)%Game.ROWS;
 					break;
 			}
+			
+			if(game.getGrid(block) != -2) {
+				this.generateResource(game, block[0], block[1], n+1);
+			} else {
+				this.generateResource(game, x, y, n);
+			}
 		}
+	}
+	
+	public int[][] getGridCells() {
+		return this.pos;
 	}
 
 }
