@@ -18,7 +18,7 @@ public class Window extends JFrame {
 		
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
-		this.setResizable(false);
+		//this.setResizable(false);
 	}
 	
 	public static void main(String[] args) {

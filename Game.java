@@ -327,7 +327,11 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 	}
 
 	public int getGrid(int[] cell) {
-		return grid[cell[0]][cell[1]];
+		if(cell[0] >= 0 && cell[0] < COLS && cell[1] >=0 && cell[1] < ROWS) {
+			return grid[cell[0]][cell[1]];
+		} else {
+			return 0;
+		}
 	}
 
 }

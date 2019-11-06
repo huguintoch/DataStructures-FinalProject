@@ -20,7 +20,6 @@ public class Resource {
 		if(n < this.size) {
 			int[] block = {x, y};
 			
-			game.setGrid(block, -2);
 			int dir = rand.nextInt(4);
 			switch(dir) {
 				case 0:
@@ -43,6 +42,7 @@ public class Resource {
 			
 			if(game.getGrid(block) != -2) {
 				this.pos.add(block);
+				game.setGrid(block, -2);
 				this.generateResource(game, block[0], block[1], n+1);
 			} else {
 				this.generateResource(game, x, y, n+1);
