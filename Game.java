@@ -10,37 +10,35 @@ import java.util.*;
 public class Game extends JPanel implements Runnable, MouseListener, KeyListener{
 
 	public static final int CELL_SIZE = 10,
-							COLS = (Window.WIDTH-10)/Game.CELL_SIZE,
+							COLS = (Window.WIDTH-10)/Game.CELL_SIZE, 
 							ROWS = (Window.HEIGHT-10)/Game.CELL_SIZE-3;
-
+	
 	private final int DELAY;
-
+					  
 	private int state;
 	private int[][] grid;
-
+	
 	private int money;
 
 	private Hashtable<Integer, Wall> walls;
 	private Resource[] resources;
 	private LinkedList<Collector> collectors;
-
-	private Stack<Cure> cures;
+	
+	private JButton keyInput;
 
 	private Thread animator;
-
+	
 	public Game() {
 		super();
 
 		this.DELAY = 50;
-
+		
 		this.state = 3;
 		this.grid = new int[COLS][ROWS];
-		this.grid[40][40] = -1;
+		this.grid[105][67] = -1;
+		
 		this.walls = new Hashtable<>();
-		this.cures = new Stack<Cure>();
-
-		this.addMouseListener(this);
-
+		
 		this.resources = new Resource[1];
 	    Random rand = new Random();
 	    int x, y;
@@ -50,9 +48,9 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			this.resources[i] = new Resource();
 			this.resources[i].generateResource(this, x, y, 0);
 		}
-
+	    
 	    this.collectors = new LinkedList<>();
-
+	    
 	    this.money = 0;
 
 		this.addMouseListener(this);
@@ -111,7 +109,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			}
 		}
 	}
-
+	
 	public void paintResources(Graphics g) {
 		g.setColor(new Color(255, 255, 0, 170));
 		int cell[][];
@@ -123,13 +121,13 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 				y = CELL_SIZE*cell[j][1];
 				g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
 			}
-		}
+		}	
 	}
-
-	public void paintCollectors(Graphics g) {
+	
+	public void paintCollectors(Graphics g) {	
 		int x, y;
 		int[][] cells;
-
+		
 		for(Collector c : this.collectors) {
 			c.paintCollectorArea(g);
 			cells = c.getGridCells();
@@ -192,7 +190,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			grid[x][y] = -1;
 		}
 	}
-
+	
 	public void update(int i, int j, LinkedList<int[]> cellsToChange) {
 		if(grid[i][j]<1) {
 			int[] toAdd = {i,j};
@@ -269,7 +267,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 				if(grid[x][y] == 0 && grid[x+1][y] == 0 && grid[x][y+1] == 0 && grid[x+1][y+1] == 0) {
 					this.collectors.add(new Collector(x, y, this));
 				}
-			}
+			}	
 			break;
 		default:
 			break;
@@ -311,9 +309,9 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
+	public void keyReleased(KeyEvent e) {		
 	}
-
+	
 	//Setters and Getters
 	public void setGrid(int[] cell, int val) {
 		grid[cell[0]][cell[1]] = val;
