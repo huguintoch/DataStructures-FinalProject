@@ -23,8 +23,6 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 	private Hashtable<Integer, Wall> walls;
 	private Resource[] resources;
 	private LinkedList<Collector> collectors;
-	
-	private JButton keyInput;
 
 	private Thread animator;
 	
@@ -39,7 +37,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		
 		this.walls = new Hashtable<>();
 		
-		this.resources = new Resource[1];
+		this.resources = new Resource[100];
 	    Random rand = new Random();
 	    int x, y;
 	    for (int i = 0; i < this.resources.length; i++) {
@@ -48,7 +46,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			this.resources[i] = new Resource();
 			this.resources[i].generateResource(this, x, y, 0);
 		}
-	    
+
 	    this.collectors = new LinkedList<>();
 	    
 	    this.money = 0;
@@ -66,9 +64,10 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		this.setBackground(Color.WHITE);
 		this.paintGrid(g);
 		this.paintResources(g);
+		this.paintWalls(g);
 		this.paintCollectors(g);
 		this.paintVirus(g);
-		this.paintWalls(g);
+		
 	}
 
 	private void paintGrid(Graphics g) {
@@ -229,7 +228,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
                 	for (Collector c : this.collectors) {
 						this.money += c.collect(this);
 					}
-                	//System.out.println(this.money);
+                	System.out.println(this.money);
                 	this.updateGrid();
                 }
                 this.repaint();

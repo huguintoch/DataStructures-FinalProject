@@ -20,7 +20,7 @@ public class Collector {
 		int[] block4 = {x+1,y+1};
 		this.gridCells[3] = block4;
 		
-		this.updateGrid(game, -3);
+		//this.updateGrid(game, -3);
 	}
 	
 	public void paintCollectorArea(Graphics g) {
@@ -37,10 +37,8 @@ public class Collector {
 			for (int j = y-3; j < y+5; j++) {
 				cell[0] = i;
 				cell[1] = j;
-				if((cell[0] >= 0 && cell[0] < Game.COLS) && (cell[1] >= 0 && cell[1] < Game.ROWS)) {
-					if(game.getGrid(cell) == -2) {
-						sum++;
-					}
+				if(game.getGrid(cell) == -2) {
+					sum++;
 				}
 			}
 		}

@@ -5,7 +5,7 @@ public class Resource {
 
 	private int size;
 	
-	private int[][] pos;
+	private LinkedList<int[]> pos;
 	
 	private Random rand;
 	
@@ -13,14 +13,12 @@ public class Resource {
 		this.rand = new Random();
 		this.size = 4+rand.nextInt(5);
 		
-		this.pos = new int[this.size][2];
+		this.pos = new LinkedList<>();
 	}
 	
 	public void generateResource(Game game, int x, int y, int n) {
 		if(n < this.size) {
 			int[] block = {x, y};
-			pos[n][0] = block[0];
-			pos[n][1] = block[1];
 			
 			game.setGrid(block, -2);
 			int dir = rand.nextInt(4);
@@ -44,15 +42,28 @@ public class Resource {
 			}
 			
 			if(game.getGrid(block) != -2) {
+				this.pos.add(block);
 				this.generateResource(game, block[0], block[1], n+1);
 			} else {
-				this.generateResource(game, x, y, n);
+				this.generateResource(game, x, y, n+1);
 			}
+		} else {
+			this.size = this.pos.size();
 		}
 	}
 	
 	public int[][] getGridCells() {
-		return this.pos;
+		int[][] temp = new int[this.pos.size()][2];
+		int index = 0;
+		for(int[] i : this.pos) {
+			temp[index] = i;
+			index++;
+		}
+		return temp;
+	}
+	
+	public int getSize() {
+		return this.size;
 	}
 
 }
