@@ -26,6 +26,8 @@ public class Collector implements Runnable {
 		this.gridCells[3] = block4;
 
 		this.game = game;
+		
+		this.updateGrid(this.game, -3);
 
 		this.hilo = new Thread(this);
 		this.hilo.start();
