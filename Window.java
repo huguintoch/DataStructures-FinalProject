@@ -3,7 +3,7 @@ import javax.swing.*;
 
 public class Window extends JFrame {
 
-	public static final int WIDTH = 1077,
+	public static final int WIDTH = 1300,
 							HEIGHT = 720;
 	
 	public Window() {
@@ -13,12 +13,13 @@ public class Window extends JFrame {
 		this.setPreferredSize(new Dimension(Window.WIDTH, Window.HEIGHT));
 		this.pack();
 		
-		Game p = new Game();
-		this.add(p);
+		this.add(new Game(), BorderLayout.CENTER);
+		this.add(new InfoPanel(), BorderLayout.EAST);
+		this.add(new StructuresPanel(), BorderLayout.WEST);
 		
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
-		//this.setResizable(false);
+		this.setResizable(false);
 	}
 	
 	public static void main(String[] args) {

@@ -9,9 +9,11 @@ import java.util.*;
 
 public class Game extends JPanel implements Runnable, MouseListener, KeyListener{
 
-	public static final int CELL_SIZE = 10,
-							COLS = (Window.WIDTH-10)/Game.CELL_SIZE,
-							ROWS = (Window.HEIGHT-10)/Game.CELL_SIZE-3;
+	public static final int WIDTH = 800, //1060
+							HEIGHT = 720,
+							CELL_SIZE = 10,
+							COLS = 80, //106
+							ROWS = 68;
 
 	private final int DELAY;
 
@@ -29,24 +31,16 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 
 	public Game() {
 		super();
-
+		this.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
 		this.DELAY = 50;
 
 		this.state = 3;
 		this.grid = new int[COLS][ROWS];
-		this.grid[105][67] = -1;
+		this.grid[67][67] = -1;
 
 		this.walls = new Hashtable<>();
 
-		this.resources = new Resource[100];
-	    Random rand = new Random();
-	    int x, y;
-	    for (int i = 0; i < this.resources.length; i++) {
-			x = rand.nextInt(COLS);
-			y = rand.nextInt(ROWS);
-			this.resources[i] = new Resource();
-			this.resources[i].generateResource(this, x, y, 0);
-		}
+		this.generateREsources(100);
 
 	    this.collectors = new LinkedList<>();
 	    this.cures = new LinkedList<>();
@@ -59,6 +53,18 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 
 		this.animator = new Thread(this);
 	    this.animator.start();
+	}
+	
+	public void generateREsources(int size) {
+		this.resources = new Resource[size];
+	    Random rand = new Random();
+	    int x, y;
+	    for (int i = 0; i < this.resources.length; i++) {
+			x = rand.nextInt(COLS);
+			y = rand.nextInt(ROWS);
+			this.resources[i] = new Resource();
+			this.resources[i].generateResource(this, x, y, 0);
+		}
 	}
 
 	public void paint(Graphics g) {
@@ -74,11 +80,11 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 
 	private void paintGrid(Graphics g) {
 		g.setColor(new Color(230, 230, 230));
-		for (int i = 0; i < COLS; i++) {
-			g.drawLine(i*CELL_SIZE, 0, i*CELL_SIZE, Window.HEIGHT);
+		for (int i = 0; i <= COLS; i++) {
+			g.drawLine(i*CELL_SIZE, 0, i*CELL_SIZE, Game.HEIGHT);
 		}
-		for (int i = 0; i < ROWS; i++) {
-			g.drawLine(0, i*CELL_SIZE, Window.WIDTH, i*CELL_SIZE);
+		for (int i = 0; i <= ROWS; i++) {
+			g.drawLine(0, i*CELL_SIZE, Game.WIDTH, i*CELL_SIZE);
 		}
 	}
 
