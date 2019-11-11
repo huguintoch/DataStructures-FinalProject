@@ -44,6 +44,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		this.wallCounter = 1;
 
 		this.generateResources(30);
+
 		this.grid[0][0] = -1;
 
 	    this.collectors = new LinkedList<>();
@@ -292,21 +293,28 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			break;
 		case 2:
 			if(x+1 < COLS && y+1 < ROWS) {
-				if(grid[x][y] == 0) {
-					this.walls.put(Integer.valueOf(this.wallCounter), new Wall(this.wallCounter, 1, x, y, this));
-					this.wallCounter++;
+				if(this.money >= 10) {
+					if(grid[x][y] == 0) {
+						this.walls.put(Integer.valueOf(this.wallCounter), new Wall(this.wallCounter, 1, x, y, this));
+						this.wallCounter++;
+						this.money -= 10;
+					}
 				}
+
 			}
 			break;
 		case 3:
 			if(x+1 < COLS && y+1 < ROWS) {
-				if(grid[x][y] == 0 && grid[x+1][y] == 0 && grid[x][y+1] == 0 && grid[x+1][y+1] == 0) {
-					this.walls.put(Integer.valueOf(this.wallCounter), new Wall(this.wallCounter, 2, x, y, this));
-					this.wallCounter++;
+				if(this.money >= 50) {
+					if(grid[x][y] == 0 && grid[x+1][y] == 0 && grid[x][y+1] == 0 && grid[x+1][y+1] == 0) {
+						this.walls.put(Integer.valueOf(this.wallCounter), new Wall(this.wallCounter, 2, x, y, this));
+						this.wallCounter++;
+						this.money -= 50;
+					}
 				}
+
 			}
 			break;
-			
 		case 4:
 			if(x+1 < COLS && y+1 < ROWS) {
 				if(this.collectors.size() == 0) {
@@ -319,12 +327,15 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 						this.money -= 100;
 					}
 				}
-				
+
 			}
 			break;
 		case 5:
-			this.cures.add(new Cure(6, x, y, this));
-			this.cures.poll();
+			if(this.money >= 200) {
+				this.cures.add(new Cure(6, x, y, this));
+				this.cures.poll();
+				this.money -= 200;
+			}
 			break;
 		default:
 			break;
