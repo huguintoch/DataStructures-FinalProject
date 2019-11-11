@@ -24,6 +24,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 	private int wallCounter;
 	
 	private Base base;
+	private VirusSpawner virusSpawner;
 
 	private Hashtable<Integer, Wall> walls;
 	private Resource[] resources;
@@ -42,13 +43,12 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		this.state = 4;
 		this.grid = new int[COLS][ROWS];
 		this.base = new Base(this);
+		this.virusSpawner = new VirusSpawner(this);
 
 		this.walls = new Hashtable<>();
 		this.wallCounter = 1;
 
 		this.generateResources(30);
-
-		this.grid[0][0] = -1;
 
 	    this.collectors = new LinkedList<>();
 	    this.cures = new LinkedList<>();
@@ -86,6 +86,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		this.paintWalls(g);
 		this.paintCollectors(g);
 		this.paintVirus(g);
+		this.paintVirusSpawner(g);
 		this.paintValues(g);
 	}
 
@@ -114,6 +115,14 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			g.fillRect(cell[0]*CELL_SIZE, cell[1]*CELL_SIZE, CELL_SIZE, CELL_SIZE);
 		}
 	}
+	
+	private void paintVirusSpawner(Graphics g) {
+		g.setColor(new Color(255,0,0,90));
+		for(int[] cell : this.virusSpawner.getLocation()) {
+			g.fillRect(cell[0]*CELL_SIZE, cell[1]*CELL_SIZE, CELL_SIZE, CELL_SIZE);
+		}
+	}
+	
 	private void paintVirus(Graphics g) {
 		int x, y;
 		g.setColor(new Color(0, 0, 0, 100));
