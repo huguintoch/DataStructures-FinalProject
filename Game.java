@@ -29,7 +29,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 	private Queue<Cure> cures;
 
 	private Thread animator;
-	
+
 	private InfoPanel info;
 
 	public Game(InfoPanel info) {
@@ -54,13 +54,13 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		this.addMouseListener(this);
 		this.addKeyListener(this);
 		this.setFocusable(true);
-		
+
 		this.info = info;
 
 		this.animator = new Thread(this);
 	    this.animator.start();
 	}
-	
+
 	public void generateResources(int size) {
 		this.resources = new Resource[size];
 	    Random rand = new Random();
@@ -88,11 +88,11 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		for (int i = 0; i < COLS; i++) {
 			for (int j = 0; j < ROWS; j++) {
 				g.setColor(Color.BLACK);
-				g.drawString(Integer.toString(grid[i][j]), i*CELL_SIZE, j*CELL_SIZE+10);
+				g.drawString(Integer.toString(grid[i][j]), i*CELL_SIZE+6, j*CELL_SIZE+15);
 			}
 		}
 	}
-	
+
 	private void paintGrid(Graphics g) {
 		g.setColor(new Color(230, 230, 230));
 		for (int i = 0; i <= COLS; i++) {
@@ -152,7 +152,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			grid[x][y] = -2;
 		}
 	}
-	
+
 	private void paintCollectors(Graphics g) {
 		int x, y;
 		int[] pos;
@@ -167,7 +167,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			g.fillRect(CELL_SIZE*x, CELL_SIZE*y, CELL_SIZE, CELL_SIZE);
 		}
 	}
-	
+
 	private void updateCollectors(int x, int y) {
 		if(grid[x][y] == 0) {
 			grid[x][y] = -3;
@@ -238,7 +238,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			}
 		}
 	}
-	
+
 	public void accumMoney(int money) {
 		this.money += money;
 	}
@@ -292,8 +292,8 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			break;
 		case 2:
 			if(x+1 < COLS && y+1 < ROWS) {
-				if(grid[x][y] == 0 && grid[x+1][y] == 0 && grid[x][y+1] == 0 && grid[x+1][y+1] == 0) {
-					this.walls.put(Integer.valueOf(this.wallCounter), new Wall(this.wallCounter, x, y, this));
+				if(grid[x][y] == 0) {
+					this.walls.put(Integer.valueOf(this.wallCounter), new Wall(this.wallCounter, 1, x, y, this));
 					this.wallCounter++;
 				}
 			}
@@ -316,6 +316,14 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		case 4:
 			this.cures.add(new Cure(6, x, y, this));
 			this.cures.poll();
+			break;
+		case 5:
+			if(x+1 < COLS && y+1 < ROWS) {
+				if(grid[x][y] == 0 && grid[x+1][y] == 0 && grid[x][y+1] == 0 && grid[x+1][y+1] == 0) {
+					this.walls.put(Integer.valueOf(this.wallCounter), new Wall(this.wallCounter, 2, x, y, this));
+					this.wallCounter++;
+				}
+			}
 			break;
 		default:
 			break;
@@ -355,6 +363,8 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			this.state = 3;
 		}else if(key == KeyEvent.VK_4) {
 			this.state = 4;
+		}else if(key == KeyEvent.VK_5) {
+			this.state = 5;
 		}
 	}
 
