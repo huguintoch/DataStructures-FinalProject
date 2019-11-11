@@ -75,9 +75,18 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		this.paintWalls(g);
 		this.paintCollectors(g);
 		this.paintVirus(g);
-
+		this.paintValues(g);
 	}
 
+	private void paintValues(Graphics g) {
+		for (int i = 0; i < COLS; i++) {
+			for (int j = 0; j < ROWS; j++) {
+				g.setColor(Color.BLACK);
+				g.drawString(Integer.toString(grid[i][j]), i*CELL_SIZE, j*CELL_SIZE+10);
+			}
+		}
+	}
+	
 	private void paintGrid(Graphics g) {
 		g.setColor(new Color(230, 230, 230));
 		for (int i = 0; i <= COLS; i++) {
@@ -88,7 +97,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		}
 	}
 
-	public void paintVirus(Graphics g) {
+	private void paintVirus(Graphics g) {
 		int x, y;
 		g.setColor(new Color(0, 0, 0, 100));
 		for (int i = 0; i < COLS; i++) {
@@ -102,7 +111,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		}
 	}
 
-	public void paintWalls(Graphics g) {
+	private void paintWalls(Graphics g) {
 		g.setColor(new Color(0, 0, 255, 150));
 		int x, y;
 		int[][] cells;
@@ -117,21 +126,28 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		}
 	}
 
-	public void paintResources(Graphics g) {
+	private void paintResources(Graphics g) {
 		g.setColor(new Color(255, 255, 0, 170));
 		int cell[][];
 		int x, y;
 		for (int i = 0; i < this.resources.length; i++) {
 			cell = this.resources[i].getGridCells();
 			for (int j = 0; j < cell.length; j++) {
-				x = CELL_SIZE*cell[j][0];
-				y = CELL_SIZE*cell[j][1];
-				g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+				x = cell[j][0];
+				y = cell[j][1];
+				updateResources(x, y);
+				g.fillRect(CELL_SIZE*x, CELL_SIZE*y, CELL_SIZE, CELL_SIZE);
 			}
 		}
 	}
 
-	public void paintCollectors(Graphics g) {
+	private void updateResources(int x, int y) {
+		if(grid[x][y] == 0) {
+			grid[x][y] = -2;
+		}
+	}
+	
+	private void paintCollectors(Graphics g) {
 		int x, y;
 		int[][] cells;
 
@@ -277,7 +293,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			}
 			break;
 		case 4:
-			this.cures.add(new Cure(8, x, y, this));
+			this.cures.add(new Cure(6, x, y, this));
 			this.cures.poll();
 			break;
 		default:

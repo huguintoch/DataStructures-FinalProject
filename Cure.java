@@ -22,7 +22,9 @@ public class Cure {
 	
 	public void updateGrid(Game game, int[][] cells) {
 		for(int[] cell : cells) {
-			game.setGrid(cell, 0);
+			if(game.getGrid(cell) == -1) {
+				game.setGrid(cell, 0);
+			}
 		}
 	}
 
