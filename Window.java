@@ -4,7 +4,7 @@ import javax.swing.*;
 public class Window extends JFrame {
 
 	public static final int WIDTH = 1300,
-							HEIGHT = 720;
+							HEIGHT = 600;
 	
 	public Window() {
 		super("Virus");

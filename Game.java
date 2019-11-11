@@ -9,11 +9,11 @@ import java.util.*;
 
 public class Game extends JPanel implements Runnable, MouseListener, KeyListener{
 
-	public static final int WIDTH = 800, //1060
-							HEIGHT = 720,
-							CELL_SIZE = 20,
-							COLS = 40, //106
-							ROWS = 34;
+	public static final int WIDTH = 800,
+							HEIGHT = 680,
+							CELL_SIZE = 20, //10
+							COLS = Game.WIDTH/Game.CELL_SIZE, //80
+							ROWS = Game.HEIGHT/Game.CELL_SIZE;
 
 	private final int DELAY;
 
@@ -29,7 +29,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 	private Queue<Cure> cures;
 
 	private Thread animator;
-	
+
 	private InfoPanel info;
 
 	public Game(InfoPanel info) {
@@ -39,7 +39,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 
 		this.state = 3;
 		this.grid = new int[COLS][ROWS];
-		this.grid[39][33] = -1;
+		this.grid[0][0] = -1;
 
 		this.walls = new Hashtable<>();
 		this.wallCounter = 1;
@@ -54,13 +54,13 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		this.addMouseListener(this);
 		this.addKeyListener(this);
 		this.setFocusable(true);
-		
+
 		this.info = info;
 
 		this.animator = new Thread(this);
 	    this.animator.start();
 	}
-	
+
 	public void generateResources(int size) {
 		this.resources = new Resource[size];
 	    Random rand = new Random();
@@ -92,7 +92,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			}
 		}
 	}
-	
+
 	private void paintGrid(Graphics g) {
 		g.setColor(new Color(230, 230, 230));
 		for (int i = 0; i <= COLS; i++) {
@@ -152,7 +152,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			grid[x][y] = -2;
 		}
 	}
-	
+
 	private void paintCollectors(Graphics g) {
 		int x, y;
 		int[][] cells;
@@ -169,7 +169,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			}
 		}
 	}
-	
+
 	private void updateCollectors(int x, int y) {
 		if(grid[x][y] == 0) {
 			grid[x][y] = -3;
@@ -240,7 +240,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			}
 		}
 	}
-	
+
 	public void accumMoney(int money) {
 		this.money += money;
 	}

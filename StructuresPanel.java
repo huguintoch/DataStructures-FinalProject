@@ -4,7 +4,7 @@ import javax.swing.*;
 public class StructuresPanel extends JPanel {
 	
 	public static final int WIDTH = 300,
-							HEIGHT = 720;
+							HEIGHT = 600;
 	
 	public StructuresPanel() {
 		super();
