@@ -1,11 +1,16 @@
 import java.awt.*;
 
-public class Collector {
+public class Collector implements Runnable {
 
+	private final int DELAY = 50;
 	private int x,
 				y;
 	
 	private int[][] gridCells = new int[4][2];
+	
+	private Thread hilo;
+	
+	private Game game;
 	
 	public Collector(int x, int y, Game game) {
 		this.x = x;
@@ -20,7 +25,10 @@ public class Collector {
 		int[] block4 = {x+1,y+1};
 		this.gridCells[3] = block4;
 		
-		//this.updateGrid(game, -3);
+		this.game = game;
+		
+		this.hilo = new Thread(this);
+		this.hilo.start();
 	}
 	
 	public void paintCollectorArea(Graphics g) {
@@ -53,6 +61,34 @@ public class Collector {
 	
 	public int[][] getGridCells(){
 		return this.gridCells;
+	}
+
+	@Override
+	public void run() {
+
+		long beforeTime, timeDiff, sleep;
+        beforeTime = System.currentTimeMillis();
+        int cont = 0;
+        
+		while(true) {
+			timeDiff = System.currentTimeMillis() - beforeTime;
+            sleep = this.DELAY - timeDiff;
+            if (sleep < 0) {
+                sleep = 2;
+            }
+            
+            try {
+				Thread.sleep(sleep);
+				cont++;
+				if(cont%50 == 0) {
+					cont = 0;
+					game.accumMoney(collect(game));
+				}
+			} catch (InterruptedException e) {
+				
+			}
+            beforeTime = System.currentTimeMillis();
+		}
 	}
 
 }

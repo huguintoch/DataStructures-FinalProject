@@ -13,8 +13,10 @@ public class Window extends JFrame {
 		this.setPreferredSize(new Dimension(Window.WIDTH, Window.HEIGHT));
 		this.pack();
 		
-		this.add(new Game(), BorderLayout.CENTER);
-		this.add(new InfoPanel(), BorderLayout.EAST);
+		InfoPanel ip = new InfoPanel();
+		
+		this.add(new Game(ip), BorderLayout.CENTER);
+		this.add(ip, BorderLayout.EAST);
 		this.add(new StructuresPanel(), BorderLayout.WEST);
 		
 		this.setLocationRelativeTo(null);

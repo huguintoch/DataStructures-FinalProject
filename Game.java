@@ -28,8 +28,10 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 	private Queue<Cure> cures;
 
 	private Thread animator;
+	
+	private InfoPanel info;
 
-	public Game() {
+	public Game(InfoPanel info) {
 		super();
 		this.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
 		this.DELAY = 50;
@@ -50,6 +52,8 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		this.addMouseListener(this);
 		this.addKeyListener(this);
 		this.setFocusable(true);
+		
+		this.info = info;
 
 		this.animator = new Thread(this);
 	    this.animator.start();
@@ -227,6 +231,10 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			}
 		}
 	}
+	
+	public void accumMoney(int money) {
+		this.money += money;
+	}
 
 
     @Override
@@ -239,7 +247,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
         while (true) {
 
             timeDiff = System.currentTimeMillis() - beforeTime;
-            sleep = DELAY - timeDiff;
+            sleep = this.DELAY - timeDiff;
             if (sleep < 0) {
                 sleep = 2;
             }
@@ -249,12 +257,9 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
                 cont++;
                 if(cont%50 == 0) {
                 	cont = 0;
-                	for (Collector c : this.collectors) {
-						this.money += c.collect(this);
-					}
-                	System.out.println(this.money);
                 	this.updateGrid();
                 }
+                this.info.updateMoney(this.money);
                 this.repaint();
             } catch (InterruptedException e) {
 
