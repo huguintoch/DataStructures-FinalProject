@@ -21,6 +21,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 	private int[][] grid;
 
 	private int money;
+	private int wallCounter;
 
 	private Hashtable<Integer, Wall> walls;
 	private Resource[] resources;
@@ -39,6 +40,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		this.grid[67][67] = -1;
 
 		this.walls = new Hashtable<>();
+		this.wallCounter = 1;
 
 		this.generateREsources(100);
 
@@ -156,10 +158,17 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			cells = c.getGridCells();
 			for(int[] cell : cells) {
 				g.setColor(new Color(255, 0, 255, 150));
-				x = CELL_SIZE*cell[0];
-				y = CELL_SIZE*cell[1];
-				g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+				x = cell[0];
+				y = cell[1];
+				updateCollectors(x, y);
+				g.fillRect(CELL_SIZE*x, CELL_SIZE*y, CELL_SIZE, CELL_SIZE);
 			}
+		}
+	}
+	
+	private void updateCollectors(int x, int y) {
+		if(grid[x][y] == 0) {
+			grid[x][y] = -3;
 		}
 	}
 
@@ -281,7 +290,8 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		case 2:
 			if(x+1 < COLS && y+1 < ROWS) {
 				if(grid[x][y] == 0 && grid[x+1][y] == 0 && grid[x][y+1] == 0 && grid[x+1][y+1] == 0) {
-					this.walls.put(Integer.valueOf(this.walls.size()+1), new Wall(this.walls.size()+1, x, y, this));
+					this.walls.put(Integer.valueOf(this.wallCounter), new Wall(this.wallCounter, x, y, this));
+					this.wallCounter++;
 				}
 			}
 			break;

@@ -20,7 +20,7 @@ public class Collector {
 		int[] block4 = {x+1,y+1};
 		this.gridCells[3] = block4;
 		
-		//this.updateGrid(game, -3);
+		this.updateGrid(game, -3);
 	}
 	
 	public void paintCollectorArea(Graphics g) {
