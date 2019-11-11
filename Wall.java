@@ -9,7 +9,7 @@ public class Wall {
 		
 		if(type == 2) {
 			this.gridCells = new int[4][2];
-			this.life = 50;
+			this.life = 15;
 			this.wallId = wallId;
 		
 			int[] block1 = {x,y};
