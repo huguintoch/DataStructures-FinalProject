@@ -22,6 +22,8 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 
 	private int money;
 	private int wallCounter;
+	
+	private Base base;
 
 	private Hashtable<Integer, Wall> walls;
 	private Resource[] resources;
@@ -39,6 +41,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 
 		this.state = 4;
 		this.grid = new int[COLS][ROWS];
+		this.base = new Base(this);
 
 		this.walls = new Hashtable<>();
 		this.wallCounter = 1;
@@ -78,6 +81,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		super.paint(g);
 		this.setBackground(Color.WHITE);
 		this.paintGrid(g);
+		this.paintBase(g);
 		this.paintResources(g);
 		this.paintWalls(g);
 		this.paintCollectors(g);
@@ -103,7 +107,13 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			g.drawLine(0, i*CELL_SIZE, Game.WIDTH, i*CELL_SIZE);
 		}
 	}
-
+	
+	private void paintBase(Graphics g) {
+		g.setColor(Color.GREEN);
+		for(int[] cell : this.base.getLocation()) {
+			g.fillRect(cell[0]*CELL_SIZE, cell[1]*CELL_SIZE, CELL_SIZE, CELL_SIZE);
+		}
+	}
 	private void paintVirus(Graphics g) {
 		int x, y;
 		g.setColor(new Color(0, 0, 0, 100));
@@ -219,10 +229,8 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
     		}
     	}
 
-		for (int[] i : cellsToChange) {
-			int x = i[0];
-			int y = i[1];
-			grid[x][y] = -1;
+		for (int[] cell : cellsToChange) {
+			this.setGrid(cell, -1);
 		}
 	}
 
@@ -239,11 +247,14 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			}
 		}
 	}
+	
+	private void updateStats() {
+		
+	}
 
 	public void accumMoney(int money) {
 		this.money += money;
 	}
-
 
     @Override
     public void run() {
@@ -263,7 +274,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
             try {
                 Thread.sleep(sleep);
                 cont++;
-                if(cont%50 == 0) {
+                if(cont%100 == 0) {
                 	cont = 0;
                 	this.updateGrid();
                 }
@@ -321,7 +332,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 					if(grid[x][y] == 0) {
 						this.collectors.add(new Collector(x, y, this));
 					}
-				} else if(this.money >= 100){
+				} else if(this.money >= 50){
 					if(grid[x][y] == 0) {
 						this.collectors.add(new Collector(x, y, this));
 						this.money -= 100;
@@ -386,7 +397,10 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 
 	//Setters and Getters
 	public void setGrid(int[] cell, int val) {
-		if(cell[0] >= 0 && cell[0] < COLS && cell[1] >=0 && cell[1] < ROWS) {
+		if(grid[cell[0]][cell[1]] == -4 && val == -1) {
+			System.out.println("GAME OVER");
+			this.state = 6;
+		}else if(cell[0] >= 0 && cell[0] < COLS && cell[1] >=0 && cell[1] < ROWS) {
 			grid[cell[0]][cell[1]] = val;
 		}
 	}

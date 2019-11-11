@@ -40,7 +40,7 @@ public class Resource {
 					break;
 			}
 			
-			if(game.getGrid(block) != -2) {
+			if(game.getGrid(block) != -2 && game.getGrid(block) != -4) {
 				this.pos.add(block);
 				game.setGrid(block, -2);
 				this.generateResource(game, block[0], block[1], n+1);
