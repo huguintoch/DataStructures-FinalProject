@@ -6,7 +6,7 @@ public class Collector implements Runnable {
 	private int x,
 				y;
 
-	private int[][] gridCells = new int[4][2];
+	private int[] pos = new int[2];
 
 	private Thread hilo;
 
@@ -16,18 +16,12 @@ public class Collector implements Runnable {
 		this.x = x;
 		this.y = y;
 
-		int[] block1 = {x,y};
-		this.gridCells[0] = block1;
-		int[] block2 = {x+1,y};
-		this.gridCells[1] = block2;
-		int[] block3 = {x,y+1};
-		this.gridCells[2] = block3;
-		int[] block4 = {x+1,y+1};
-		this.gridCells[3] = block4;
+		this.pos[0] = x;
+		this.pos[1] = y; 
 
 		this.game = game;
 		
-		this.updateGrid(this.game, -3);
+		game.setGrid(this.pos, -3);
 
 		this.hilo = new Thread(this);
 		this.hilo.start();
@@ -35,16 +29,16 @@ public class Collector implements Runnable {
 
 	public void paintCollectorArea(Graphics g) {
 		g.setColor(new Color(255, 0, 255));
-		int x_ = this.x*Game.CELL_SIZE - Game.CELL_SIZE*3;
-		int y_ = this.y*Game.CELL_SIZE - Game.CELL_SIZE*3;
-		g.drawRect(x_, y_, Game.CELL_SIZE*8, Game.CELL_SIZE*8);
+		int x_ = this.x*Game.CELL_SIZE - Game.CELL_SIZE*2;
+		int y_ = this.y*Game.CELL_SIZE - Game.CELL_SIZE*2;
+		g.drawRect(x_, y_, Game.CELL_SIZE*5, Game.CELL_SIZE*5);
 	}
 
 	public int collect(Game game) {
 		int sum = 0;
 		int[] cell = new int[2];
-		for(int i = x-3; i < x+5; i++) {
-			for (int j = y-3; j < y+5; j++) {
+		for(int i = x-2; i < x+3; i++) {
+			for (int j = y-2; j < y+3; j++) {
 				cell[0] = i;
 				cell[1] = j;
 				if(game.getGrid(cell) == -2) {
@@ -55,14 +49,8 @@ public class Collector implements Runnable {
 		return sum;
 	}
 
-	public void updateGrid(Game game, int value) {
-		for(int[] cell : this.gridCells) {
-			game.setGrid(cell, value);
-		}
-	}
-
-	public int[][] getGridCells(){
-		return this.gridCells;
+	public int[] getPos(){
+		return this.pos;
 	}
 
 	@Override

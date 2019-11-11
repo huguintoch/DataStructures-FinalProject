@@ -155,18 +155,16 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 	
 	private void paintCollectors(Graphics g) {
 		int x, y;
-		int[][] cells;
+		int[] pos;
 
 		for(Collector c : this.collectors) {
 			c.paintCollectorArea(g);
-			cells = c.getGridCells();
-			for(int[] cell : cells) {
-				g.setColor(new Color(255, 0, 255, 150));
-				x = cell[0];
-				y = cell[1];
-				updateCollectors(x, y);
-				g.fillRect(CELL_SIZE*x, CELL_SIZE*y, CELL_SIZE, CELL_SIZE);
-			}
+			pos = c.getPos();
+			g.setColor(new Color(255, 0, 255, 150));
+			x = pos[0];
+			y = pos[1];
+			updateCollectors(x, y);
+			g.fillRect(CELL_SIZE*x, CELL_SIZE*y, CELL_SIZE, CELL_SIZE);
 		}
 	}
 	
@@ -302,9 +300,17 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			break;
 		case 3:
 			if(x+1 < COLS && y+1 < ROWS) {
-				if(grid[x][y] == 0 && grid[x+1][y] == 0 && grid[x][y+1] == 0 && grid[x+1][y+1] == 0) {
-					this.collectors.add(new Collector(x, y, this));
+				if(this.collectors.size() == 0) {
+					if(grid[x][y] == 0) {
+						this.collectors.add(new Collector(x, y, this));
+					}
+				} else if(this.money >= 100){
+					if(grid[x][y] == 0) {
+						this.collectors.add(new Collector(x, y, this));
+						this.money -= 100;
+					}
 				}
+				
 			}
 			break;
 		case 4:
