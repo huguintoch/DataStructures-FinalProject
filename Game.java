@@ -88,7 +88,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		for (int i = 0; i < COLS; i++) {
 			for (int j = 0; j < ROWS; j++) {
 				g.setColor(Color.BLACK);
-				g.drawString(Integer.toString(grid[i][j]), i*CELL_SIZE, j*CELL_SIZE+10);
+				g.drawString(Integer.toString(grid[i][j]), i*CELL_SIZE+6, j*CELL_SIZE+15);
 			}
 		}
 	}

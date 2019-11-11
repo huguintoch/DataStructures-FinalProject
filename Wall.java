@@ -24,7 +24,7 @@ public class Wall {
 			this.updateGrid(game, this.wallId);
 		}else {
 			this.gridCells = new int[1][2];
-			this.life = 5;
+			this.life = 7;
 			this.wallId = wallId;
 			
 			int[] block1 = {x,y};
