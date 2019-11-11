@@ -69,9 +69,18 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		this.paintWalls(g);
 		this.paintCollectors(g);
 		this.paintVirus(g);
-
+		this.paintValues(g);
 	}
 
+	public void paintValues(Graphics g) {
+		for (int i = 0; i < COLS; i++) {
+			for (int j = 0; j < ROWS; j++) {
+				g.setColor(Color.BLACK);
+				g.drawString(Integer.toString(grid[i][j]), i*CELL_SIZE, j*CELL_SIZE+10);
+			}
+		}
+	}
+	
 	private void paintGrid(Graphics g) {
 		g.setColor(new Color(230, 230, 230));
 		for (int i = 0; i < COLS; i++) {
@@ -271,7 +280,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			}
 			break;
 		case 4:
-			this.cures.add(new Cure(8, x, y, this));
+			this.cures.add(new Cure(6, x, y, this));
 			this.cures.poll();
 			break;
 		default:
