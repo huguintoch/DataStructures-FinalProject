@@ -1,19 +1,9 @@
-import java.awt.*;
-import java.util.*;
 
-public class Resource {
-
-	protected int size;
+public class Terrain extends Resource {
 	
-	protected LinkedList<int[]> pos;
-	
-	protected Random rand;
-	
-	public Resource() {
-		this.rand = new Random();
-		this.size = 4+rand.nextInt(5);
-		
-		this.pos = new LinkedList<>();
+	public Terrain() {
+		super();
+		this.size = 6+rand.nextInt(3);
 	}
 	
 	public void generateResource(Game game, int x, int y, int n) {
@@ -42,7 +32,7 @@ public class Resource {
 			
 			if(game.getGrid(block) != -2 && game.getGrid(block) != -4 && game.getGrid(block) != -1 && game.getGrid(block) != -6) {
 				this.pos.add(block);
-				game.setGrid(block, -2);
+				game.setGrid(block, -6);
 				this.generateResource(game, block[0], block[1], n+1);
 			} else {
 				this.generateResource(game, x, y, n+1);
@@ -51,19 +41,4 @@ public class Resource {
 			this.size = this.pos.size();
 		}
 	}
-	
-	public int[][] getGridCells() {
-		int[][] temp = new int[this.pos.size()][2];
-		int index = 0;
-		for(int[] i : this.pos) {
-			temp[index] = i;
-			index++;
-		}
-		return temp;
-	}
-	
-	public int getSize() {
-		return this.size;
-	}
-
 }
