@@ -4,7 +4,7 @@ import java.awt.*;
 public class InfoPanel extends JPanel {
 
 	public static final int WIDTH = 183,
-							HEIGHT = 720;
+							HEIGHT = 600;
 	
 	private JLabel money;
 	

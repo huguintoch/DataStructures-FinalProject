@@ -9,11 +9,11 @@ import java.util.*;
 
 public class Game extends JPanel implements Runnable, MouseListener, KeyListener{
 
-	public static final int WIDTH = 800, //1060
-							HEIGHT = 720,
-							CELL_SIZE = 10,
-							COLS = 80, //106
-							ROWS = 68;
+	public static final int WIDTH = 800,
+							HEIGHT = 680,
+							CELL_SIZE = 20, //10
+							COLS = Game.WIDTH/Game.CELL_SIZE, //80
+							ROWS = Game.HEIGHT/Game.CELL_SIZE;
 
 	private final int DELAY;
 
@@ -39,12 +39,12 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 
 		this.state = 3;
 		this.grid = new int[COLS][ROWS];
-		this.grid[67][67] = -1;
+		this.grid[0][0] = -1;
 
 		this.walls = new Hashtable<>();
 		this.wallCounter = 1;
 
-		this.generateREsources(100);
+		this.generateResources(30);
 
 	    this.collectors = new LinkedList<>();
 	    this.cures = new LinkedList<>();
@@ -61,7 +61,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 	    this.animator.start();
 	}
 	
-	public void generateREsources(int size) {
+	public void generateResources(int size) {
 		this.resources = new Resource[size];
 	    Random rand = new Random();
 	    int x, y;
