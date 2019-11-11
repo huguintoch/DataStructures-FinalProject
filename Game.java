@@ -294,8 +294,8 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			break;
 		case 2:
 			if(x+1 < COLS && y+1 < ROWS) {
-				if(grid[x][y] == 0 && grid[x+1][y] == 0 && grid[x][y+1] == 0 && grid[x+1][y+1] == 0) {
-					this.walls.put(Integer.valueOf(this.wallCounter), new Wall(this.wallCounter, x, y, this));
+				if(grid[x][y] == 0) {
+					this.walls.put(Integer.valueOf(this.wallCounter), new Wall(this.wallCounter, 1, x, y, this));
 					this.wallCounter++;
 				}
 			}
@@ -310,6 +310,14 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		case 4:
 			this.cures.add(new Cure(6, x, y, this));
 			this.cures.poll();
+			break;
+		case 5:
+			if(x+1 < COLS && y+1 < ROWS) {
+				if(grid[x][y] == 0 && grid[x+1][y] == 0 && grid[x][y+1] == 0 && grid[x+1][y+1] == 0) {
+					this.walls.put(Integer.valueOf(this.wallCounter), new Wall(this.wallCounter, 2, x, y, this));
+					this.wallCounter++;
+				}
+			}
 			break;
 		default:
 			break;
@@ -349,6 +357,8 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			this.state = 3;
 		}else if(key == KeyEvent.VK_4) {
 			this.state = 4;
+		}else if(key == KeyEvent.VK_5) {
+			this.state = 5;
 		}
 	}
 
