@@ -11,9 +11,9 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 
 	public static final int WIDTH = 800, //1060
 							HEIGHT = 720,
-							CELL_SIZE = 10,
-							COLS = 80, //106
-							ROWS = 68;
+							CELL_SIZE = 20,
+							COLS = 40, //106
+							ROWS = 34;
 
 	private final int DELAY;
 
@@ -39,12 +39,12 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 
 		this.state = 3;
 		this.grid = new int[COLS][ROWS];
-		this.grid[67][67] = -1;
+		this.grid[39][33] = -1;
 
 		this.walls = new Hashtable<>();
 		this.wallCounter = 1;
 
-		this.generateREsources(100);
+		this.generateResources(30);
 
 	    this.collectors = new LinkedList<>();
 	    this.cures = new LinkedList<>();
@@ -61,7 +61,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 	    this.animator.start();
 	}
 	
-	public void generateREsources(int size) {
+	public void generateResources(int size) {
 		this.resources = new Resource[size];
 	    Random rand = new Random();
 	    int x, y;
