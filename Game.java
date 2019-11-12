@@ -139,7 +139,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 	private void paintVirusSpawner(Graphics g) {
 		g.setColor(new Color(255,0,0,90));
 		for(int[] cell : this.virusSpawner.getLocation()) {
-			g.fillRect(cell[0]*CELL_SIZE, cell[1]*CELL_SIZE, CELL_SIZE, CELL_SIZE);
+			g.fillRect(cell[0]*CELL_SIZE+1, cell[1]*CELL_SIZE+1, CELL_SIZE, CELL_SIZE);
 		}
 	}
 	
