@@ -6,7 +6,7 @@ public class VirusSpawner {
 	
 	public VirusSpawner(Game game) {
 		
-		this.life = 20;
+		this.life = 100;
 		
 		int[][] location = {{2,2},{2,3},{3,2},{3,3}};
 		this.location = location;
@@ -19,7 +19,7 @@ public class VirusSpawner {
 	//Setters & Getters
 
 	public void setLife(int life) {
-		this.life = life;
+		this.life += life;
 	}
 	
 	public int getLife() {

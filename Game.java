@@ -1,12 +1,14 @@
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.*;
 
-public class Game extends JPanel implements Runnable, MouseListener, KeyListener{
+public class Game extends JPanel implements Runnable, MouseListener, MouseMotionListener, KeyListener{
 
 	public static final int WIDTH = 800,
 							HEIGHT = 680,
@@ -18,6 +20,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 
 	private int state;
 	private int[][] grid;
+	private int[] mousePos;
 
 	private int money;
 	private int wallCounter;
@@ -46,6 +49,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 
 		this.state = 4;
 		this.grid = new int[COLS][ROWS];
+		this.mousePos = new int[2];
 		this.base = new Base(this);
 		this.virusSpawner = new VirusSpawner(this);
 
@@ -62,6 +66,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 	    this.money = 0;
 
 		this.addMouseListener(this);
+		this.addMouseMotionListener(this);;
 		this.addKeyListener(this);
 		this.setFocusable(true);
 
@@ -99,6 +104,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		super.paint(g);
 		this.setBackground(Color.WHITE);
 		this.paintGrid(g);
+		this.paintContour(g);
 		this.paintBase(g);
 		this.paintResources(g);
 		this.paintTerrain(g);
@@ -126,6 +132,13 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		}
 		for (int i = 0; i <= ROWS; i++) {
 			g.drawLine(0, i*CELL_SIZE, Game.WIDTH, i*CELL_SIZE);
+		}
+	}
+	
+	private void paintContour(Graphics g) {
+		if(this.state == 2) {
+			g.setColor(Color.BLUE);
+			g.drawRect(this.mousePos[0], this.mousePos[1], CELL_SIZE, CELL_SIZE);
 		}
 	}
 
@@ -308,7 +321,10 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 	}
 
 	private void updateStats() {
-
+		if (this.grid[2][2] == 0 || this.grid[2][3] == 0 || this.grid[3][2] == 0 || this.grid[3][3] == 0) {
+			this.virusSpawner.setLife(-10);
+			System.out.println(this.virusSpawner.getLife());
+		}
 	}
 
 	public void accumMoney(int money) {
@@ -335,6 +351,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
                 cont++;
                 if(cont%100 == 0) {
                 	cont = 0;
+                	this.updateStats();
                 	this.updateGrid();
                 }
                 this.info.updateMoney(this.money);
@@ -414,16 +431,16 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			break;
 		case 5:
 			if(this.money >= 1000) {
-				this.cures.add(new Cure(10, x, y, this));
+				this.cures.add(new Cure(2, x, y, this));
 				this.cures.poll();
 				this.money -= 1000;
 			}
 			break;
 		case 6:
-			if(this.money >= 200) {
+			if(this.money >= 0) {
 				if(grid[x][y] == 0) {
 					this.turrets.add(new Turret(x, y, this));
-					this.money -= 200;
+					this.money -= 0;
 				}
 			}
 			break;
@@ -494,6 +511,20 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		} else {
 			return 0;
 		}
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		int x = e.getX();
+		int y = e.getY();
+		this.mousePos[0] = x-x%20;
+		this.mousePos[1] = y-y%20;
 	}
 
 }
