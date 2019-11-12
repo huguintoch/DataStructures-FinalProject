@@ -107,7 +107,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 		this.paintCollectors(g);
 		this.paintVirus(g);
 		this.paintVirusSpawner(g);
-		this.paintValues(g);
+		//this.paintValues(g);
 	}
 
 	private void paintValues(Graphics g) {
@@ -339,10 +339,15 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
                 }
                 this.info.updateMoney(this.money);
                 
+                LinkedList<Turret> deadTurrets = new LinkedList<>();
                 for(Turret t : this.turrets) {
                 	if(t.isDead()) {
-                		this.turrets.remove(t);
+                		deadTurrets.add(t);
                 	}
+                }
+                
+                for(Turret t : deadTurrets) {
+                	this.turrets.remove(t);
                 }
                 
                 this.repaint();
@@ -393,7 +398,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			}
 			break;
 		case 4:
-			if(x+1 < COLS && y+1 < ROWS) {
+			if(x < COLS && y < ROWS) {
 				if(this.collectors.size() == 0) {
 					if(grid[x][y] == 0) {
 						this.collectors.add(new Collector(x, y, this));
@@ -415,10 +420,10 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			}
 			break;
 		case 6:
-			if(this.money >= 0) {
+			if(this.money >= 100) {
 				if(grid[x][y] == 0) {
 					this.turrets.add(new Turret(x, y, this));
-					this.money -= 0;
+					this.money -= 100;
 				}
 			}
 			break;
@@ -473,11 +478,13 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 
 	//Setters and Getters
 	public void setGrid(int[] cell, int val) {
-		if(grid[cell[0]][cell[1]] == -4 && val == -1) {
-			System.out.println("GAME OVER");
-			this.state = 6;
-		}else if(cell[0] >= 0 && cell[0] < COLS && cell[1] >=0 && cell[1] < ROWS) {
-			grid[cell[0]][cell[1]] = val;
+		if(cell[0] >= 0 && cell[0] < COLS && cell[1] >=0 && cell[1] < ROWS) {
+			if(grid[cell[0]][cell[1]] == -4 && val == -1) {
+				System.out.println("GAME OVER");
+				this.state = 6;
+			} else {
+				grid[cell[0]][cell[1]] = val;
+			}
 		}
 	}
 
