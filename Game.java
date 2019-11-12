@@ -21,18 +21,18 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 
 	private int money;
 	private int wallCounter;
-	
+
 	private Base base;
 	private VirusSpawner virusSpawner;
 
 	private Hashtable<Integer, Wall> walls;
-	
+
 	private Resource[] resources;
 	private Terrain[] terrain;
-	
+
 	private LinkedList<Collector> collectors;
 	private LinkedList<Turret> turrets;
-	
+
 	private Queue<Cure> cures;
 
 	private Thread animator;
@@ -82,7 +82,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			this.resources[i].generateResource(this, x, y, 0);
 		}
 	}
-	
+
 	public void generateTerrain(int size) {
 		this.terrain = new Terrain[size];
 	    Random rand = new Random();
@@ -128,21 +128,21 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			g.drawLine(0, i*CELL_SIZE, Game.WIDTH, i*CELL_SIZE);
 		}
 	}
-	
+
 	private void paintBase(Graphics g) {
 		g.setColor(Color.GREEN);
 		for(int[] cell : this.base.getLocation()) {
 			g.fillRect(cell[0]*CELL_SIZE+1, cell[1]*CELL_SIZE+1, CELL_SIZE, CELL_SIZE);
 		}
 	}
-	
+
 	private void paintVirusSpawner(Graphics g) {
 		g.setColor(new Color(255,0,0,90));
 		for(int[] cell : this.virusSpawner.getLocation()) {
 			g.fillRect(cell[0]*CELL_SIZE+1, cell[1]*CELL_SIZE+1, CELL_SIZE, CELL_SIZE);
 		}
 	}
-	
+
 	private void paintVirus(Graphics g) {
 		int x, y;
 		g.setColor(new Color(0, 0, 0, 100));
@@ -186,7 +186,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			}
 		}
 	}
-	
+
 	private void paintTerrain(Graphics g) {
 		g.setColor(new Color(130, 100, 15, 170));
 		int cell[][];
@@ -222,7 +222,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			g.fillRect(CELL_SIZE*x+1, CELL_SIZE*y+1, CELL_SIZE, CELL_SIZE);
 		}
 	}
-	
+
 	private void paintTurrets(Graphics g) {
 		int x, y;
 		int[] pos;
@@ -306,9 +306,9 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			}
 		}
 	}
-	
+
 	private void updateStats() {
-		
+
 	}
 
 	public void accumMoney(int money) {
@@ -338,13 +338,18 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
                 	this.updateGrid();
                 }
                 this.info.updateMoney(this.money);
-                
+
+                LinkedList<Turret> deadTurrets = new LinkedList<>();
                 for(Turret t : this.turrets) {
                 	if(t.isDead()) {
-                		this.turrets.remove(t);
+                		deadTurrets.add(t);
                 	}
                 }
-                
+
+                for(Turret t : deadTurrets) {
+                	this.turrets.remove(t);
+                }
+
                 this.repaint();
             } catch (InterruptedException e) {
 
@@ -393,7 +398,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			}
 			break;
 		case 4:
-			if(x+1 < COLS && y+1 < ROWS) {
+			if(x < COLS && y < ROWS) {
 				if(this.collectors.size() == 0) {
 					if(grid[x][y] == 0) {
 						this.collectors.add(new Collector(x, y, this));
@@ -473,11 +478,13 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 
 	//Setters and Getters
 	public void setGrid(int[] cell, int val) {
-		if(grid[cell[0]][cell[1]] == -4 && val == -1) {
-			System.out.println("GAME OVER");
-			this.state = 6;
-		}else if(cell[0] >= 0 && cell[0] < COLS && cell[1] >=0 && cell[1] < ROWS) {
-			grid[cell[0]][cell[1]] = val;
+		if(cell[0] >= 0 && cell[0] < COLS && cell[1] >=0 && cell[1] < ROWS) {
+			if(grid[cell[0]][cell[1]] == -4 && val == -1) {
+				System.out.println("GAME OVER");
+				this.state = 6;
+			} else {
+				grid[cell[0]][cell[1]] = val;
+			}
 		}
 	}
 
