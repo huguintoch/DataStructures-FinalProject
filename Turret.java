@@ -38,8 +38,8 @@ public class Turret implements Runnable {
 
 	public void shoot(Game game) {
 		int[] cell = new int[2];
-		int min = 0;
-		int[] minPos = new int[2];
+		int min = Math.abs(this.x-(this.x-3))+Math.abs(this.y-(this.y-3));
+		int[] minPos = {this.x-3, this.y-3};
 		boolean shoot = false;
 		
 		for(int i = x-3; i < x+4; i++) {
@@ -48,16 +48,10 @@ public class Turret implements Runnable {
 				cell[1] = j;
 				if(game.getGrid(cell) == -1) {
 					shoot = true;
-					if(i == x-3 && j == y-3) {
+					if(min > Math.abs(x-i)+Math.abs(y-j)) {
 						min = Math.abs(x-i)+Math.abs(y-j);
 						minPos[0] = i;
 						minPos[1] = j;
-					} else {
-						if(min > Math.abs(x-i)+Math.abs(y-j)) {
-							min = Math.abs(x-i)+Math.abs(y-j);
-							minPos[0] = i;
-							minPos[1] = j;
-						}
 					}
 				}
 			}

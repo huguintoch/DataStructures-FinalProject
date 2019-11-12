@@ -415,10 +415,10 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 			}
 			break;
 		case 6:
-			if(this.money >= 100) {
+			if(this.money >= 0) {
 				if(grid[x][y] == 0) {
 					this.turrets.add(new Turret(x, y, this));
-					this.money -= 100;
+					this.money -= 0;
 				}
 			}
 			break;
