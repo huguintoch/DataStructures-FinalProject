@@ -4,16 +4,22 @@ import java.awt.Graphics;
 public class Constructor implements Runnable {
 	
 	private final int DELAY = 50;
+	
 	private int x,
-				y;
+				y,
+				type;
+	
+	private Game game;
 	
 	private Thread hilo;
 	
 	private boolean done = false;
 	
-	public Constructor(int x, int y, int type) {
+	public Constructor(int x, int y, int type, Game game) {
 		this.x = x;
 		this.y = y;
+		this.type = type;
+		this.game = game;
 		this.hilo = new Thread(this);
 		this.hilo.start();
 	}

@@ -43,6 +43,8 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	private LinkedList<Turret> turrets;
 
 	private Queue<Cure> cures;
+	private Queue<Constructor> constructors;
+	private Queue<Constructor> waitList;
 
 	private Thread animator;
 
@@ -68,6 +70,8 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	    this.collectors = new LinkedList<>();
 	    this.turrets = new LinkedList<>();
 	    this.cures = new LinkedList<>();
+	    this.constructors = new LinkedList<>();
+	    this.waitList = new LinkedList<>();
 
 	    this.money = 0;
 
@@ -497,10 +501,17 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			return 0;
 		}
 	}
+	
+	public void addTurret(Turret t) {
+		this.turrets.add(t);
+	}
+	
+	public void addCollector(Collector c) {
+		this.collectors.add(c);
+	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		//System.out.println("Drag");
 		this.mouseActions(e);
 		int x = e.getX();
 		int y = e.getY();
