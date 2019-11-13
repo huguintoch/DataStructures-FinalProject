@@ -17,10 +17,13 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 							ROWS = Game.HEIGHT/Game.CELL_SIZE;
 
 	public final int WALL_PRICE = 10,
-					 BIG_WALL_PRICE = 25,
 					 COLLECTOR_PRICE = 50,
 					 CURE_PRICE = 1000,
 					 TURRET_PRICE = 100;
+
+	private int maxConstructors,
+			 	maxTurrets, 
+			 	maxCollectors;
 
 	private final int DELAY;
 
@@ -54,6 +57,10 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		super();
 		this.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
 		this.DELAY = 50;
+		
+		this.maxConstructors = 2;
+		this.maxTurrets = 3;
+		this.maxCollectors = 2;
 
 		this.state = 2;
 		this.money = 0;
@@ -374,10 +381,23 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	}
 
 	private void updateStats() {
+		
+		//Virus spawner health adjustment
 		if (this.grid[2][2] == 0 || this.grid[2][3] == 0 || this.grid[3][2] == 0 || this.grid[3][3] == 0) {
 			this.virusSpawner.setLife(-10);
-			System.out.println(this.virusSpawner.getLife());
 		}
+		
+		//Base stats adjustment
+		if(this.base.getLevel() == 2) {
+			this.maxConstructors = 3;
+			this.maxCollectors = 3;
+			this.maxTurrets = 4;
+		}else if(this.base.getLevel() == 3) {
+			this.maxConstructors = 4;
+			this.maxCollectors = 4;
+			this.maxTurrets = 5;
+		}
+		
 	}
 
 	public void accumMoney(int money) {
@@ -413,7 +433,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
                 	this.constructors.remove(c);
                 }
 
-                if(this.constructors.size() < 2 && this.waitList.size() != 0) {
+                if(this.constructors.size() < this.maxConstructors && this.waitList.size() != 0) {
                 	Constructor temp = this.waitList.poll();
                 	temp.start();
                 	this.constructors.add(temp);
@@ -486,6 +506,11 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			this.state = 3;
 		} else if(key == KeyEvent.VK_4) {
 			this.state = 4;
+		} else if(key == KeyEvent.VK_0) {
+			int tmp = this.base.getLevel();
+			if(tmp+1<4) {
+				this.base.setLevel(tmp+1);
+			}
 		}
 	}
 
@@ -556,18 +581,19 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			}
 			break;
 		case 2:
+			System.out.println(this.collectors.size() +","+ this.maxCollectors);
 			if(x < COLS && y < ROWS) {
 				if(this.collectors.size() == 0 && this.constructors.size() == 0) {
 					if(grid[x][y] == 0) {
-						if(this.constructors.size() < 3) {
+						if(this.constructors.size() < this.maxConstructors) {
 							this.constructors.add(new Constructor(x, y, 1, this, true));
 						} else {
 							this.waitList.add(new Constructor(x, y, 1, this, false));
 						}
 					}
-				} else if(this.money >= COLLECTOR_PRICE){
+				} else if(this.money >= COLLECTOR_PRICE && this.collectors.size() <= this.maxCollectors){
 					if(grid[x][y] == 0) {
-						if(this.constructors.size() < 2) {
+						if(this.constructors.size() < this.maxConstructors) {
 							this.constructors.add(new Constructor(x, y, 1, this, true));
 						} else {
 							this.waitList.add(new Constructor(x, y, 1, this, false));
@@ -586,9 +612,9 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			}
 			break;
 		case 4:
-			if(this.money >= TURRET_PRICE) {
+			if(this.money >= TURRET_PRICE && this.turrets.size() <= this.maxTurrets) {
 				if(grid[x][y] == 0) {
-					if(this.constructors.size() < 2) {
+					if(this.constructors.size() < this.maxConstructors) {
 						this.constructors.add(new Constructor(x, y, 2, this, true));
 
 					} else {

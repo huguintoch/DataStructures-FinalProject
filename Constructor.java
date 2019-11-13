@@ -73,6 +73,5 @@ public class Constructor implements Runnable {
             beforeTime = System.currentTimeMillis();
 		}
 	}
-
 	
 }
