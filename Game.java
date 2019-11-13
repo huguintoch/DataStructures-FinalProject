@@ -53,7 +53,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		this.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
 		this.DELAY = 50;
 
-		this.state = 4;
+		this.state = 2;
 		this.grid = new int[COLS][ROWS];
 		this.mousePos = new int[2];
 		this.base = new Base(this);
@@ -432,6 +432,91 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
     //MouseListener
 	@Override
 	public void mouseClicked(MouseEvent e) {
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		this.mouseActions(e);
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+	}
+
+	//KeyListener
+	@Override
+	public void keyTyped(KeyEvent e) {
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		int key = e.getKeyCode();
+		if(key == KeyEvent.VK_1) {
+			this.state = 1;
+		} else if(key == KeyEvent.VK_2) {
+			this.state = 2;
+		} else if(key == KeyEvent.VK_3) {
+			this.state = 3;
+		} else if(key == KeyEvent.VK_4) {
+			this.state = 4;
+		} else if(key == KeyEvent.VK_5) {
+			this.state = 5;
+		} else if(key == KeyEvent.VK_6) {
+			this.state = 6;
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+	}
+
+	//Setters and Getters
+	public void setGrid(int[] cell, int val) {
+		if(cell[0] >= 0 && cell[0] < COLS && cell[1] >=0 && cell[1] < ROWS) {
+			if(grid[cell[0]][cell[1]] == -4 && val == -1) {
+				System.out.println("GAME OVER");
+				this.state = 6;
+			} else {
+				grid[cell[0]][cell[1]] = val;
+			}
+		}
+	}
+
+	public int getGrid(int[] cell) {
+		if(cell[0] >= 0 && cell[0] < COLS && cell[1] >=0 && cell[1] < ROWS) {
+			return grid[cell[0]][cell[1]];
+		} else {
+			return 0;
+		}
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		//System.out.println("Drag");
+		this.mouseActions(e);
+		int x = e.getX();
+		int y = e.getY();
+		this.mousePos[0] = x-x%20;
+		this.mousePos[1] = y-y%20;
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		int x = e.getX();
+		int y = e.getY();
+		this.mousePos[0] = x-x%20;
+		this.mousePos[1] = y-y%20;
+	}
+	
+	public void mouseActions(MouseEvent e) {
 		int x = e.getX()/CELL_SIZE;
 		int y = e.getY()/CELL_SIZE;
 
@@ -500,84 +585,6 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		default:
 			break;
 		}
-
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-	}
-
-	//KeyListener
-	@Override
-	public void keyTyped(KeyEvent e) {
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		int key = e.getKeyCode();
-		if(key == KeyEvent.VK_1) {
-			this.state = 1;
-		} else if(key == KeyEvent.VK_2) {
-			this.state = 2;
-		} else if(key == KeyEvent.VK_3) {
-			this.state = 3;
-		} else if(key == KeyEvent.VK_4) {
-			this.state = 4;
-		} else if(key == KeyEvent.VK_5) {
-			this.state = 5;
-		} else if(key == KeyEvent.VK_6) {
-			this.state = 6;
-		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-	}
-
-	//Setters and Getters
-	public void setGrid(int[] cell, int val) {
-		if(cell[0] >= 0 && cell[0] < COLS && cell[1] >=0 && cell[1] < ROWS) {
-			if(grid[cell[0]][cell[1]] == -4 && val == -1) {
-				System.out.println("GAME OVER");
-				this.state = 6;
-			} else {
-				grid[cell[0]][cell[1]] = val;
-			}
-		}
-	}
-
-	public int getGrid(int[] cell) {
-		if(cell[0] >= 0 && cell[0] < COLS && cell[1] >=0 && cell[1] < ROWS) {
-			return grid[cell[0]][cell[1]];
-		} else {
-			return 0;
-		}
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		int x = e.getX();
-		int y = e.getY();
-		this.mousePos[0] = x-x%20;
-		this.mousePos[1] = y-y%20;
 	}
 
 }
