@@ -15,7 +15,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 							CELL_SIZE = 20, //10
 							COLS = Game.WIDTH/Game.CELL_SIZE, //80
 							ROWS = Game.HEIGHT/Game.CELL_SIZE;
-	
+
 	public final int WALL_PRICE = 10,
 					 BIG_WALL_PRICE = 25,
 					 COLLECTOR_PRICE = 50,
@@ -24,20 +24,20 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
 	private final int DELAY;
 
-	private int state;
-	private int[][] grid;
-	private int[] mousePos;
+	private int state,
+	 			money,
+	 			wallCounter;
 
-	private int money;
-	private int wallCounter;
+	private int[] mousePos;
+	private int[][] grid;
 
 	private Base base;
 	private VirusSpawner virusSpawner;
 
-	private Hashtable<Integer, Wall> walls;
-
 	private Resource[] resources;
 	private Terrain[] terrain;
+
+	private Hashtable<Integer, Wall> walls;
 
 	private LinkedList<Collector> collectors;
 	private LinkedList<Turret> turrets;
@@ -56,24 +56,25 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		this.DELAY = 50;
 
 		this.state = 2;
-		this.grid = new int[COLS][ROWS];
+		this.money = 0;
+		this.wallCounter = 1;
+
 		this.mousePos = new int[2];
+		this.grid = new int[COLS][ROWS];
+
 		this.base = new Base(this);
 		this.virusSpawner = new VirusSpawner(this);
 
-		this.walls = new Hashtable<>();
-		this.wallCounter = 1;
-
 		this.generateResources(30);
 		this.generateTerrain(25);
+
+		this.walls = new Hashtable<>();
 
 	    this.collectors = new LinkedList<>();
 	    this.turrets = new LinkedList<>();
 	    this.cures = new LinkedList<>();
 	    this.constructors = new LinkedList<>();
 	    this.waitList = new LinkedList<>();
-
-	    this.money = 0;
 
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);;
@@ -126,12 +127,12 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		this.paintContour(g);
 		//this.paintValues(g);
 	}
-	
+
 	private void paintConstructors(Graphics g) {
 		for(Constructor c : this.constructors) {
 			c.paintConstructor(g);
 		}
-		
+
 		for(Constructor c : this.waitList) {
 			c.paintConstructor(g);
 		}
@@ -155,9 +156,9 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			g.drawLine(0, i*CELL_SIZE, Game.WIDTH, i*CELL_SIZE);
 		}
 	}
-	
+
 	private void paintContour(Graphics g) {
-		if(this.state == 2) {
+		if(this.state == 1) {
 			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && this.money >= WALL_PRICE) {
 				g.setColor(Color.BLUE);
 				g.drawRect(this.mousePos[0], this.mousePos[1], CELL_SIZE, CELL_SIZE);
@@ -165,8 +166,8 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 				g.setColor(new Color(255, 0, 0, 200));
 				g.fillRect(this.mousePos[0], this.mousePos[1], CELL_SIZE, CELL_SIZE);
 			}
-		} else if(this.state == 3) {
-			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && (this.money >= COLLECTOR_PRICE || (this.collectors.size() == 0 && this.constructors.size() == 0))) {
+		} else if(this.state == 2) {
+			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && (this.money >= COLLECTOR_PRICE || this.collectors.size() == 0)) {
 				g.setColor(Color.PINK);
 				g.drawRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
 				g.drawRect(this.mousePos[0], this.mousePos[1], CELL_SIZE, CELL_SIZE);
@@ -175,18 +176,15 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 				g.fillRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
 				g.fillRect(this.mousePos[0], this.mousePos[1], CELL_SIZE, CELL_SIZE);
 			}
+		} else if(this.state == 3) {
+			if(this.money >= CURE_PRICE) {
+				g.setColor(Color.GRAY);
+				g.drawRect(this.mousePos[0], this.mousePos[1], CELL_SIZE*2, CELL_SIZE*2);
+			} else {
+				g.setColor(new Color(255, 0, 0, 200));
+				g.fillRect(this.mousePos[0], this.mousePos[1], CELL_SIZE*2, CELL_SIZE*2);
+			}
 		} else if(this.state == 4) {
-			int y = this.mousePos[1]/20,
-					x = this.mousePos[0]/20;
-				//Ta mal
-				if(grid[x][y] == 0 && grid[x+1][y] == 0 && grid[x][y+1] == 0 && grid[x+1][y+1] == 0 && this.money >= CURE_PRICE) {
-					g.setColor(Color.GRAY);
-					g.drawRect(this.mousePos[0], this.mousePos[1], CELL_SIZE*2, CELL_SIZE*2);
-				} else {
-					g.setColor(new Color(255, 0, 0, 200));
-					g.fillRect(this.mousePos[0], this.mousePos[1], CELL_SIZE*2, CELL_SIZE*2);
-				}
-		} else if(this.state == 5) {
 			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && this.money >= TURRET_PRICE) {
 				g.setColor(Color.ORANGE);
 				g.drawRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
@@ -403,7 +401,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
             try {
                 Thread.sleep(sleep);
-                
+
                 LinkedList<Constructor> deadConstructors = new LinkedList<>();
                 for(Constructor c : this.constructors) {
                 	if(c.isDead()) {
@@ -414,20 +412,20 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
                 for(Constructor c : deadConstructors) {
                 	this.constructors.remove(c);
                 }
-                
+
                 if(this.constructors.size() < 2 && this.waitList.size() != 0) {
                 	Constructor temp = this.waitList.poll();
                 	temp.start();
                 	this.constructors.add(temp);
                 }
-                
+
                 cont++;
                 if(cont%100 == 0) {
                 	cont = 0;
                 	this.updateStats();
                 	this.updateGrid();
                 }
-                
+
                 this.info.updateMoney(this.money);
 
                 LinkedList<Turret> deadTurrets = new LinkedList<>();
@@ -488,8 +486,6 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			this.state = 3;
 		} else if(key == KeyEvent.VK_4) {
 			this.state = 4;
-		} else if(key == KeyEvent.VK_5) {
-			this.state = 5;
 		}
 	}
 
@@ -516,11 +512,11 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			return 0;
 		}
 	}
-	
+
 	public void addTurret(Turret t) {
 		this.turrets.add(t);
 	}
-	
+
 	public void addCollector(Collector c) {
 		this.collectors.add(c);
 	}
@@ -541,20 +537,13 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		this.mousePos[0] = x-x%20;
 		this.mousePos[1] = y-y%20;
 	}
-	
+
 	public void mouseActions(MouseEvent e) {
 		int x = e.getX()/CELL_SIZE;
 		int y = e.getY()/CELL_SIZE;
 
 		switch (this.state) {
 		case 1:
-//			if(grid[x][y] == 0) {
-//				grid[x][y] = -1;
-//			}else {
-//				grid[x][y] = 0;
-//			}
-//			break;
-		case 2:
 			if(x < COLS && y < ROWS) {
 				if(this.money >= WALL_PRICE) {
 					if(grid[x][y] == 0) {
@@ -566,7 +555,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
 			}
 			break;
-		case 3:
+		case 2:
 			if(x < COLS && y < ROWS) {
 				if(this.collectors.size() == 0 && this.constructors.size() == 0) {
 					if(grid[x][y] == 0) {
@@ -589,19 +578,19 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
 			}
 			break;
-		case 4:
+		case 3:
 			if(this.money >= CURE_PRICE) {
 				this.cures.add(new Cure(2, x, y, this));
-				this.cures.poll();
+				this.cures.remove();
 				this.money -= CURE_PRICE;
 			}
 			break;
-		case 5:
+		case 4:
 			if(this.money >= TURRET_PRICE) {
 				if(grid[x][y] == 0) {
 					if(this.constructors.size() < 2) {
 						this.constructors.add(new Constructor(x, y, 2, this, true));
-						
+
 					} else {
 						this.waitList.add(new Constructor(x, y, 2, this, false));
 					}
