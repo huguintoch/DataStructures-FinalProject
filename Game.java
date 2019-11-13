@@ -41,9 +41,9 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
 	private LinkedList<Collector> collectors;
 	private LinkedList<Turret> turrets;
+	private LinkedList<Constructor> constructors;
 
 	private Queue<Cure> cures;
-	private Queue<Constructor> constructors;
 	private Queue<Constructor> waitList;
 
 	private Thread animator;
@@ -120,10 +120,21 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		this.paintWalls(g);
 		this.paintTurrets(g);
 		this.paintCollectors(g);
+		this.paintConstructors(g);
 		this.paintVirus(g);
 		this.paintVirusSpawner(g);
 		this.paintContour(g);
 		//this.paintValues(g);
+	}
+	
+	private void paintConstructors(Graphics g) {
+		for(Constructor c : this.constructors) {
+			c.paintConstructor(g);
+		}
+		
+		for(Constructor c : this.waitList) {
+			c.paintConstructor(g);
+		}
 	}
 
 	private void paintValues(Graphics g) {
@@ -155,7 +166,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 				g.fillRect(this.mousePos[0], this.mousePos[1], CELL_SIZE, CELL_SIZE);
 			}
 		} else if(this.state == 3) {
-			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && (this.money >= COLLECTOR_PRICE || this.collectors.size() == 0)) {
+			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && (this.money >= COLLECTOR_PRICE || (this.collectors.size() == 0 && this.constructors.size() == 0))) {
 				g.setColor(Color.PINK);
 				g.drawRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
 				g.drawRect(this.mousePos[0], this.mousePos[1], CELL_SIZE, CELL_SIZE);
@@ -392,12 +403,31 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
             try {
                 Thread.sleep(sleep);
+                
+                LinkedList<Constructor> deadConstructors = new LinkedList<>();
+                for(Constructor c : this.constructors) {
+                	if(c.isDead()) {
+                		deadConstructors.add(c);
+                	}
+                }
+
+                for(Constructor c : deadConstructors) {
+                	this.constructors.remove(c);
+                }
+                
+                if(this.constructors.size() < 2 && this.waitList.size() != 0) {
+                	Constructor temp = this.waitList.poll();
+                	temp.start();
+                	this.constructors.add(temp);
+                }
+                
                 cont++;
                 if(cont%100 == 0) {
                 	cont = 0;
                 	this.updateStats();
                 	this.updateGrid();
                 }
+                
                 this.info.updateMoney(this.money);
 
                 LinkedList<Turret> deadTurrets = new LinkedList<>();
@@ -538,13 +568,21 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			break;
 		case 3:
 			if(x < COLS && y < ROWS) {
-				if(this.collectors.size() == 0) {
+				if(this.collectors.size() == 0 && this.constructors.size() == 0) {
 					if(grid[x][y] == 0) {
-						this.collectors.add(new Collector(x, y, this));
+						if(this.constructors.size() < 3) {
+							this.constructors.add(new Constructor(x, y, 1, this, true));
+						} else {
+							this.waitList.add(new Constructor(x, y, 1, this, false));
+						}
 					}
 				} else if(this.money >= COLLECTOR_PRICE){
 					if(grid[x][y] == 0) {
-						this.collectors.add(new Collector(x, y, this));
+						if(this.constructors.size() < 2) {
+							this.constructors.add(new Constructor(x, y, 1, this, true));
+						} else {
+							this.waitList.add(new Constructor(x, y, 1, this, false));
+						}
 						this.money -= COLLECTOR_PRICE;
 					}
 				}
@@ -561,7 +599,12 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		case 5:
 			if(this.money >= TURRET_PRICE) {
 				if(grid[x][y] == 0) {
-					this.turrets.add(new Turret(x, y, this));
+					if(this.constructors.size() < 2) {
+						this.constructors.add(new Constructor(x, y, 2, this, true));
+						
+					} else {
+						this.waitList.add(new Constructor(x, y, 2, this, false));
+					}
 					this.money -= TURRET_PRICE;
 				}
 			}
