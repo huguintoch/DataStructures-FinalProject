@@ -151,17 +151,6 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 				g.fillRect(this.mousePos[0], this.mousePos[1], CELL_SIZE, CELL_SIZE);
 			}
 		} else if(this.state == 3) {
-			int y = this.mousePos[1]/20,
-				x = this.mousePos[0]/20;
-			//Ta mal
-			if(grid[x][y] == 0 && grid[x+1][y] == 0 && grid[x][y+1] == 0 && grid[x+1][y+1] == 0 && this.money >= BIG_WALL_PRICE) {
-				g.setColor(Color.BLUE);
-				g.drawRect(this.mousePos[0], this.mousePos[1], CELL_SIZE*2, CELL_SIZE*2);
-			} else {
-				g.setColor(new Color(255, 0, 0, 200));
-				g.fillRect(this.mousePos[0], this.mousePos[1], CELL_SIZE*2, CELL_SIZE*2);
-			}
-		} else if(this.state == 4) {
 			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && (this.money >= COLLECTOR_PRICE || this.collectors.size() == 0)) {
 				g.setColor(Color.PINK);
 				g.drawRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
@@ -171,7 +160,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 				g.fillRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
 				g.fillRect(this.mousePos[0], this.mousePos[1], CELL_SIZE, CELL_SIZE);
 			}
-		} else if(this.state == 5) {
+		} else if(this.state == 4) {
 			int y = this.mousePos[1]/20,
 					x = this.mousePos[0]/20;
 				//Ta mal
@@ -182,7 +171,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 					g.setColor(new Color(255, 0, 0, 200));
 					g.fillRect(this.mousePos[0], this.mousePos[1], CELL_SIZE*2, CELL_SIZE*2);
 				}
-		} else if(this.state == 6) {
+		} else if(this.state == 5) {
 			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && this.money >= TURRET_PRICE) {
 				g.setColor(Color.ORANGE);
 				g.drawRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
@@ -226,15 +215,14 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	private void paintWalls(Graphics g) {
 		g.setColor(new Color(0, 0, 255, 150));
 		int x, y;
-		int[][] cells;
+		int[] cell;
 		Set<Integer> keys = walls.keySet();
 		for(Integer key : keys) {
-			cells = walls.get(key).getGridCells();
-			for(int[] cell : cells) {
-				x = CELL_SIZE*cell[0]+1;
-				y = CELL_SIZE*cell[1]+1;
-				g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
-			}
+			cell = walls.get(key).getGridCell();
+			x = CELL_SIZE*cell[0]+1;
+			y = CELL_SIZE*cell[1]+1;
+			g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+
 		}
 	}
 
@@ -366,9 +354,8 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		} else if(grid[i][j] > 0){
 			this.walls.get(grid[i][j]).setLife(-1);
 			if(this.walls.get(grid[i][j]).getLife() == 0) {
-				int tmp = grid[i][j];
-				this.walls.get(grid[i][j]).updateGrid(this,0);
-				this.walls.remove(tmp);
+				this.walls.remove(grid[i][j]);
+				this.grid[i][j] = 0;
 			}
 		}
 	}
@@ -469,8 +456,6 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			this.state = 4;
 		} else if(key == KeyEvent.VK_5) {
 			this.state = 5;
-		} else if(key == KeyEvent.VK_6) {
-			this.state = 6;
 		}
 	}
 
@@ -532,7 +517,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			if(x < COLS && y < ROWS) {
 				if(this.money >= WALL_PRICE) {
 					if(grid[x][y] == 0) {
-						this.walls.put(Integer.valueOf(this.wallCounter), new Wall(this.wallCounter, 1, x, y, this));
+						this.walls.put(Integer.valueOf(this.wallCounter), new Wall(this.wallCounter, x, y, this));
 						this.wallCounter++;
 						this.money -= WALL_PRICE;
 					}
@@ -541,18 +526,6 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			}
 			break;
 		case 3:
-			if(x+1 < COLS && y+1 < ROWS) {
-				if(this.money >= BIG_WALL_PRICE) {
-					if(grid[x][y] == 0 && grid[x+1][y] == 0 && grid[x][y+1] == 0 && grid[x+1][y+1] == 0) {
-						this.walls.put(Integer.valueOf(this.wallCounter), new Wall(this.wallCounter, 2, x, y, this));
-						this.wallCounter++;
-						this.money -= BIG_WALL_PRICE;
-					}
-				}
-
-			}
-			break;
-		case 4:
 			if(x < COLS && y < ROWS) {
 				if(this.collectors.size() == 0) {
 					if(grid[x][y] == 0) {
@@ -567,14 +540,14 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
 			}
 			break;
-		case 5:
+		case 4:
 			if(this.money >= CURE_PRICE) {
 				this.cures.add(new Cure(2, x, y, this));
 				this.cures.poll();
 				this.money -= CURE_PRICE;
 			}
 			break;
-		case 6:
+		case 5:
 			if(this.money >= TURRET_PRICE) {
 				if(grid[x][y] == 0) {
 					this.turrets.add(new Turret(x, y, this));

@@ -3,36 +3,18 @@ public class Wall {
 	private int life,
 	            wallId;
 	
-	private int[][] gridCells;
+	private int[] gridCell;
 	
-	public Wall(int wallId, int type, int x, int y, Game game) {
+	public Wall(int wallId, int x, int y, Game game) {
+
+		this.life = 7;
+		this.wallId = wallId;
 		
-		if(type == 2) {
+		int[] gridCell = {x,y};
+		this.gridCell = gridCell;
 			
-			this.life = 15;
-			this.wallId = wallId;
-			
-			int[][] gridCells = {{x,y},{x+1,y},{x,y+1},{x+1,y+1}};
-			this.gridCells = gridCells;
-			
-		}else {
-			
-			this.life = 7;
-			this.wallId = wallId;
-			
-			int[][] gridCells = {{x,y}};
-			this.gridCells = gridCells;
-			
-		}
+		game.setGrid(this.gridCell, this.wallId);
 		
-		this.updateGrid(game, this.wallId);
-		
-	}
-	
-	public void updateGrid(Game game, int value) {
-		for(int[] cell : this.gridCells) {
-			game.setGrid(cell, value);
-		}
 	}
 	
 	//Setters and Getters
@@ -45,8 +27,8 @@ public class Wall {
 		return this.life;
 	}
 	
-	public int[][] getGridCells(){
-		return this.gridCells;
+	public int[] getGridCell(){
+		return this.gridCell;
 	}
 	
 }
