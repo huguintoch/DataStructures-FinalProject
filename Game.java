@@ -24,25 +24,24 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
 	private final int DELAY;
 
-	private int state;
-	private int[][] grid;
+	private int state,
+	 			money,
+	 			wallCounter;
+	
 	private int[] mousePos;
-
-	private int money;
-	private int wallCounter;
+	private int[][] grid;
 
 	private Base base;
 	private VirusSpawner virusSpawner;
 
-	private Hashtable<Integer, Wall> walls;
-
 	private Resource[] resources;
 	private Terrain[] terrain;
 
+	private Hashtable<Integer, Wall> walls;
+	
 	private LinkedList<Collector> collectors;
 	private LinkedList<Turret> turrets;
-
-	private Queue<Cure> cures;
+	private LinkedList<Cure> cures;
 
 	private Thread animator;
 
@@ -54,22 +53,23 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		this.DELAY = 50;
 
 		this.state = 2;
-		this.grid = new int[COLS][ROWS];
+		this.money = 0;
+		this.wallCounter = 1;
+		
 		this.mousePos = new int[2];
+		this.grid = new int[COLS][ROWS];
+		
 		this.base = new Base(this);
 		this.virusSpawner = new VirusSpawner(this);
-
-		this.walls = new Hashtable<>();
-		this.wallCounter = 1;
 
 		this.generateResources(30);
 		this.generateTerrain(25);
 
+		this.walls = new Hashtable<>();
+		
 	    this.collectors = new LinkedList<>();
 	    this.turrets = new LinkedList<>();
 	    this.cures = new LinkedList<>();
-
-	    this.money = 0;
 
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);;
@@ -531,7 +531,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		case 3:
 			if(this.money >= CURE_PRICE) {
 				this.cures.add(new Cure(2, x, y, this));
-				this.cures.poll();
+				this.cures.remove();
 				this.money -= CURE_PRICE;
 			}
 			break;
