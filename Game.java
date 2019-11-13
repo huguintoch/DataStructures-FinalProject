@@ -42,8 +42,8 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	private LinkedList<Collector> collectors;
 	private LinkedList<Turret> turrets;
 	private LinkedList<Constructor> constructors;
-
-	private Queue<Cure> cures;
+	private LinkedList<Cure> cures;
+	
 	private Queue<Constructor> waitList;
 
 	private Thread animator;
