@@ -15,6 +15,10 @@ public class Base {
 	
 	//Setters & Getters
 	
+	public void setLevel(int level) {
+		this.level = level;
+	}
+	
 	public int getLevel() {
 		return this.level;
 	}
