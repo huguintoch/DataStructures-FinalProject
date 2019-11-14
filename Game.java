@@ -164,16 +164,16 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 				g.setColor(Color.BLUE);
 				g.drawRect(this.mousePos[0], this.mousePos[1], CELL_SIZE, CELL_SIZE);
 			} else {
-				g.setColor(new Color(255, 0, 0, 200));
+				g.setColor(new Color(255, 0, 0, 150));
 				g.fillRect(this.mousePos[0], this.mousePos[1], CELL_SIZE, CELL_SIZE);
 			}
 		} else if(this.state == 2) {
-			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && (this.money >= COLLECTOR_PRICE || this.collectors.size() == 0)) {
+			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && (this.money >= COLLECTOR_PRICE || this.collectors.size() == 0) && (this.collectors.size() < this.maxCollectors)) {
 				g.setColor(Color.PINK);
 				g.drawRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
 				g.drawRect(this.mousePos[0], this.mousePos[1], CELL_SIZE, CELL_SIZE);
 			} else {
-				g.setColor(new Color(255, 0, 0, 200));
+				g.setColor(new Color(255, 0, 0, 150));
 				g.fillRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
 				g.fillRect(this.mousePos[0], this.mousePos[1], CELL_SIZE, CELL_SIZE);
 			}
@@ -182,16 +182,16 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 				g.setColor(Color.GRAY);
 				g.drawRect(this.mousePos[0], this.mousePos[1], CELL_SIZE*2, CELL_SIZE*2);
 			} else {
-				g.setColor(new Color(255, 0, 0, 200));
+				g.setColor(new Color(255, 0, 0, 150));
 				g.fillRect(this.mousePos[0], this.mousePos[1], CELL_SIZE*2, CELL_SIZE*2);
 			}
 		} else if(this.state == 4) {
-			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && this.money >= TURRET_PRICE) {
+			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && this.money >= TURRET_PRICE && (this.turrets.size() < this.maxTurrets)) {
 				g.setColor(Color.ORANGE);
 				g.drawRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
 				g.drawRect(this.mousePos[0], this.mousePos[1], CELL_SIZE, CELL_SIZE);
 			} else {
-				g.setColor(new Color(255, 0, 0, 200));
+				g.setColor(new Color(255, 0, 0, 150));
 				g.fillRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
 				g.fillRect(this.mousePos[0], this.mousePos[1], CELL_SIZE, CELL_SIZE);
 			}
