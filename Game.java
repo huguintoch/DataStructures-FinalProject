@@ -44,10 +44,9 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
 	private LinkedList<Collector> collectors;
 	private LinkedList<Turret> turrets;
-	private LinkedList<Constructor> constructors;
 	private LinkedList<Cure> cures;
 	
-	private Queue<Constructor> waitList;
+	private Queue<Constructor> constructors;
 
 	private Thread animator;
 
@@ -81,7 +80,6 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	    this.turrets = new LinkedList<>();
 	    this.cures = new LinkedList<>();
 	    this.constructors = new LinkedList<>();
-	    this.waitList = new LinkedList<>();
 
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);;
@@ -137,10 +135,6 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
 	private void paintConstructors(Graphics g) {
 		for(Constructor c : this.constructors) {
-			c.paintConstructor(g);
-		}
-
-		for(Constructor c : this.waitList) {
 			c.paintConstructor(g);
 		}
 	}
@@ -390,12 +384,12 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		//Base stats adjustment
 		if(this.base.getLevel() == 2) {
 			this.maxConstructors = 3;
-			this.maxCollectors = 3;
+			this.maxCollectors = 5;
 			this.maxTurrets = 4;
 		}else if(this.base.getLevel() == 3) {
 			this.maxConstructors = 4;
-			this.maxCollectors = 4;
-			this.maxTurrets = 5;
+			this.maxCollectors = 7;
+			this.maxTurrets = 8;
 		}
 		
 	}
