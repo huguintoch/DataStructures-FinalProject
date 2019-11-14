@@ -415,7 +415,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
             try {
                 Thread.sleep(sleep);
-
+                
                 LinkedList<Constructor> deadConstructors = new LinkedList<>();
                 for(Constructor c : this.constructors) {
                 	if(c.isDead()) {
@@ -424,9 +424,8 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
                 }
 
                 for(Constructor c : deadConstructors) {
-                	this.constructors.poll();
+                	this.constructors.remove(c);
                 }
-
 
                 cont++;
                 if(cont%100 == 0) {
@@ -570,7 +569,6 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			}
 			break;
 		case 2:
-			System.out.println(this.collectors.size() +","+ this.maxCollectors);
 			if(x < COLS && y < ROWS) {
 				if(this.collectors.size() == 0 && this.constructors.size() == 0) {
 					if(grid[x][y] == 0) {
@@ -578,7 +576,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 							this.constructors.add(new Constructor(x, y, 1, this, true));
 						}
 					}
-				} else if(this.money >= COLLECTOR_PRICE && this.collectors.size() <= this.maxCollectors){
+				} else if(this.money >= COLLECTOR_PRICE && this.collectors.size()+this.constructors.size() < this.maxCollectors){
 					if(grid[x][y] == 0) {
 						if(this.constructors.size() < this.maxConstructors) {
 							this.constructors.add(new Constructor(x, y, 1, this, true));
@@ -586,7 +584,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 						}
 					}
 				}
-
+				
 			}
 			break;
 		case 3:
@@ -597,12 +595,12 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			}
 			break;
 		case 4:
-			if(this.money >= TURRET_PRICE && this.turrets.size() <= this.maxTurrets) {
+			if(this.money >= TURRET_PRICE && this.turrets.size()+this.constructors.size() < this.maxTurrets) {
 				if(grid[x][y] == 0) {
 					if(this.constructors.size() < this.maxConstructors) {
 						this.constructors.add(new Constructor(x, y, 2, this, true));
 						this.money -= TURRET_PRICE;
-					}
+					}		
 				}
 			}
 			break;

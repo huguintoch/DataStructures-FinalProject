@@ -59,7 +59,7 @@ public class Constructor implements Runnable {
             try {
 				Thread.sleep(sleep);
 				cont++;
-				if(cont%100 == 0) {
+				if(cont%100 == 0 && !this.done) {
 					this.done = true;
 					if(type == 1) {
 						this.game.addCollector(new Collector(this.x, this.y, game));
