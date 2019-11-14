@@ -41,10 +41,9 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
 	private LinkedList<Collector> collectors;
 	private LinkedList<Turret> turrets;
-	private LinkedList<Constructor> constructors;
 	private LinkedList<Cure> cures;
 	
-	private Queue<Constructor> waitList;
+	private Queue<Constructor> constructors;
 
 	private Thread animator;
 
@@ -74,7 +73,6 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	    this.turrets = new LinkedList<>();
 	    this.cures = new LinkedList<>();
 	    this.constructors = new LinkedList<>();
-	    this.waitList = new LinkedList<>();
 
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);;
@@ -130,10 +128,6 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
 	private void paintConstructors(Graphics g) {
 		for(Constructor c : this.constructors) {
-			c.paintConstructor(g);
-		}
-
-		for(Constructor c : this.waitList) {
 			c.paintConstructor(g);
 		}
 	}
@@ -410,14 +404,9 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
                 }
 
                 for(Constructor c : deadConstructors) {
-                	this.constructors.remove(c);
+                	this.constructors.poll();
                 }
 
-                if(this.constructors.size() < 2 && this.waitList.size() != 0) {
-                	Constructor temp = this.waitList.poll();
-                	temp.start();
-                	this.constructors.add(temp);
-                }
 
                 cont++;
                 if(cont%100 == 0) {
@@ -559,20 +548,16 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			if(x < COLS && y < ROWS) {
 				if(this.collectors.size() == 0 && this.constructors.size() == 0) {
 					if(grid[x][y] == 0) {
-						if(this.constructors.size() < 3) {
+						if(this.constructors.size() < 2) {
 							this.constructors.add(new Constructor(x, y, 1, this, true));
-						} else {
-							this.waitList.add(new Constructor(x, y, 1, this, false));
 						}
 					}
 				} else if(this.money >= COLLECTOR_PRICE){
 					if(grid[x][y] == 0) {
 						if(this.constructors.size() < 2) {
 							this.constructors.add(new Constructor(x, y, 1, this, true));
-						} else {
-							this.waitList.add(new Constructor(x, y, 1, this, false));
-						}
-						this.money -= COLLECTOR_PRICE;
+							this.money -= COLLECTOR_PRICE;
+						}	
 					}
 				}
 
@@ -590,11 +575,8 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 				if(grid[x][y] == 0) {
 					if(this.constructors.size() < 2) {
 						this.constructors.add(new Constructor(x, y, 2, this, true));
-
-					} else {
-						this.waitList.add(new Constructor(x, y, 2, this, false));
+						this.money -= TURRET_PRICE;
 					}
-					this.money -= TURRET_PRICE;
 				}
 			}
 			break;
