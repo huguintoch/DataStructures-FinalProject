@@ -132,7 +132,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		this.paintVirus(g);
 		this.paintVirusSpawner(g);
 		this.paintContour(g);
-		this.paintValues(g);
+		//this.paintValues(g);
 	}
 
 	private void paintConstructors(Graphics g) {
