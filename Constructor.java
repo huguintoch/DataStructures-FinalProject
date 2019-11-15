@@ -67,6 +67,11 @@ public class Constructor implements Runnable {
 						this.game.addTurret(new Turret(this.x, this.y, game));
 					}
 				}
+				
+				int[] cell = {this.x, this.y};
+				if(this.game.getGrid(cell) != -7) {
+					this.done = true;
+				}
 			} catch (InterruptedException e) {
 
 			}

@@ -168,7 +168,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 				g.fillRect(this.mousePos[0], this.mousePos[1], CELL_SIZE, CELL_SIZE);
 			}
 		} else if(this.state == 2) {
-			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && (this.money >= COLLECTOR_PRICE || this.collectors.size() == 0) && (this.collectors.size() < this.maxCollectors)) {
+			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && (this.money >= COLLECTOR_PRICE || this.collectors.size() == 0 && this.constructors.size() == 0) && (this.collectors.size()+this.constructors.size() < this.maxCollectors)) {
 				g.setColor(Color.PINK);
 				g.drawRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
 				g.drawRect(this.mousePos[0], this.mousePos[1], CELL_SIZE, CELL_SIZE);
@@ -422,10 +422,10 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
                 		deadConstructors.add(c);
                 	}
                 }
-
-                for(Constructor c : deadConstructors) {
-                	this.constructors.remove(c);
-                }
+                
+                for (int i = 0; i < deadConstructors.size(); i++) {
+                	this.constructors.poll();
+				}
 
                 cont++;
                 if(cont%100 == 0) {
