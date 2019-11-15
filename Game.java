@@ -18,12 +18,13 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
 	public final int WALL_PRICE = 10,
 					 COLLECTOR_PRICE = 50,
-					 CURE_PRICE = 1000,
+					 CURE_PRICE = 2000,
 					 TURRET_PRICE = 100;
 
 	private int maxConstructors,
 			 	maxTurrets,
-			 	maxCollectors;
+			 	maxCollectors,
+			 	baseUpdateCost;
 
 	private final int DELAY;
 
@@ -60,6 +61,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		this.maxConstructors = 2;
 		this.maxTurrets = 3;
 		this.maxCollectors = 2;
+		this.baseUpdateCost = 500;
 
 		this.state = 2;
 		this.money = 0;
@@ -130,7 +132,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		this.paintVirus(g);
 		this.paintVirusSpawner(g);
 		this.paintContour(g);
-		//this.paintValues(g);
+		this.paintValues(g);
 	}
 
 	private void paintConstructors(Graphics g) {
@@ -375,10 +377,19 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	}
 
 	private void updateStats() {
-
+		
 		//Virus spawner health adjustment
 		if (this.grid[2][2] == 0 || this.grid[2][3] == 0 || this.grid[3][2] == 0 || this.grid[3][3] == 0) {
-			this.virusSpawner.setLife(-10);
+			this.virusSpawner.setLife(-20);
+		}
+		
+		if (this.grid[2][2] == -8 || this.grid[2][3] == -8 || this.grid[3][2] == -8 || this.grid[3][3] == -8) {
+			this.virusSpawner.setLife(-100);
+		}
+		
+		if(this.virusSpawner.getLife() <= 0) {
+			System.out.println("WIN");
+			this.animator.stop();
 		}
 
 		//Base stats adjustment
@@ -386,6 +397,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			this.maxConstructors = 3;
 			this.maxCollectors = 5;
 			this.maxTurrets = 4;
+			this.baseUpdateCost = 1000;
 		}else if(this.base.getLevel() == 3) {
 			this.maxConstructors = 4;
 			this.maxCollectors = 7;
@@ -496,8 +508,10 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			this.state = 4;
 		} else if(key == KeyEvent.VK_0) {
 			int tmp = this.base.getLevel();
-			if(tmp+1<4) {
+			if(tmp+1<4 && this.money >= this.baseUpdateCost) {
+				this.money -= this.baseUpdateCost;
 				this.base.setLevel(tmp+1);
+				this.info.updateLevel(this.base.getLevel());
 			}
 		}
 	}
