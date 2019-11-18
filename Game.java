@@ -398,8 +398,9 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	//Game Paint Methods
 	
 	private void paintGrid(Graphics g) {
-//		g.drawImage(this.spriteManager.getGridSprite()[1], 0, 220, 500, 500, this);
-//		g.drawImage(this.spriteManager.getGridSprite()[1], 700, 200, 200, 200, this);
+		g.drawImage(this.spriteManager.getGridSprite()[1], 0, 220, 500, 500, this);
+		g.drawImage(this.spriteManager.getGridSprite()[1], 700, 200, 200, 200, this);
+		g.drawImage(this.spriteManager.getGridSprite()[1], 300, -200, 400, 400, this);
 		for (int i = 0; i <= COLS; i++) {
 			for (int j = 0; j <= ROWS; j++) {
 				g.drawImage(this.spriteManager.getGridSprite()[0], CELL_SIZE*i, CELL_SIZE*j, this);
