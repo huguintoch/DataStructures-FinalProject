@@ -53,6 +53,10 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
 	private InfoPanel info;
 
+	private SpriteManager spriteManager; 
+	
+	private boolean debugPaint;
+	
 	public Game(InfoPanel info) {
 		super();
 		this.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
@@ -64,7 +68,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		this.baseUpdateCost = 500;
 
 		this.state = 2;
-		this.money = 0;
+		this.money = 1000;
 		this.wallCounter = 1;
 
 		this.mousePos = new int[2];
@@ -92,6 +96,9 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
 		this.animator = new Thread(this);
 	    this.animator.start();
+	    
+	    this.spriteManager = new SpriteManager();
+	    this.debugPaint = false;
 	}
 
 	public void generateResources(int size) {
@@ -119,21 +126,33 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	}
 
 	public void paint(Graphics g) {
-		super.paint(g);
-		this.setBackground(Color.WHITE);
-		this.paintGrid(g);
-		this.paintBase(g);
-		this.paintResources(g);
-		this.paintTerrain(g);
-		this.paintWalls(g);
-		this.paintTurrets(g);
-		this.paintCollectors(g);
-		this.paintConstructors(g);
-		this.paintVirus(g);
-		this.paintVirusSpawner(g);
-		this.paintContour(g);
-		//this.paintValues(g);
+		super.paintComponent(g);
+		if(this.debugPaint) {
+			this.setBackground(Color.WHITE);
+			this.paintGridDebug(g);
+			this.paintBaseDebug(g);
+			this.paintResourcesDebug(g);
+			this.paintTerrainDebug(g);
+			this.paintWallsDebug(g);
+			this.paintTurrets(g);
+			this.paintCollectors(g);
+			this.paintConstructors(g);
+			this.paintVirus(g);
+			this.paintVirusSpawner(g);
+			this.paintContour(g);
+			this.paintValues(g);
+		}else {
+			this.setBackground(new Color(163,163,163));
+			this.paintGrid(g);
+			this.paintBase(g);
+			this.paintResources(g);
+			this.paintTerrain(g);
+			this.paintWalls(g);
+		}
+		
 	}
+	
+	//Debug Paint Methods
 
 	private void paintConstructors(Graphics g) {
 		for(Constructor c : this.constructors) {
@@ -150,7 +169,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		}
 	}
 
-	private void paintGrid(Graphics g) {
+	private void paintGridDebug(Graphics g) {
 		g.setColor(new Color(230, 230, 230));
 		for (int i = 0; i <= COLS; i++) {
 			g.drawLine(i*CELL_SIZE, 0, i*CELL_SIZE, Game.HEIGHT);
@@ -200,7 +219,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		}
 	}
 
-	private void paintBase(Graphics g) {
+	private void paintBaseDebug(Graphics g) {
 		g.setColor(Color.GREEN);
 		for(int[] cell : this.base.getLocation()) {
 			g.fillRect(cell[0]*CELL_SIZE+1, cell[1]*CELL_SIZE+1, CELL_SIZE, CELL_SIZE);
@@ -228,7 +247,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		}
 	}
 
-	private void paintWalls(Graphics g) {
+	private void paintWallsDebug(Graphics g) {
 		g.setColor(new Color(0, 0, 255, 150));
 		int x, y;
 		int[] cell;
@@ -242,7 +261,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		}
 	}
 
-	private void paintResources(Graphics g) {
+	private void paintResourcesDebug(Graphics g) {
 		g.setColor(new Color(255, 255, 0, 170));
 		int cell[][];
 		int x, y;
@@ -256,8 +275,14 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			}
 		}
 	}
+	
+	private void updateResources(int x, int y) {
+		if(grid[x][y] == 0) {
+			grid[x][y] = -2;
+		}
+	}
 
-	private void paintTerrain(Graphics g) {
+	private void paintTerrainDebug(Graphics g) {
 		g.setColor(new Color(130, 100, 15, 170));
 		int cell[][];
 		int x, y;
@@ -269,12 +294,6 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 				updateResources(x, y);
 				g.fillRect(CELL_SIZE*x+1, CELL_SIZE*y+1, CELL_SIZE, CELL_SIZE);
 			}
-		}
-	}
-
-	private void updateResources(int x, int y) {
-		if(grid[x][y] == 0) {
-			grid[x][y] = -2;
 		}
 	}
 
@@ -375,7 +394,67 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			}
 		}
 	}
+	
+	//Game Paint Methods
+	
+	private void paintGrid(Graphics g) {
+//		g.drawImage(this.spriteManager.getGridSprite()[1], 0, 220, 500, 500, this);
+//		g.drawImage(this.spriteManager.getGridSprite()[1], 700, 200, 200, 200, this);
+		for (int i = 0; i <= COLS; i++) {
+			for (int j = 0; j <= ROWS; j++) {
+				g.drawImage(this.spriteManager.getGridSprite()[0], CELL_SIZE*i, CELL_SIZE*j, this);
+			}
+		}		
+	}
+	
+	private void paintResources(Graphics g) {
+		int cell[][];
+		int x, y;
+		for (int i = 0; i < this.resources.length; i++) {
+			cell = this.resources[i].getGridCells();
+			for (int j = 0; j < cell.length; j++) {
+				x = cell[j][0];
+				y = cell[j][1];
+				updateResources(x, y);
+				g.drawImage(this.spriteManager.getResourceSprite(), CELL_SIZE*x+1, CELL_SIZE*y+1, this);
+			}
+		}
+	}
+	
+	private void paintTerrain(Graphics g) {
+		int cell[][];
+		int x, y;
+		for (int i = 0; i < this.terrain.length; i++) {
+			cell = this.terrain[i].getGridCells();
+			for (int j = 0; j < cell.length; j++) {
+				x = cell[j][0];
+				y = cell[j][1];
+				updateResources(x, y);
+				g.drawImage(this.spriteManager.getTerrainSprite(), CELL_SIZE*x+1, CELL_SIZE*y+1, this);
+			}
+		}
+	}
 
+	private void paintWalls(Graphics g) {
+		g.setColor(new Color(0, 0, 255, 150));
+		int x, y;
+		int[] cell;
+		Set<Integer> keys = walls.keySet();
+		for(Integer key : keys) {
+			cell = walls.get(key).getGridCell();
+			x = CELL_SIZE*cell[0]+1;
+			y = CELL_SIZE*cell[1]+1;
+			g.drawImage(this.spriteManager.getWallSprite()[0], x, y, this);
+
+		}
+	}
+	
+	private void paintBase(Graphics g) {
+		int x = this.base.getLocation()[0][0]*CELL_SIZE+1;
+		int y= this.base.getLocation()[0][1]*CELL_SIZE+1;
+		g.drawImage(this.spriteManager.getBaseSprite(), x, y, this);
+	}
+	
 	private void updateStats() {
 		
 		//Virus spawner health adjustment
