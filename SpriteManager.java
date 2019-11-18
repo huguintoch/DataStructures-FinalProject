@@ -6,7 +6,8 @@ public class SpriteManager {
 	
 	private Image[] grid = {new ImageIcon("grid.png").getImage(), 
 			                new ImageIcon("grid2.png").getImage()},
-			        wall = {new ImageIcon("wall.png").getImage()};
+			        wall = {new ImageIcon("wall.png").getImage()},
+			        collector = {new ImageIcon("collector.png").getImage()};
 
 	private Image resource,
 				  terrain,
@@ -32,6 +33,10 @@ public class SpriteManager {
 	
 	public Image[] getWallSprite() {
 		return this.wall;
+	}
+	
+	public Image[] getCollectorSprite() {
+		return this.collector;
 	}
 	
 	public Image[] getGridSprite() {

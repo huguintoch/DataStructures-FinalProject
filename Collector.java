@@ -31,7 +31,9 @@ public class Collector implements Runnable {
 		g.setColor(new Color(255, 0, 255));
 		int x_ = this.x*Game.CELL_SIZE - Game.CELL_SIZE*2;
 		int y_ = this.y*Game.CELL_SIZE - Game.CELL_SIZE*2;
-		g.drawRect(x_, y_, Game.CELL_SIZE*5, Game.CELL_SIZE*5);
+		g.drawRect(x_, y_+1, Game.CELL_SIZE*5, Game.CELL_SIZE*5);
+		g.setColor(new Color(255, 0, 255,50));
+		g.fillRect(x_, y_+1, Game.CELL_SIZE*5, Game.CELL_SIZE*5);
 	}
 
 	public int collect(Game game) {

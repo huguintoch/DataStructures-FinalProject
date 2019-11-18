@@ -135,7 +135,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			this.paintTerrainDebug(g);
 			this.paintWallsDebug(g);
 			this.paintTurrets(g);
-			this.paintCollectors(g);
+			this.paintCollectorsDebug(g);
 			this.paintConstructors(g);
 			this.paintVirus(g);
 			this.paintVirusSpawner(g);
@@ -148,6 +148,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			this.paintResources(g);
 			this.paintTerrain(g);
 			this.paintWalls(g);
+			this.paintCollectors(g);
 		}
 		
 	}
@@ -297,14 +298,13 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		}
 	}
 
-	private void paintCollectors(Graphics g) {
+	private void paintCollectorsDebug(Graphics g) {
+		g.setColor(new Color(255, 0, 255, 150));
 		int x, y;
 		int[] pos;
-
 		for(Collector c : this.collectors) {
 			c.paintCollectorArea(g);
 			pos = c.getPos();
-			g.setColor(new Color(255, 0, 255, 150));
 			x = pos[0];
 			y = pos[1];
 			updateCollectors(x, y);
@@ -454,6 +454,19 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		int x = this.base.getLocation()[0][0]*CELL_SIZE+1;
 		int y= this.base.getLocation()[0][1]*CELL_SIZE+1;
 		g.drawImage(this.spriteManager.getBaseSprite(), x, y, this);
+	}
+	
+	private void paintCollectors(Graphics g) {
+		int x, y;
+		int[] pos;
+		for(Collector c : this.collectors) {
+			c.paintCollectorArea(g);
+			pos = c.getPos();
+			x = pos[0];
+			y = pos[1];
+			updateCollectors(x, y);
+			g.drawImage(this.spriteManager.getCollectorSprite()[0], CELL_SIZE*x+1, CELL_SIZE*y+1, this);
+		}
 	}
 	
 	private void updateStats() {
