@@ -14,9 +14,15 @@ public class Collector implements Runnable {
 
 	private Game game;
 	
-	private Image[] sprites = {new ImageIcon("collector.png").getImage(),
-							   new ImageIcon("collector2.png").getImage(),
-							   new ImageIcon("collector3.png").getImage()};
+	private Image[] sprites = {new ImageIcon("collector2.png").getImage(),
+							   new ImageIcon("collector3.png").getImage(),
+							   new ImageIcon("collector.png").getImage(),
+							   new ImageIcon("collector5.png").getImage(),
+							   new ImageIcon("collector6.png").getImage(),
+							   new ImageIcon("collector7.png").getImage(),
+							   new ImageIcon("collector8.png").getImage(),};
+	
+	private Image sprite;
 	
 	public Collector(int x, int y, Game game) {
 		this.x = x;
@@ -26,6 +32,7 @@ public class Collector implements Runnable {
 		this.pos[1] = y; 
 
 		this.game = game;
+		this.sprite = this.sprites[2];
 		
 		game.setGrid(this.pos, -3);
 
@@ -35,7 +42,7 @@ public class Collector implements Runnable {
 
 	public void paintCollector(Graphics g) {
 		this.paintCollectorArea(g);
-		g.drawImage(this.sprites[0], Game.CELL_SIZE*this.x+1, Game.CELL_SIZE*this.y+1, this.game);
+		g.drawImage(this.sprite, Game.CELL_SIZE*this.x+1, Game.CELL_SIZE*this.y+1, this.game);
 	}
 	
 	public void paintCollectorArea(Graphics g) {
@@ -72,6 +79,7 @@ public class Collector implements Runnable {
 		long beforeTime, timeDiff, sleep;
         beforeTime = System.currentTimeMillis();
         int cont = 0;
+        int index = 2;
 
 		while(true) {
 			timeDiff = System.currentTimeMillis() - beforeTime;
@@ -83,9 +91,13 @@ public class Collector implements Runnable {
             try {
 				Thread.sleep(sleep);
 				cont++;
+				if(cont%10 == 0) {
+					this.sprite = this.sprites[index++];
+				}
 				if(cont%50 == 0) {
 					cont = 0;
 					game.accumMoney(collect(game));
+					index = 2;
 				}
 			} catch (InterruptedException e) {
 

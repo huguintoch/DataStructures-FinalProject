@@ -120,7 +120,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	    this.animator.start();
 	    
 	    this.spriteManager = new SpriteManager();
-	    this.debugPaint = true;
+	    this.debugPaint = false;
 	}
 	
 	private void addKeyBinding(JComponent comp, int keyCode, String id, ActionListener act) {
@@ -457,7 +457,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 				g.drawRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
 				g.setColor(new Color(0,255,0,50));
 				g.fillRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
-				g.drawImage(this.spriteManager.getCollectorSprite()[1],this.mousePos[0], this.mousePos[1], this);
+				g.drawImage(this.spriteManager.getCollectorSprite()[0],this.mousePos[0], this.mousePos[1], this);
 			} else {
 				g.setColor(Color.RED);
 				g.drawRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
