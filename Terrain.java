@@ -1,8 +1,14 @@
+import java.awt.Graphics;
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
 
 public class Terrain extends Resource {
 	
-	public Terrain() {
-		super();
+	private Image sprite = new ImageIcon("terrain.png").getImage();
+	
+	public Terrain(Game game) {
+		super(game);
 		this.size = 6+rand.nextInt(3);
 	}
 	
@@ -41,4 +47,11 @@ public class Terrain extends Resource {
 			this.size = this.pos.size();
 		}
 	}
+	
+	public void paintResource(Graphics g) {
+		for(int[] cell : this.pos) {
+			g.drawImage(this.sprite, Game.CELL_SIZE*cell[0]+1, Game.CELL_SIZE*cell[1]+1, this.game);
+		}
+	}
+	
 }

@@ -1,5 +1,7 @@
 import java.awt.*;
 
+import javax.swing.ImageIcon;
+
 public class Turret implements Runnable {
 
 	private final int DELAY = 50;
@@ -13,7 +15,9 @@ public class Turret implements Runnable {
 	private Thread hilo;
 
 	private Game game;
-
+	
+	private Image sprite = new ImageIcon("turret.png").getImage();
+	
 	public Turret(int x, int y, Game game) {
 		this.x = x;
 		this.y = y;
@@ -29,13 +33,19 @@ public class Turret implements Runnable {
 		this.hilo.start();
 	}
 
+	
+	public void paint(Graphics g) {
+		g.drawImage(this.sprite, Game.CELL_SIZE*x+1, Game.CELL_SIZE*y+1, this.game);
+		this.paintCollectorArea(g);
+	}
+	
 	public void paintCollectorArea(Graphics g) {
 		g.setColor(new Color(255, 160, 0));
 		int x_ = this.x*Game.CELL_SIZE - Game.CELL_SIZE*3;
 		int y_ = this.y*Game.CELL_SIZE - Game.CELL_SIZE*3;
-		g.drawRect(x_, y_, Game.CELL_SIZE*7, Game.CELL_SIZE*7);
+		g.drawRect(x_+1, y_+1, Game.CELL_SIZE*7, Game.CELL_SIZE*7);
 		g.setColor(new Color(255, 160, 0,50));
-		g.fillRect(x_, y_, Game.CELL_SIZE*7, Game.CELL_SIZE*7);
+		g.fillRect(x_+1, y_+1, Game.CELL_SIZE*7, Game.CELL_SIZE*7);
 	}
 
 	public void shoot(Game game) {

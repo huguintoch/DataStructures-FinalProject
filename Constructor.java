@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 
 import javax.swing.CellEditor;
 import javax.swing.ImageIcon;
@@ -15,6 +16,8 @@ public class Constructor implements Runnable {
 	private Game game;
 	
 	private Thread hilo;
+	
+	private Image sprite = new ImageIcon("constructor.png").getImage();
 	
 	private boolean done = false;
 	
@@ -35,8 +38,8 @@ public class Constructor implements Runnable {
 		this.hilo.start();
 	}
 	
-	public void paintConstructor(Graphics g) {
-		g.drawImage(new ImageIcon("constructor.png").getImage(),this.x*Game.CELL_SIZE, this.y*Game.CELL_SIZE, game);
+	public void paint(Graphics g) {
+		g.drawImage(this.sprite,this.x*Game.CELL_SIZE, this.y*Game.CELL_SIZE, game);
 	}
 	
 	public boolean isDead() {
@@ -55,7 +58,6 @@ public class Constructor implements Runnable {
             if (sleep < 0) {
                 sleep = 2;
             }
-
             try {
 				Thread.sleep(sleep);
 				cont++;
@@ -67,16 +69,25 @@ public class Constructor implements Runnable {
 						this.game.addTurret(new Turret(this.x, this.y, game));
 					}
 				}
-				
 				int[] cell = {this.x, this.y};
 				if(this.game.getGrid(cell) != -7) {
 					this.done = true;
 				}
 			} catch (InterruptedException e) {
-
+				//
 			}
             beforeTime = System.currentTimeMillis();
 		}
 	}
+
+	//Setters and Getters
 	
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
 }

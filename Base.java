@@ -1,8 +1,16 @@
+import java.awt.Graphics;
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
 
 public class Base {
 	
 	private int level;
 	private int[][] location;
+	
+	private Game game;
+	
+	private Image sprite = new ImageIcon("base.png").getImage();
 	
 	public Base(Game game) {
 		this.level = 1;
@@ -11,6 +19,11 @@ public class Base {
 		for(int[] cell : this.location) {
 			game.setGrid(cell, -4);
 		}
+		this.game = game;
+	}
+	
+	public void paint(Graphics g) {
+		g.drawImage(this.sprite, this.location[0][0]*Game.CELL_SIZE+1, this.location[0][1]*Game.CELL_SIZE+1, this.game);
 	}
 	
 	//Setters & Getters

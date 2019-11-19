@@ -120,7 +120,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	    this.animator.start();
 	    
 	    this.spriteManager = new SpriteManager();
-	    this.debugPaint = false;
+	    this.debugPaint = true;
 	}
 	
 	private void addKeyBinding(JComponent comp, int keyCode, String id, ActionListener act) {
@@ -143,8 +143,8 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	    for (int i = 0; i < this.resources.length; i++) {
 			x = rand.nextInt(COLS);
 			y = rand.nextInt(ROWS);
-			this.resources[i] = new Resource();
-			this.resources[i].generateResource(this, x, y, 0);
+			this.resources[i] = new Resource(this);
+			this.resources[i].generateResource(x, y, 0);
 		}
 	}
 
@@ -155,8 +155,8 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	    for (int i = 0; i < this.terrain.length; i++) {
 			x = rand.nextInt(COLS);
 			y = rand.nextInt(ROWS);
-			this.terrain[i] = new Terrain();
-			this.terrain[i].generateResource(this, x, y, 0);
+			this.terrain[i] = new Terrain(this);
+			this.terrain[i].generateResource(x, y, 0);
 		}
 	}
 
@@ -197,7 +197,8 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
 	private void paintConstructorsDebug(Graphics g) {
 		for(Constructor c : this.constructors) {
-			c.paintConstructor(g);
+			g.setColor(Color.CYAN);
+			g.fillRect(c.getX()*Game.CELL_SIZE+1, c.getY()*Game.CELL_SIZE, Game.CELL_SIZE, Game.CELL_SIZE);
 		}
 	}
 
@@ -340,15 +341,10 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
 	private void paintCollectorsDebug(Graphics g) {
 		g.setColor(new Color(255, 0, 255, 150));
-		int x, y;
-		int[] pos;
 		for(Collector c : this.collectors) {
 			c.paintCollectorArea(g);
-			pos = c.getPos();
-			x = pos[0];
-			y = pos[1];
-			updateCollectors(x, y);
-			g.fillRect(CELL_SIZE*x+1, CELL_SIZE*y+1, CELL_SIZE, CELL_SIZE);
+			updateCollectors(c.getPos()[0], c.getPos()[1]);
+			g.fillRect(CELL_SIZE*c.getPos()[0]+1, CELL_SIZE*c.getPos()[1]+1, CELL_SIZE, CELL_SIZE);
 		}
 	}
 
@@ -496,77 +492,48 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	
 	private void paintResources(Graphics g) {
 		int cell[][];
-		int x, y;
-		for (int i = 0; i < this.resources.length; i++) {
-			cell = this.resources[i].getGridCells();
+		for (Resource r : this.resources) {
+			r.paintResource(g);
+			cell = r.getGridCells();
 			for (int j = 0; j < cell.length; j++) {
-				x = cell[j][0];
-				y = cell[j][1];
-				updateResources(x, y);
-				g.drawImage(this.spriteManager.getResourceSprite(), CELL_SIZE*x+1, CELL_SIZE*y+1, this);
+				updateResources(cell[j][0], cell[j][1]);
 			}
 		}
 	}
 	
 	private void paintTerrain(Graphics g) {
 		int cell[][];
-		int x, y;
-		for (int i = 0; i < this.terrain.length; i++) {
-			cell = this.terrain[i].getGridCells();
+		for (Terrain r : this.terrain) {
+			r.paintResource(g);
+			cell = r.getGridCells();
 			for (int j = 0; j < cell.length; j++) {
-				x = cell[j][0];
-				y = cell[j][1];
-				updateResources(x, y);
-				g.drawImage(this.spriteManager.getTerrainSprite(), CELL_SIZE*x+1, CELL_SIZE*y+1, this);
+				updateResources(cell[j][0], cell[j][1]);
 			}
 		}
 	}
 
 	private void paintWalls(Graphics g) {
-		g.setColor(new Color(0, 0, 255, 150));
-		int x, y;
-		int[] cell;
 		Set<Integer> keys = walls.keySet();
 		for(Integer key : keys) {
-			cell = walls.get(key).getGridCell();
-			x = CELL_SIZE*cell[0]+1;
-			y = CELL_SIZE*cell[1]+1;
-			g.drawImage(this.spriteManager.getWallSprite()[0], x, y, this);
-
+			walls.get(key).paint(g);
 		}
 	}
 	
 	private void paintBase(Graphics g) {
-		int x = this.base.getLocation()[0][0]*CELL_SIZE+1;
-		int y= this.base.getLocation()[0][1]*CELL_SIZE+1;
-		g.drawImage(this.spriteManager.getBaseSprite(), x, y, this);
+		this.base.paint(g);
 	}
 	
 	private void paintCollectors(Graphics g) {
-		int x, y;
-		int[] pos;
 		for(Collector c : this.collectors) {
-			c.paintCollectorArea(g);
-			pos = c.getPos();
-			x = pos[0];
-			y = pos[1];
-			updateCollectors(x, y);
-			g.drawImage(this.spriteManager.getCollectorSprite()[0], CELL_SIZE*x+1, CELL_SIZE*y+1, this);
+			c.paintCollector(g);
+			updateCollectors(c.getPos()[0], c.getPos()[1]);
 		}
 	}
 	
 	private void paintTurrets(Graphics g) {
-		int x, y;
-		int[] pos;
-
 		for(Turret t : this.turrets) {
-			t.paintCollectorArea(g);
-			pos = t.getPos();
-			g.setColor(new Color(255, 160, 0, 150));
-			x = pos[0];
-			y = pos[1];
-			updateCollectors(x, y);
-			g.drawImage(this.spriteManager.getTurretSprite()[0], CELL_SIZE*x+1, CELL_SIZE*y+1, this);
+			t.paint(g);
+			updateCollectors(t.getPos()[0], t.getPos()[1]);
 		}
 	}
 	
@@ -589,16 +556,12 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	}
 	
 	private void paintVirusSpawner(Graphics g) {
-		Graphics2D g2D = (Graphics2D) g;
-		float alpha = 0.60f; 
-		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
-		g2D.setComposite(ac);
-		g2D.drawImage(this.spriteManager.getVirusSpawnerSprite(), CELL_SIZE*2+1, CELL_SIZE*2+1, this);
+		this.virusSpawner.paint(g);
 	}
 	
 	private void paintConstructors(Graphics g) {
 		for(Constructor c : this.constructors) {
-			c.paintConstructor(g);
+			c.paint(g);
 		}
 	}
 	

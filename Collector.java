@@ -1,5 +1,7 @@
 import java.awt.*;
 
+import javax.swing.ImageIcon;
+
 public class Collector implements Runnable {
 
 	private final int DELAY = 50;
@@ -11,7 +13,11 @@ public class Collector implements Runnable {
 	private Thread hilo;
 
 	private Game game;
-
+	
+	private Image[] sprites = {new ImageIcon("collector.png").getImage(),
+							   new ImageIcon("collector2.png").getImage(),
+							   new ImageIcon("collector3.png").getImage()};
+	
 	public Collector(int x, int y, Game game) {
 		this.x = x;
 		this.y = y;
@@ -27,13 +33,18 @@ public class Collector implements Runnable {
 		this.hilo.start();
 	}
 
+	public void paintCollector(Graphics g) {
+		this.paintCollectorArea(g);
+		g.drawImage(this.sprites[0], Game.CELL_SIZE*this.x+1, Game.CELL_SIZE*this.y+1, this.game);
+	}
+	
 	public void paintCollectorArea(Graphics g) {
 		g.setColor(new Color(255, 0, 255));
 		int x_ = this.x*Game.CELL_SIZE - Game.CELL_SIZE*2;
 		int y_ = this.y*Game.CELL_SIZE - Game.CELL_SIZE*2;
-		g.drawRect(x_, y_+1, Game.CELL_SIZE*5, Game.CELL_SIZE*5);
+		g.drawRect(x_+1, y_+1, Game.CELL_SIZE*5, Game.CELL_SIZE*5);
 		g.setColor(new Color(255, 0, 255,50));
-		g.fillRect(x_, y_+1, Game.CELL_SIZE*5, Game.CELL_SIZE*5);
+		g.fillRect(x_+1, y_+2, Game.CELL_SIZE*5, Game.CELL_SIZE*5);
 	}
 
 	public int collect(Game game) {

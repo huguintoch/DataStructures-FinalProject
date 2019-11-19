@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.util.*;
 
+import javax.swing.ImageIcon;
+
 public class Resource {
 
 	protected int size;
@@ -9,14 +11,20 @@ public class Resource {
 	
 	protected Random rand;
 	
-	public Resource() {
+	protected Game game;
+	
+	protected Thread hilo;
+	
+	protected Image sprite = new ImageIcon("resource.png").getImage();
+	
+	public Resource(Game game) {
 		this.rand = new Random();
 		this.size = 4+rand.nextInt(5);
-		
 		this.pos = new LinkedList<>();
+		this.game = game;
 	}
 	
-	public void generateResource(Game game, int x, int y, int n) {
+	public void generateResource(int x, int y, int n) {
 		if(n < this.size) {
 			int[] block = {x, y};
 			
@@ -40,17 +48,25 @@ public class Resource {
 					break;
 			}
 			
-			if(game.getGrid(block) != -2 && game.getGrid(block) != -4 && game.getGrid(block) != -1 && game.getGrid(block) != -6) {
+			if(this.game.getGrid(block) != -2 && this.game.getGrid(block) != -4 && this.game.getGrid(block) != -1 && this.game.getGrid(block) != -6) {
 				this.pos.add(block);
-				game.setGrid(block, -2);
-				this.generateResource(game, block[0], block[1], n+1);
+				this.game.setGrid(block, -2);
+				this.generateResource(block[0], block[1], n+1);
 			} else {
-				this.generateResource(game, x, y, n+1);
+				this.generateResource(x, y, n+1);
 			}
 		} else {
 			this.size = this.pos.size();
 		}
 	}
+	
+	public void paintResource(Graphics g) {
+		for(int[] cell : this.pos) {
+			g.drawImage(this.sprite, Game.CELL_SIZE*cell[0]+1, Game.CELL_SIZE*cell[1]+1, this.game);
+		}
+	}
+	
+	//Setters and Getters
 	
 	public int[][] getGridCells() {
 		int[][] temp = new int[this.pos.size()][2];
