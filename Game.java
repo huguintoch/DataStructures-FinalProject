@@ -1,14 +1,15 @@
 import javax.swing.*;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.*;
 
-public class Game extends JPanel implements Runnable, MouseListener, MouseMotionListener, KeyListener {
+public class Game extends JPanel implements Runnable, MouseListener, MouseMotionListener {
 
 	public static final int WIDTH = 800,
 							HEIGHT = 680,
@@ -90,9 +91,29 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);;
-		this.addKeyListener(this);
-		this.setFocusable(true);
-
+		
+		//Key Input
+		this.addKeyBinding(this, KeyEvent.VK_1, "WALL", (e) -> {
+			state = 1;
+		});
+		this.addKeyBinding(this, KeyEvent.VK_2, "COLLECTOR", (e) -> {
+			state = 2;
+		});
+		this.addKeyBinding(this, KeyEvent.VK_3, "CURE", (e) -> {
+			state = 3;
+		});
+		this.addKeyBinding(this, KeyEvent.VK_4, "TURRET", (e) -> {
+			state = 4;
+		});
+		this.addKeyBinding(this, KeyEvent.VK_0, "BASE", (e) -> {
+			int tmp = this.base.getLevel();
+			if(tmp+1<4 && this.money >= this.baseUpdateCost) {
+				this.money -= this.baseUpdateCost;
+				this.base.setLevel(tmp+1);
+				this.info.updateLevel(this.base.getLevel());
+			}
+		});
+		
 		this.info = info;
 
 		this.animator = new Thread(this);
@@ -100,6 +121,19 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	    
 	    this.spriteManager = new SpriteManager();
 	    this.debugPaint = false;
+	}
+	
+	private void addKeyBinding(JComponent comp, int keyCode, String id, ActionListener act) {
+		InputMap im = comp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		ActionMap ap = comp.getActionMap();
+		
+		im.put(KeyStroke.getKeyStroke(keyCode, 0, false), id);
+		ap.put(id, new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				act.actionPerformed(e);
+			}
+		});
 	}
 
 	public void generateResources(int size) {
@@ -682,35 +716,6 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	public void mouseExited(MouseEvent e) {
 	}
 
-	//KeyListener
-	@Override
-	public void keyTyped(KeyEvent e) {
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		int key = e.getKeyCode();
-		if(key == KeyEvent.VK_1) {
-			this.state = 1;
-		} else if(key == KeyEvent.VK_2) {
-			this.state = 2;
-		} else if(key == KeyEvent.VK_3) {
-			this.state = 3;
-		} else if(key == KeyEvent.VK_4) {
-			this.state = 4;
-		} else if(key == KeyEvent.VK_0) {
-			int tmp = this.base.getLevel();
-			if(tmp+1<4 && this.money >= this.baseUpdateCost) {
-				this.money -= this.baseUpdateCost;
-				this.base.setLevel(tmp+1);
-				this.info.updateLevel(this.base.getLevel());
-			}
-		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-	}
 
 	//Setters and Getters
 	public void setGrid(int[] cell, int val) {
