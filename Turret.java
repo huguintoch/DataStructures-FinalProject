@@ -36,6 +36,8 @@ public class Turret implements Runnable {
 	private Image[] sprite = {new ImageIcon("turret.png").getImage(),
 							  new ImageIcon("turret4.png").getImage()};
 	
+	private Image cannonSprite;
+	
 	public Turret(int x, int y, Game game) {
 		this.x = x;
 		this.y = y;
@@ -46,6 +48,8 @@ public class Turret implements Runnable {
 		this.game = game;
 		
 		game.setGrid(this.pos, -5);
+		
+		this.cannonSprite = this.cannonSprites[0];
 
 		this.hilo = new Thread(this);
 		this.hilo.start();
@@ -53,7 +57,8 @@ public class Turret implements Runnable {
 
 	
 	public void paint(Graphics g) {
-		g.drawImage(this.sprite[0], Game.CELL_SIZE*x+1, Game.CELL_SIZE*y+1, this.game);
+		g.drawImage(this.sprite[1], Game.CELL_SIZE*x+1, Game.CELL_SIZE*y+1, this.game);
+		g.drawImage(this.cannonSprite, Game.CELL_SIZE*x+1, Game.CELL_SIZE*y+1, this.game);
 		this.paintCollectorArea(g);
 	}
 	
@@ -99,7 +104,53 @@ public class Turret implements Runnable {
 			   y0 = this.y+10,
 			   xf = minPos[0]+10,
 			   yf = minPos[1]+10;
-
+		
+		double angle = Math.abs(Math.toDegrees(Math.atan((yf-y0)/(xf-x0))));
+		System.out.println(angle);
+		
+		if(angle == 0) {
+			if(x0 >= xf) {
+				this.cannonSprite = this.cannonSprites[8];
+			}else {
+				this.cannonSprite = this.cannonSprites[0];
+			}
+		}else if(angle >= 18 && angle < 27) {
+			if(xf >= x0 && yf >= y0) {
+				this.cannonSprite = this.cannonSprites[13];
+			}else if(xf <= x0 && yf <= y0) { 
+				this.cannonSprite = this.cannonSprites[5];
+			}else if(xf <= x0 && yf >= y0) {
+				this.cannonSprite = this.cannonSprites[11];
+			}else {
+				this.cannonSprite = this.cannonSprites[3];
+			}
+		}else if(angle >= 26 && angle <= 45) {
+			if(xf >= x0 && yf >= y0) {
+				this.cannonSprite = this.cannonSprites[6];
+			}else if(xf <= x0 && yf <= y0) { 
+				this.cannonSprite = this.cannonSprites[14];
+			}else if(xf <= x0 && yf >= y0) {
+				this.cannonSprite = this.cannonSprites[2];
+			}else {
+				this.cannonSprite = this.cannonSprites[10];
+			}
+		}else if(angle >= 60 && angle < 90) {
+			if(xf >= x0 && yf >= y0) {
+				this.cannonSprite = this.cannonSprites[15];
+			}else if(xf <= x0 && yf <= y0) { 
+				this.cannonSprite = this.cannonSprites[7];
+			}else if(xf <= x0 && yf >= y0) {
+				this.cannonSprite = this.cannonSprites[9];
+			}else {
+				this.cannonSprite = this.cannonSprites[1];
+			}
+		}else if(angle == 90) {
+			if(y0 >= yf) {
+				this.cannonSprite = this.cannonSprites[4];
+			}else {
+				this.cannonSprite = this.cannonSprites[12];
+			}
+		}
 	}
 
 	public int[] getPos(){
