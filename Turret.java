@@ -16,7 +16,25 @@ public class Turret implements Runnable {
 
 	private Game game;
 	
-	private Image sprite = new ImageIcon("turret.png").getImage();
+	private Image[] cannonSprites = {new ImageIcon("t0.png").getImage(),
+							         new ImageIcon("t30.png").getImage(),
+							         new ImageIcon("t45.png").getImage(),
+							         new ImageIcon("t60.png").getImage(),
+					        		 new ImageIcon("t90.png").getImage(),
+							         new ImageIcon("t120.png").getImage(),
+							         new ImageIcon("t135.png").getImage(),
+							         new ImageIcon("t150.png").getImage(),
+							         new ImageIcon("t180.png").getImage(),
+							         new ImageIcon("t210.png").getImage(),
+							         new ImageIcon("t225.png").getImage(),
+							         new ImageIcon("t240.png").getImage(),
+					        		 new ImageIcon("t270.png").getImage(),
+							         new ImageIcon("t300.png").getImage(),
+							         new ImageIcon("t315.png").getImage(),
+							         new ImageIcon("t330.png").getImage()};
+	
+	private Image[] sprite = {new ImageIcon("turret.png").getImage(),
+							  new ImageIcon("turret4.png").getImage()};
 	
 	public Turret(int x, int y, Game game) {
 		this.x = x;
@@ -35,7 +53,7 @@ public class Turret implements Runnable {
 
 	
 	public void paint(Graphics g) {
-		g.drawImage(this.sprite, Game.CELL_SIZE*x+1, Game.CELL_SIZE*y+1, this.game);
+		g.drawImage(this.sprite[0], Game.CELL_SIZE*x+1, Game.CELL_SIZE*y+1, this.game);
 		this.paintCollectorArea(g);
 	}
 	
@@ -69,9 +87,19 @@ public class Turret implements Runnable {
 			}
 		}
 		
+		this.selectSprite(minPos);
+		
 		if(shoot) {
 			game.setGrid(minPos, 0);
 		}
+	}
+	
+	private void selectSprite(int[] minPos) {
+		double x0 = this.x+10,
+			   y0 = this.y+10,
+			   xf = minPos[0]+10,
+			   yf = minPos[1]+10;
+
 	}
 
 	public int[] getPos(){
