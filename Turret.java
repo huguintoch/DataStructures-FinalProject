@@ -100,13 +100,12 @@ public class Turret implements Runnable {
 	}
 	
 	private void selectSprite(int[] minPos) {
-		double x0 = this.x+10,
-			   y0 = this.y+10,
-			   xf = minPos[0]+10,
-			   yf = minPos[1]+10;
+		double x0 = this.x*Game.CELL_SIZE+10,
+			   y0 = this.y*Game.CELL_SIZE+10,
+			   xf = minPos[0]*Game.CELL_SIZE+10,
+			   yf = minPos[1]*Game.CELL_SIZE+10;
 		
 		double angle = Math.abs(Math.toDegrees(Math.atan((yf-y0)/(xf-x0))));
-		System.out.println(angle);
 		
 		if(angle == 0) {
 			if(x0 >= xf) {
@@ -114,41 +113,53 @@ public class Turret implements Runnable {
 			}else {
 				this.cannonSprite = this.cannonSprites[0];
 			}
-		}else if(angle >= 18 && angle < 27) {
-			if(xf >= x0 && yf >= y0) {
-				this.cannonSprite = this.cannonSprites[13];
-			}else if(xf <= x0 && yf <= y0) { 
-				this.cannonSprite = this.cannonSprites[5];
-			}else if(xf <= x0 && yf >= y0) {
-				this.cannonSprite = this.cannonSprites[11];
-			}else {
-				this.cannonSprite = this.cannonSprites[3];
-			}
-		}else if(angle >= 26 && angle <= 45) {
-			if(xf >= x0 && yf >= y0) {
-				this.cannonSprite = this.cannonSprites[6];
-			}else if(xf <= x0 && yf <= y0) { 
-				this.cannonSprite = this.cannonSprites[14];
-			}else if(xf <= x0 && yf >= y0) {
-				this.cannonSprite = this.cannonSprites[2];
-			}else {
-				this.cannonSprite = this.cannonSprites[10];
-			}
-		}else if(angle >= 60 && angle < 90) {
-			if(xf >= x0 && yf >= y0) {
-				this.cannonSprite = this.cannonSprites[15];
-			}else if(xf <= x0 && yf <= y0) { 
-				this.cannonSprite = this.cannonSprites[7];
-			}else if(xf <= x0 && yf >= y0) {
-				this.cannonSprite = this.cannonSprites[9];
-			}else {
-				this.cannonSprite = this.cannonSprites[1];
-			}
 		}else if(angle == 90) {
 			if(y0 >= yf) {
 				this.cannonSprite = this.cannonSprites[4];
 			}else {
 				this.cannonSprite = this.cannonSprites[12];
+			}
+		}else{
+			if(xf > x0 && yf < y0) { // Cuadrante 1
+				if(angle > 0 && angle <= 18) {
+					this.cannonSprite = this.cannonSprites[1];
+				}else if(angle > 18 && angle <= 45) {
+					this.cannonSprite = this.cannonSprites[2];
+				}else if(angle > 45 && angle <= 72) {
+					this.cannonSprite = this.cannonSprites[3];
+				}else {
+					this.cannonSprite = this.cannonSprites[4];
+				}
+			}else if(xf < x0 && yf < y0) { // Cuadrante 2
+				if(angle > 0 && angle <= 18) {
+					this.cannonSprite = this.cannonSprites[8];
+				}else if(angle > 18 && angle <= 45) {
+					this.cannonSprite = this.cannonSprites[7];
+				}else if(angle > 45 && angle <= 72) {
+					this.cannonSprite = this.cannonSprites[6];
+				}else {
+					this.cannonSprite = this.cannonSprites[5];
+				}
+			}else if(xf < x0 && yf > y0) { //Cuadrante 3
+				if(angle > 0 && angle <= 18) {
+					this.cannonSprite = this.cannonSprites[9];
+				}else if(angle > 18 && angle <= 45) {
+					this.cannonSprite = this.cannonSprites[10];
+				}else if(angle > 45 && angle <= 72) {
+					this.cannonSprite = this.cannonSprites[11];
+				}else {
+					this.cannonSprite = this.cannonSprites[12];
+				}
+			}else if(xf > x0 && yf > y0){ // Cuadrante 4
+				if(angle > 0 && angle <= 18) {
+					this.cannonSprite = this.cannonSprites[13];
+				}else if(angle > 18 && angle <= 45) {
+					this.cannonSprite = this.cannonSprites[14];
+				}else if(angle > 45 && angle <= 72) {
+					this.cannonSprite = this.cannonSprites[15];
+				}else {
+					this.cannonSprite = this.cannonSprites[0];
+				}
 			}
 		}
 	}
