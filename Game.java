@@ -134,12 +134,12 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			this.paintResourcesDebug(g);
 			this.paintTerrainDebug(g);
 			this.paintWallsDebug(g);
-			this.paintTurrets(g);
+			this.paintTurretsDebug(g);
 			this.paintCollectorsDebug(g);
-			this.paintConstructors(g);
-			this.paintVirus(g);
-			this.paintVirusSpawner(g);
-			this.paintContour(g);
+			this.paintConstructorsDebug(g);
+			this.paintVirusDebug(g);
+			this.paintVirusSpawnerDebug(g);
+			this.paintContourDebug(g);
 			this.paintValues(g);
 		}else {
 			this.setBackground(new Color(163,163,163));
@@ -148,14 +148,19 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			this.paintResources(g);
 			this.paintTerrain(g);
 			this.paintWalls(g);
+			this.paintTurrets(g);
 			this.paintCollectors(g);
+			this.paintConstructors(g);
+			this.paintVirus(g);
+			this.paintVirusSpawner(g);
+			this.paintContour(g);
 		}
 		
 	}
 	
 	//Debug Paint Methods
 
-	private void paintConstructors(Graphics g) {
+	private void paintConstructorsDebug(Graphics g) {
 		for(Constructor c : this.constructors) {
 			c.paintConstructor(g);
 		}
@@ -180,7 +185,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		}
 	}
 
-	private void paintContour(Graphics g) {
+	private void paintContourDebug(Graphics g) {
 		if(this.state == 1) {
 			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && this.money >= WALL_PRICE) {
 				g.setColor(Color.BLUE);
@@ -227,14 +232,14 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		}
 	}
 
-	private void paintVirusSpawner(Graphics g) {
+	private void paintVirusSpawnerDebug(Graphics g) {
 		g.setColor(new Color(255,0,0,90));
 		for(int[] cell : this.virusSpawner.getLocation()) {
 			g.fillRect(cell[0]*CELL_SIZE+1, cell[1]*CELL_SIZE+1, CELL_SIZE, CELL_SIZE);
 		}
 	}
 
-	private void paintVirus(Graphics g) {
+	private void paintVirusDebug(Graphics g) {
 		int x, y;
 		g.setColor(new Color(0, 0, 0, 100));
 		for (int i = 0; i < COLS; i++) {
@@ -312,7 +317,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		}
 	}
 
-	private void paintTurrets(Graphics g) {
+	private void paintTurretsDebug(Graphics g) {
 		int x, y;
 		int[] pos;
 
@@ -408,6 +413,52 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		}		
 	}
 	
+	private void paintContour(Graphics g) {
+		if(this.state == 1) {
+			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && this.money >= WALL_PRICE) {
+				g.drawImage(this.spriteManager.getWallSprite()[1],this.mousePos[0], this.mousePos[1], this);
+			} else {
+				g.drawImage(this.spriteManager.getWallSprite()[2],this.mousePos[0], this.mousePos[1], this);
+			}
+		} else if(this.state == 2) {
+			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && (this.money >= COLLECTOR_PRICE || this.collectors.size() == 0 && this.constructors.size() == 0) && (this.collectors.size()+this.constructors.size() < this.maxCollectors)) {
+				g.setColor(Color.GREEN);
+				g.drawRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
+				g.setColor(new Color(0,255,0,50));
+				g.fillRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
+				g.drawImage(this.spriteManager.getCollectorSprite()[1],this.mousePos[0], this.mousePos[1], this);
+			} else {
+				g.setColor(Color.RED);
+				g.drawRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
+				g.setColor(new Color(255,0,0,50));
+				g.fillRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
+				g.drawImage(this.spriteManager.getCollectorSprite()[2],this.mousePos[0], this.mousePos[1], this);
+			}
+		} else if(this.state == 3) {
+			if(this.money >= CURE_PRICE) {
+				g.setColor(Color.GRAY);
+				g.drawRect(this.mousePos[0], this.mousePos[1], CELL_SIZE*2, CELL_SIZE*2);
+			} else {
+				g.setColor(new Color(255, 0, 0, 150));
+				g.fillRect(this.mousePos[0], this.mousePos[1], CELL_SIZE*2, CELL_SIZE*2);
+			}
+		} else if(this.state == 4) {
+			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && this.money >= TURRET_PRICE && (this.turrets.size() < this.maxTurrets)) {
+				g.setColor(Color.GREEN);
+				g.drawRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
+				g.setColor(new Color(0,255,0,50));
+				g.fillRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
+				g.drawImage(this.spriteManager.getTurretSprite()[1],this.mousePos[0], this.mousePos[1], this);
+			} else {
+				g.setColor(Color.RED);
+				g.drawRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
+				g.setColor(new Color(255,0,0,50));
+				g.fillRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
+				g.drawImage(this.spriteManager.getTurretSprite()[2],this.mousePos[0], this.mousePos[1], this);
+			}
+		}
+	}
+	
 	private void paintResources(Graphics g) {
 		int cell[][];
 		int x, y;
@@ -466,6 +517,53 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			y = pos[1];
 			updateCollectors(x, y);
 			g.drawImage(this.spriteManager.getCollectorSprite()[0], CELL_SIZE*x+1, CELL_SIZE*y+1, this);
+		}
+	}
+	
+	private void paintTurrets(Graphics g) {
+		int x, y;
+		int[] pos;
+
+		for(Turret t : this.turrets) {
+			t.paintCollectorArea(g);
+			pos = t.getPos();
+			g.setColor(new Color(255, 160, 0, 150));
+			x = pos[0];
+			y = pos[1];
+			updateCollectors(x, y);
+			g.drawImage(this.spriteManager.getTurretSprite()[0], CELL_SIZE*x+1, CELL_SIZE*y+1, this);
+		}
+	}
+	
+	private void paintVirus(Graphics g) {
+		Graphics2D g2D = (Graphics2D) g;
+		int x, y;
+		for (int i = 0; i < COLS; i++) {
+			for (int j = 0; j < ROWS; j++) {
+				if(grid[i][j] == -1) {
+					x = Game.CELL_SIZE*i+1;
+					y = Game.CELL_SIZE*j+1;
+					
+					float alpha = 0.75f; 
+					AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
+					g2D.setComposite(ac);
+					g2D.drawImage(this.spriteManager.getVirusSprite()[0], x, y, this);
+				}
+			}
+		}
+	}
+	
+	private void paintVirusSpawner(Graphics g) {
+		Graphics2D g2D = (Graphics2D) g;
+		float alpha = 0.60f; 
+		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
+		g2D.setComposite(ac);
+		g2D.drawImage(this.spriteManager.getVirusSpawnerSprite(), CELL_SIZE*2+1, CELL_SIZE*2+1, this);
+	}
+	
+	private void paintConstructors(Graphics g) {
+		for(Constructor c : this.constructors) {
+			c.paintConstructor(g);
 		}
 	}
 	
@@ -646,16 +744,16 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		this.mouseActions(e);
 		int x = e.getX();
 		int y = e.getY();
-		this.mousePos[0] = x-x%20;
-		this.mousePos[1] = y-y%20;
+		this.mousePos[0] = x-x%20+1;
+		this.mousePos[1] = y-y%20+1;
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
-		this.mousePos[0] = x-x%20;
-		this.mousePos[1] = y-y%20;
+		this.mousePos[0] = x-x%20+1;
+		this.mousePos[1] = y-y%20+1;
 	}
 
 	public void mouseActions(MouseEvent e) {

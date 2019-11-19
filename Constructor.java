@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import javax.swing.CellEditor;
+import javax.swing.ImageIcon;
 
 public class Constructor implements Runnable {
 	
@@ -35,8 +36,7 @@ public class Constructor implements Runnable {
 	}
 	
 	public void paintConstructor(Graphics g) {
-		g.setColor(Color.CYAN);
-		g.fillRect(this.x*Game.CELL_SIZE, this.y*Game.CELL_SIZE, Game.CELL_SIZE, Game.CELL_SIZE);
+		g.drawImage(new ImageIcon("constructor.png").getImage(),this.x*Game.CELL_SIZE, this.y*Game.CELL_SIZE, game);
 	}
 	
 	public boolean isDead() {
