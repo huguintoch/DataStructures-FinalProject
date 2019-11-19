@@ -34,6 +34,8 @@ public class Turret implements Runnable {
 		int x_ = this.x*Game.CELL_SIZE - Game.CELL_SIZE*3;
 		int y_ = this.y*Game.CELL_SIZE - Game.CELL_SIZE*3;
 		g.drawRect(x_, y_, Game.CELL_SIZE*7, Game.CELL_SIZE*7);
+		g.setColor(new Color(255, 160, 0,50));
+		g.fillRect(x_, y_, Game.CELL_SIZE*7, Game.CELL_SIZE*7);
 	}
 
 	public void shoot(Game game) {
