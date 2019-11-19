@@ -1,5 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.LinkedList;
 
 public class InfoPanel extends JPanel {
 
@@ -8,6 +11,10 @@ public class InfoPanel extends JPanel {
 	
 	private JLabel money,
 			       level;
+	
+	private JButton btn1;
+	
+	private List<Collector> list;
 	
 	public InfoPanel() {
 		super();
@@ -22,6 +29,17 @@ public class InfoPanel extends JPanel {
 		
 		this.add(this.money);
 		this.add(this.level);
+		
+		this.btn1 = new JButton("Lista");
+		this.btn1.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				list.setVisible(true);
+			}
+			
+		} );
+		this.add(this.btn1);
 	}
 	
 	public void updateMoney(int money) {
@@ -30,6 +48,10 @@ public class InfoPanel extends JPanel {
 	
 	public void updateLevel(int level) {
 		this.level.setText(level+"");
+	}
+	
+	public void sendList(LinkedList<Collector> collector) {
+		this.list = new List<>(collector, "Collector");
 	}
 
 }

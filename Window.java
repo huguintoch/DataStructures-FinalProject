@@ -16,7 +16,6 @@ public class Window extends JFrame {
 		
 		this.add(new Game(ip), BorderLayout.CENTER);
 		this.add(ip, BorderLayout.EAST);
-		this.add(new StructuresPanel(), BorderLayout.WEST);
 		
 		this.pack();
 		this.setLocationRelativeTo(null);
