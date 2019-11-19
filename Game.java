@@ -17,7 +17,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 							ROWS = Game.HEIGHT/Game.CELL_SIZE;
 
 	public final int WALL_PRICE = 10,
-					 COLLECTOR_PRICE = 0,
+					 COLLECTOR_PRICE = 50,
 					 CURE_PRICE = 2000,
 					 TURRET_PRICE = 100;
 
@@ -60,7 +60,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
 		this.maxConstructors = 2;
 		this.maxTurrets = 3;
-		this.maxCollectors = 10;
+		this.maxCollectors = 2;
 		this.baseUpdateCost = 500;
 
 		this.state = 2;

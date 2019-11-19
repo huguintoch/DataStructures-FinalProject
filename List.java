@@ -10,6 +10,7 @@ public class List <E> extends JFrame implements Runnable {
 	private LinkedList<E> list;
 	private LinkedList<Node> nodes;
 	private int[] pos = {-60, 70};
+	private int cont = 0;
 	private Thread hilo;
 	
 	public List(LinkedList<E> list, String name) {
@@ -37,20 +38,21 @@ public class List <E> extends JFrame implements Runnable {
 			if(this.nodes.size() % 4 != 0 || this.nodes.size() == 0) {
 				if(this.right) {
 					this.pos[0] += 110;
-					if(this.nodes.size()+1 % 4 != 0) {
-						dir = 0;
-					} else {
+					if(this.cont == 3) {
 						dir = 2;
+					} else {
+						dir = 0;
 					}
 				} else {
 					this.pos[0] -= 110;
-					if(this.nodes.size()+1 % 4 != 0) {
-						dir = 1;
-					} else {
+					if(this.cont == 3) {
 						dir = 2;
+					} else {
+						dir = 1;
 					}
 				}
 			} else {
+				this.cont = 0;
 				this.pos[1] += 50;
 				this.right = !this.right;
 				if(this.right) {
@@ -60,6 +62,7 @@ public class List <E> extends JFrame implements Runnable {
 				}
 			}
 			this.nodes.add(new Node(this.pos[0], this.pos[1], name+" "+this.nodes.size(), dir));
+			cont++;
 		}
 	}
 	
