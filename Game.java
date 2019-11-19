@@ -93,6 +93,9 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		this.addMouseMotionListener(this);;
 		
 		//Key Input
+		this.addKeyBinding(this, KeyEvent.VK_0, "DELETE", (e) -> {
+			state = 0;
+		});
 		this.addKeyBinding(this, KeyEvent.VK_1, "WALL", (e) -> {
 			state = 1;
 		});
@@ -105,7 +108,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		this.addKeyBinding(this, KeyEvent.VK_4, "TURRET", (e) -> {
 			state = 4;
 		});
-		this.addKeyBinding(this, KeyEvent.VK_0, "BASE", (e) -> {
+		this.addKeyBinding(this, KeyEvent.VK_5, "BASE", (e) -> {
 			int tmp = this.base.getLevel();
 			if(tmp+1<4 && this.money >= this.baseUpdateCost) {
 				this.money -= this.baseUpdateCost;
@@ -730,6 +733,33 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		int y = e.getY()/CELL_SIZE;
 
 		switch (this.state) {
+		case 0:
+			if(grid[x][y] == -3) {
+				Collector dead = null;
+				int[] current = {x, y};
+				int[] collect = new int[2];
+				for(Collector c : this.collectors) {
+					collect = c.getPos();
+					if(collect[0] == current[0] && collect[1] == current[1]) {
+						dead = c;
+					}
+				}
+				this.collectors.remove(dead);
+			} else if(grid[x][y] == -5) {
+				Turret dead = null;
+				int[] current = {x, y};
+				int[] turr = new int[2];
+				for(Turret t : this.turrets) {
+					turr = t.getPos();
+					if(turr[0] == current[0] && turr[1] == current[1]) {
+						dead = t;
+					}
+				}
+				this.turrets.remove(dead);
+			} else if(grid[x][y] > 0) {
+				this.walls.remove(grid[x][y]);
+			}
+			break;
 		case 1:
 			if(x < COLS && y < ROWS) {
 				if(this.money >= WALL_PRICE) {

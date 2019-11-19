@@ -61,7 +61,7 @@ public class List <E> extends JFrame implements Runnable {
 					dir = 1;
 				}
 			}
-			this.nodes.add(new Node(this.pos[0], this.pos[1], name+" "+this.nodes.size(), dir));
+			this.nodes.add(new Node<E>(this.pos[0], this.pos[1], name+" "+this.nodes.size(), dir, this.list.getLast()));
 			cont++;
 		}
 	}

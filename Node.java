@@ -1,17 +1,19 @@
 import java.awt.*;
 
-public class Node {
+public class Node <E> {
 	
 	private int x, y, width, height, dir;
 	private String name;
+	private E id;
 	
-	public Node(int x, int y, String name, int dir) {
+	public Node(int x, int y, String name, int dir, E id) {
 		this.x = x;
 		this.y = y;
 		this.width = 65;
 		this.height = 20;
 		this.name = name;
 		this.dir = dir;
+		this.id = id;
 	}
 	
 	public void paintNode(Graphics g) {
