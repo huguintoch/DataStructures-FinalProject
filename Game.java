@@ -160,7 +160,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 			x = rand.nextInt(COLS);
 			y = rand.nextInt(ROWS);
 			this.terrain[i] = new Terrain(this);
-			this.terrain[i].generateResource(x, y, 0);
+			this.terrain[i].generateTerrain(this, x, y, 0);
 		}
 	}
 
