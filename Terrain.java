@@ -12,7 +12,7 @@ public class Terrain extends Resource {
 		this.size = 6+rand.nextInt(3);
 	}
 	
-	public void generateResource(Game game, int x, int y, int n) {
+	public void generateTerrain(Game game, int x, int y, int n) {
 		if(n < this.size) {
 			int[] block = {x, y};
 			
@@ -39,9 +39,9 @@ public class Terrain extends Resource {
 			if(game.getGrid(block) != -2 && game.getGrid(block) != -4 && game.getGrid(block) != -1 && game.getGrid(block) != -6) {
 				this.pos.add(block);
 				game.setGrid(block, -6);
-				this.generateResource(game, block[0], block[1], n+1);
+				this.generateTerrain(game, block[0], block[1], n+1);
 			} else {
-				this.generateResource(game, x, y, n+1);
+				this.generateTerrain(game, x, y, n+1);
 			}
 		} else {
 			this.size = this.pos.size();
