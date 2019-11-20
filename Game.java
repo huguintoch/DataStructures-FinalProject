@@ -124,7 +124,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	    this.animator.start();
 	    
 	    this.spriteManager = new SpriteManager();
-	    this.debugPaint = true;
+	    this.debugPaint = false;
 	}
 	
 	private void addKeyBinding(JComponent comp, int keyCode, String id, ActionListener act) {
