@@ -1,21 +1,28 @@
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.*;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
-public class Menu extends JFrame {
-
-	private JButton btnStart;
+public class GameOver extends JFrame {
+private JButton btnStart;
 	
 	private JPanel panel;
 	
-	public Menu() {
+	public GameOver() {
 		super("Moon Defender");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
-
-		this.add(new MenuPanel(this), BorderLayout.CENTER);
+		this.add(new GameOverPanel(this), BorderLayout.CENTER);
 		
 		this.pack();
 		this.setLocationRelativeTo(null);
@@ -29,15 +36,15 @@ public class Menu extends JFrame {
 
 }
 
-class MenuPanel extends JPanel {
+class GameOverPanel extends JPanel {
 	 private MyButton start;
-	 private Image background = new ImageIcon("Menu.png").getImage();
-	 private Image btnImage = new ImageIcon("btn_start.png").getImage();
-	 private Image btnImageIn = new ImageIcon("btn_start_0.png").getImage();
+	 private Image background = new ImageIcon("GameOver.png").getImage();
+	 private Image btnImage = new ImageIcon("btn_retry.png").getImage();
+	 private Image btnImageIn = new ImageIcon("btn_retry_0.png").getImage();
 	 private int width = 130,
 			 	 height = 60;
 	 
-	 public MenuPanel(Menu menu) {
+	 public GameOverPanel(GameOver gm) {
 		 super();
 		 this.setPreferredSize(new Dimension(1000,680));
 		 this.setLayout(null);
@@ -49,8 +56,8 @@ class MenuPanel extends JPanel {
 			 @Override
 			 public void mouseClicked(MouseEvent e) {
 				 Window w = new Window();
-				 w.setLocation(menu.getLocationOnScreen().x, menu.getLocationOnScreen().y);
-				 menu.dispose();
+				 w.setLocation(gm.getLocationOnScreen().x, gm.getLocationOnScreen().y);
+				 gm.dispose();
 			 }
 
 			 @Override

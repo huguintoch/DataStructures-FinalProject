@@ -8,7 +8,7 @@ import java.util.Queue;
 public class InfoPanel extends JPanel {
 
 	public static final int WIDTH = 200,
-							HEIGHT = 600;
+							HEIGHT = 680;
 	
 	private JLabel money,
 			       level;
@@ -103,5 +103,17 @@ public class InfoPanel extends JPanel {
 	public void sendType(int type) {
 		this.queueConstructors.sendType(type);
 	}
+	
+	public List<Collector> getCollectorList() {
+		return this.listCollectors;
+	}  
+	
+	public List<Turret> getTurretList() {
+		return this.listTurrets;
+	}  
+	
+	public Cola getQueue() {
+		return this.queueConstructors;
+	}  
 
 }
