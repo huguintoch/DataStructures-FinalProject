@@ -538,6 +538,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	}
 	
 	private void paintVirus(Graphics g) {
+		Random r = new Random();
 		Graphics2D g2D = (Graphics2D) g;
 		int x, y;
 		for (int i = 0; i < COLS; i++) {
@@ -549,7 +550,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 					float alpha = 0.75f; 
 					AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
 					g2D.setComposite(ac);
-					g2D.drawImage(this.spriteManager.getVirusSprite()[0], x, y, this);
+					g2D.drawImage(this.spriteManager.getVirusSprite()[r.nextInt(5)], x, y, this);
 				}
 			}
 		}
@@ -604,7 +605,8 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
         long beforeTime, timeDiff, sleep;
         beforeTime = System.currentTimeMillis();
-        int cont = 0;
+        int cont = 0,
+        	virusAnim = 0;
 
         while (true) {
 
@@ -629,8 +631,10 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 				}
 
                 cont++;
+                
                 if(cont%100 == 0) {
                 	cont = 0;
+                	
                 	this.updateStats();
                 	this.updateGrid();
                 }
