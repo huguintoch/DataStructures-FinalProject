@@ -80,12 +80,15 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
 		this.generateResources(30);
 		this.generateTerrain(25);
+		
+		this.info = info;
 
 		this.walls = new Hashtable<>();
 
 	    this.collectors = new LinkedList<>();
-	    info.sendList(this.collectors);
+	    this.info.sendCollectors(this.collectors);
 	    this.turrets = new LinkedList<>();
+	    this.info.sendTurrets(this.turrets);
 	    this.cures = new LinkedList<>();
 	    this.constructors = new LinkedList<>();
 
@@ -116,8 +119,6 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 				this.info.updateLevel(this.base.getLevel());
 			}
 		});
-		
-		this.info = info;
 
 		this.animator = new Thread(this);
 	    this.animator.start();
@@ -527,9 +528,12 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	}
 	
 	private void paintCollectors(Graphics g) {
-		for(Collector c : this.collectors) {
-			c.paintCollector(g);
-			updateCollectors(c.getPos()[0], c.getPos()[1]);
+		try {
+			for(Collector c : this.collectors) {
+				c.paintCollector(g);
+				updateCollectors(c.getPos()[0], c.getPos()[1]);
+			}
+		} catch (ConcurrentModificationException e) {
 		}
 	}
 	
@@ -586,14 +590,14 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
 		//Base stats adjustment
 		if(this.base.getLevel() == 2) {
-			this.maxConstructors = 3;
+			//this.maxConstructors = 3;
 			this.maxCollectors = 5;
-			this.maxTurrets = 4;
+			this.maxTurrets = 6;
 			this.baseUpdateCost = 1000;
 		}else if(this.base.getLevel() == 3) {
-			this.maxConstructors = 4;
+			//this.maxConstructors = 4;
 			this.maxCollectors = 7;
-			this.maxTurrets = 8;
+			this.maxTurrets = 9;
 		}
 
 	}
@@ -744,7 +748,9 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 						dead = c;
 					}
 				}
+				this.info.sendDeadCollector(dead);
 				this.collectors.remove(dead);
+				this.grid[x][y] = 0;
 			} else if(grid[x][y] == -5) {
 				Turret dead = null;
 				int[] current = {x, y};
@@ -755,9 +761,12 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 						dead = t;
 					}
 				}
+				this.info.sendDeadTurret(dead);
 				this.turrets.remove(dead);
+				this.grid[x][y] = 0;
 			} else if(grid[x][y] > 0) {
 				this.walls.remove(grid[x][y]);
+				this.grid[x][y] = 0;
 			}
 			break;
 		case 1:

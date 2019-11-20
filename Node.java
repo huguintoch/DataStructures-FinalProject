@@ -4,13 +4,15 @@ public class Node <E> {
 	
 	private int x, y, width, height, dir;
 	private String name;
+	int cont;
 	private E id;
 	
-	public Node(int x, int y, String name, int dir, E id) {
+	public Node(int x, int y, String name, int cont, int dir, E id) {
 		this.x = x;
 		this.y = y;
 		this.width = 65;
 		this.height = 20;
+		this.cont = cont;
 		this.name = name;
 		this.dir = dir;
 		this.id = id;
@@ -19,7 +21,7 @@ public class Node <E> {
 	public void paintNode(Graphics g) {
 		g.setColor(Color.black);
 		g.drawRect(this.x, this.y, this.width, this.height);
-		g.drawString(this.name, this.x+3, this.y+15);
+		g.drawString(this.name+" "+this.cont, this.x+3, this.y+15);
 		g.setColor(Color.RED);
 		int x_, y_;
 		int xSpace = 40;
@@ -44,5 +46,18 @@ public class Node <E> {
 			g.drawLine(x_, y_+ySpace, x_-arrow, y_+ySpace-arrow);
 			g.drawLine(x_, y_+ySpace, x_+arrow, y_+ySpace-arrow);
 		}
+	}
+	
+	public E getId() {
+		return this.id;
+	}
+	
+	public int getCont() {
+		return this.cont;
+	}
+	
+	public void setPos(int[] pos) {
+		this.x = pos[0];
+		this.y = pos[1];
 	}
 }

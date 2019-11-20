@@ -12,9 +12,11 @@ public class InfoPanel extends JPanel {
 	private JLabel money,
 			       level;
 	
-	private JButton btn1;
+	private JButton btnCollector;
+	private JButton btnTurrets;
 	
-	private List<Collector> list;
+	private List<Collector> listCollectors;
+	private List<Turret> listTurrets;
 	
 	public InfoPanel() {
 		super();
@@ -30,16 +32,29 @@ public class InfoPanel extends JPanel {
 		this.add(this.money);
 		this.add(this.level);
 		
-		this.btn1 = new JButton("Lista");
-		this.btn1.addActionListener(new ActionListener() {
+		this.btnCollector = new JButton("C");
+		this.btnCollector.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				list.setVisible(true);
+				listCollectors.setVisible(true);
 			}
 			
 		} );
-		this.add(this.btn1);
+		this.add(this.btnCollector);
+		
+		this.btnTurrets = new JButton("T");
+		this.btnTurrets.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				listTurrets.setVisible(true);
+			}
+			
+		} );
+		this.add(this.btnTurrets);
+		
+		
 	}
 	
 	public void updateMoney(int money) {
@@ -50,8 +65,20 @@ public class InfoPanel extends JPanel {
 		this.level.setText(level+"");
 	}
 	
-	public void sendList(LinkedList<Collector> collector) {
-		this.list = new List<>(collector, "Collector");
+	public void sendCollectors(LinkedList<Collector> collectors) {
+		this.listCollectors = new List<>(collectors, "Collector");
+	}
+	
+	public void sendDeadCollector(Collector e) {
+		this.listCollectors.sendDead(e);
+	}
+	
+	public void sendTurrets(LinkedList<Turret> turrets) {
+		this.listTurrets = new List<>(turrets, "Turret");
+	}
+	
+	public void sendDeadTurret(Turret e) {
+		this.listTurrets.sendDead(e);
 	}
 
 }
