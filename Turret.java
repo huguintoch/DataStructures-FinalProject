@@ -8,9 +8,11 @@ public class Turret implements Runnable {
 	private int x,
 				y;
 	
-	private boolean done = false;
+	private boolean done = false,
+					paintBlaster = false;
 
-	private int[] pos = new int[2];
+	private int[] pos = new int[2],
+			      toShoot = new int[2];
 
 	private Thread hilo;
 
@@ -60,6 +62,9 @@ public class Turret implements Runnable {
 		g.drawImage(this.sprite[1], Game.CELL_SIZE*x+1, Game.CELL_SIZE*y+1, this.game);
 		g.drawImage(this.cannonSprite, Game.CELL_SIZE*x+1, Game.CELL_SIZE*y+1, this.game);
 		this.paintCollectorArea(g);
+		if(this.paintBlaster) {
+			this.paintBlaster(g, this.toShoot[0], this.toShoot[1]);
+		}
 	}
 	
 	public void paintCollectorArea(Graphics g) {
@@ -69,6 +74,12 @@ public class Turret implements Runnable {
 		g.drawRect(x_+1, y_+1, Game.CELL_SIZE*7, Game.CELL_SIZE*7);
 		g.setColor(new Color(255, 160, 0,50));
 		g.fillRect(x_+1, y_+1, Game.CELL_SIZE*7, Game.CELL_SIZE*7);
+	}
+	
+	public void paintBlaster(Graphics g, int x, int y) {
+		g.setColor(Color.RED);
+		g.drawLine(this.x*Game.CELL_SIZE+10, this.y*Game.CELL_SIZE+10, x*Game.CELL_SIZE+10, y*Game.CELL_SIZE+10);
+		this.paintBlaster = false;
 	}
 
 	public void shoot(Game game) {
@@ -95,6 +106,8 @@ public class Turret implements Runnable {
 		this.selectSprite(minPos);
 		
 		if(shoot) {
+			this.toShoot = minPos;
+			this.paintBlaster = true;
 			game.setGrid(minPos, 0);
 		}
 	}
