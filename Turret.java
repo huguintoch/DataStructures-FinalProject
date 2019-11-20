@@ -77,8 +77,10 @@ public class Turret implements Runnable {
 	}
 	
 	public void paintBlaster(Graphics g, int x, int y) {
-		g.setColor(Color.RED);
-		g.drawLine(this.x*Game.CELL_SIZE+10, this.y*Game.CELL_SIZE+10, x*Game.CELL_SIZE+10, y*Game.CELL_SIZE+10);
+		Graphics2D g2 = (Graphics2D) g;
+	    g2.setStroke(new BasicStroke(2));
+		g2.setColor(Color.RED);
+		g2.drawLine(this.x*Game.CELL_SIZE+10, this.y*Game.CELL_SIZE+10, x*Game.CELL_SIZE+10, y*Game.CELL_SIZE+10);
 		this.paintBlaster = false;
 	}
 
