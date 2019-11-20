@@ -124,7 +124,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	    this.animator.start();
 	    
 	    this.spriteManager = new SpriteManager();
-	    this.debugPaint = false;
+	    this.debugPaint = true;
 	}
 	
 	private void addKeyBinding(JComponent comp, int keyCode, String id, ActionListener act) {
@@ -218,10 +218,10 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	private void paintGridDebug(Graphics g) {
 		g.setColor(new Color(230, 230, 230));
 		for (int i = 0; i <= COLS; i++) {
-			g.drawLine(i*CELL_SIZE, 0, i*CELL_SIZE, Game.HEIGHT);
+			g.drawLine(i*CELL_SIZE, 0, i*CELL_SIZE+1, Game.HEIGHT+1);
 		}
 		for (int i = 0; i <= ROWS; i++) {
-			g.drawLine(0, i*CELL_SIZE, Game.WIDTH, i*CELL_SIZE);
+			g.drawLine(1, i*CELL_SIZE, Game.WIDTH, i*CELL_SIZE+1);
 		}
 	}
 
