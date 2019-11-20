@@ -17,6 +17,7 @@ public class Collector implements Runnable {
 	private Image[] sprites = {new ImageIcon("collector2.png").getImage(),
 							   new ImageIcon("collector3.png").getImage(),
 							   new ImageIcon("collector.png").getImage(),
+							   new ImageIcon("collector4.png").getImage(),
 							   new ImageIcon("collector5.png").getImage(),
 							   new ImageIcon("collector6.png").getImage(),
 							   new ImageIcon("collector7.png").getImage(),
@@ -91,13 +92,15 @@ public class Collector implements Runnable {
             try {
 				Thread.sleep(sleep);
 				cont++;
-				if(cont%10 == 0) {
+				if(cont%8 == 0) {
 					this.sprite = this.sprites[index++];
+				}
+				if(cont%48 == 0) {
+					index = 2;
 				}
 				if(cont%50 == 0) {
 					cont = 0;
 					game.accumMoney(collect(game));
-					index = 2;
 				}
 			} catch (InterruptedException e) {
 

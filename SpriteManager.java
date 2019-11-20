@@ -15,7 +15,11 @@ public class SpriteManager {
 			        turret = {new ImageIcon("turret.png").getImage(),
 			        		  new ImageIcon("turret2.png").getImage(),
 			        		  new ImageIcon("turret3.png").getImage()},
-			        virus = {new ImageIcon("virus.png").getImage()};
+			        virus = {new ImageIcon("virus.png").getImage(),
+			        		 new ImageIcon("virus2.png").getImage(),
+			        		 new ImageIcon("virus3.png").getImage(),
+			        		 new ImageIcon("virus4.png").getImage(),
+			        		 new ImageIcon("virus5.png").getImage()};
 
 	private Image resource,
 				  terrain,

@@ -8,9 +8,11 @@ public class Turret implements Runnable {
 	private int x,
 				y;
 	
-	private boolean done = false;
+	private boolean done = false,
+					paintBlaster = false;
 
-	private int[] pos = new int[2];
+	private int[] pos = new int[2],
+			      toShoot = new int[2];
 
 	private Thread hilo;
 
@@ -36,6 +38,8 @@ public class Turret implements Runnable {
 	private Image[] sprite = {new ImageIcon("turret.png").getImage(),
 							  new ImageIcon("turret4.png").getImage()};
 	
+	private Image cannonSprite;
+	
 	public Turret(int x, int y, Game game) {
 		this.x = x;
 		this.y = y;
@@ -46,6 +50,8 @@ public class Turret implements Runnable {
 		this.game = game;
 		
 		game.setGrid(this.pos, -5);
+		
+		this.cannonSprite = this.cannonSprites[0];
 
 		this.hilo = new Thread(this);
 		this.hilo.start();
@@ -53,8 +59,12 @@ public class Turret implements Runnable {
 
 	
 	public void paint(Graphics g) {
-		g.drawImage(this.sprite[0], Game.CELL_SIZE*x+1, Game.CELL_SIZE*y+1, this.game);
+		g.drawImage(this.sprite[1], Game.CELL_SIZE*x+1, Game.CELL_SIZE*y+1, this.game);
+		g.drawImage(this.cannonSprite, Game.CELL_SIZE*x+1, Game.CELL_SIZE*y+1, this.game);
 		this.paintCollectorArea(g);
+		if(this.paintBlaster) {
+			this.paintBlaster(g, this.toShoot[0], this.toShoot[1]);
+		}
 	}
 	
 	public void paintCollectorArea(Graphics g) {
@@ -64,6 +74,14 @@ public class Turret implements Runnable {
 		g.drawRect(x_+1, y_+1, Game.CELL_SIZE*7, Game.CELL_SIZE*7);
 		g.setColor(new Color(255, 160, 0,50));
 		g.fillRect(x_+1, y_+1, Game.CELL_SIZE*7, Game.CELL_SIZE*7);
+	}
+	
+	public void paintBlaster(Graphics g, int x, int y) {
+		Graphics2D g2 = (Graphics2D) g;
+	    g2.setStroke(new BasicStroke(2));
+		g2.setColor(Color.RED);
+		g2.drawLine(this.x*Game.CELL_SIZE+10, this.y*Game.CELL_SIZE+10, x*Game.CELL_SIZE+10, y*Game.CELL_SIZE+10);
+		this.paintBlaster = false;
 	}
 
 	public void shoot(Game game) {
@@ -90,16 +108,75 @@ public class Turret implements Runnable {
 		this.selectSprite(minPos);
 		
 		if(shoot) {
+			this.toShoot = minPos;
+			this.paintBlaster = true;
 			game.setGrid(minPos, 0);
 		}
 	}
 	
 	private void selectSprite(int[] minPos) {
-		double x0 = this.x+10,
-			   y0 = this.y+10,
-			   xf = minPos[0]+10,
-			   yf = minPos[1]+10;
-
+		double x0 = this.x*Game.CELL_SIZE+10,
+			   y0 = this.y*Game.CELL_SIZE+10,
+			   xf = minPos[0]*Game.CELL_SIZE+10,
+			   yf = minPos[1]*Game.CELL_SIZE+10;
+		
+		double angle = Math.abs(Math.toDegrees(Math.atan((yf-y0)/(xf-x0))));
+		
+		if(angle == 0) {
+			if(x0 >= xf) {
+				this.cannonSprite = this.cannonSprites[8];
+			}else {
+				this.cannonSprite = this.cannonSprites[0];
+			}
+		}else if(angle == 90) {
+			if(y0 >= yf) {
+				this.cannonSprite = this.cannonSprites[4];
+			}else {
+				this.cannonSprite = this.cannonSprites[12];
+			}
+		}else{
+			if(xf > x0 && yf < y0) { // Cuadrante 1
+				if(angle > 0 && angle <= 18) {
+					this.cannonSprite = this.cannonSprites[1];
+				}else if(angle > 18 && angle <= 45) {
+					this.cannonSprite = this.cannonSprites[2];
+				}else if(angle > 45 && angle <= 72) {
+					this.cannonSprite = this.cannonSprites[3];
+				}else {
+					this.cannonSprite = this.cannonSprites[4];
+				}
+			}else if(xf < x0 && yf < y0) { // Cuadrante 2
+				if(angle > 0 && angle <= 18) {
+					this.cannonSprite = this.cannonSprites[8];
+				}else if(angle > 18 && angle <= 45) {
+					this.cannonSprite = this.cannonSprites[7];
+				}else if(angle > 45 && angle <= 72) {
+					this.cannonSprite = this.cannonSprites[6];
+				}else {
+					this.cannonSprite = this.cannonSprites[5];
+				}
+			}else if(xf < x0 && yf > y0) { //Cuadrante 3
+				if(angle > 0 && angle <= 18) {
+					this.cannonSprite = this.cannonSprites[9];
+				}else if(angle > 18 && angle <= 45) {
+					this.cannonSprite = this.cannonSprites[10];
+				}else if(angle > 45 && angle <= 72) {
+					this.cannonSprite = this.cannonSprites[11];
+				}else {
+					this.cannonSprite = this.cannonSprites[12];
+				}
+			}else if(xf > x0 && yf > y0){ // Cuadrante 4
+				if(angle > 0 && angle <= 18) {
+					this.cannonSprite = this.cannonSprites[13];
+				}else if(angle > 18 && angle <= 45) {
+					this.cannonSprite = this.cannonSprites[14];
+				}else if(angle > 45 && angle <= 72) {
+					this.cannonSprite = this.cannonSprites[15];
+				}else {
+					this.cannonSprite = this.cannonSprites[0];
+				}
+			}
+		}
 	}
 
 	public int[] getPos(){
