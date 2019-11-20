@@ -3,7 +3,9 @@ import java.util.*;
 
 import javax.swing.ImageIcon;
 
-public class Resource {
+public class Resource implements Runnable {
+	
+	private final int DELAY = 50;
 
 	protected int size;
 	
@@ -15,6 +17,13 @@ public class Resource {
 	
 	protected Thread hilo;
 	
+	protected Image[] sprites = {new ImageIcon("resource1.png").getImage(),
+			                     new ImageIcon("resource2.png").getImage(),
+			                     new ImageIcon("resource3.png").getImage(),
+			                     new ImageIcon("resource4.png").getImage(),
+			                     new ImageIcon("resource5.png").getImage(),
+			                     new ImageIcon("resource.png").getImage()};
+	
 	protected Image sprite = new ImageIcon("resource.png").getImage();
 	
 	public Resource(Game game) {
@@ -22,6 +31,9 @@ public class Resource {
 		this.size = 4+rand.nextInt(5);
 		this.pos = new LinkedList<>();
 		this.game = game;
+		
+		this.hilo = new Thread(this);
+		this.hilo.start();
 	}
 	
 	public void generateResource(int x, int y, int n) {
@@ -82,4 +94,48 @@ public class Resource {
 		return this.size;
 	}
 
+	@Override
+	public void run() {
+
+		long beforeTime, timeDiff, sleep;
+        beforeTime = System.currentTimeMillis();
+        int cont = 0;
+        int index = 0;
+        boolean anim = false;
+       
+		while(true) {
+			timeDiff = System.currentTimeMillis() - beforeTime;
+            sleep = this.DELAY - timeDiff;
+            if (sleep < 0) {
+                sleep = 2;
+            }
+
+            try {
+				Thread.sleep(sleep);
+				cont++;
+
+				if(anim && cont%2 == 0) {
+					this.sprite = this.sprites[index++];
+				}
+
+				if(cont%12 == 0) {
+					index = 0;
+					anim = false;
+				}
+				
+				if(cont%50 == 0) {
+					cont = 0;
+					if(rand.nextInt(8) == 4) {
+						anim = true;
+					};
+				}
+				
+			
+			} catch (InterruptedException e) {
+
+			}
+            beforeTime = System.currentTimeMillis();
+		}
+	}
+	
 }
