@@ -91,6 +91,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	    this.info.sendTurrets(this.turrets);
 	    this.cures = new LinkedList<>();
 	    this.constructors = new LinkedList<>();
+	    this.info.sendConstructors(this.constructors);
 
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);;
@@ -656,6 +657,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
                 }
 
                 for(Turret t : deadTurrets) {
+                	this.info.sendDeadTurret(t);
                 	this.turrets.remove(t);
                 }
 
@@ -791,12 +793,14 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 					if(grid[x][y] == 0) {
 						if(this.constructors.size() < this.maxConstructors) {
 							this.constructors.add(new Constructor(x, y, 1, this, true));
+							this.info.sendType(1);
 						}
 					}
 				} else if(this.money >= COLLECTOR_PRICE && this.collectors.size()+this.constructors.size() < this.maxCollectors){
 					if(grid[x][y] == 0) {
 						if(this.constructors.size() < this.maxConstructors) {
 							this.constructors.add(new Constructor(x, y, 1, this, true));
+							this.info.sendType(1);
 							this.money -= COLLECTOR_PRICE;
 						}
 					}
@@ -816,6 +820,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 				if(grid[x][y] == 0) {
 					if(this.constructors.size() < this.maxConstructors) {
 						this.constructors.add(new Constructor(x, y, 2, this, true));
+						this.info.sendType(2);
 						this.money -= TURRET_PRICE;
 					}		
 				}

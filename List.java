@@ -22,6 +22,7 @@ public class List <E> extends JFrame implements Runnable {
 	public List(LinkedList<E> list, String name) {
 		super("LikedList of: "+name);	
 		this.setSize(390, 240);
+		this.setResizable(false);
 		
 		this.name = name;
 		this.list = list;

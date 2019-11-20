@@ -2,9 +2,6 @@ import java.awt.*;
 import javax.swing.*;
 
 public class Window extends JFrame {
-
-	public static final int WIDTH = 1300,
-							HEIGHT = 600;
 	
 	public Window() {
 		super("Virus");
@@ -21,10 +18,6 @@ public class Window extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		this.setResizable(false);
-	}
-	
-	public static void main(String[] args) {
-		Window w = new Window();
 	}
 
 }

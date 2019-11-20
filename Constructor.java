@@ -125,5 +125,9 @@ public class Constructor implements Runnable {
 	public int getY() {
 		return y;
 	}
+	
+	public int getType() {
+		return this.type;
+	}
 
 }
