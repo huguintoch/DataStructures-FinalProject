@@ -88,6 +88,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		this.generateTerrain(25);
 		
 		this.info = info;
+		this.info.setGame(this);
 
 		this.walls = new Hashtable<>();
 
@@ -225,10 +226,10 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	private void paintGridDebug(Graphics g) {
 		g.setColor(new Color(230, 230, 230));
 		for (int i = 0; i <= COLS; i++) {
-			g.drawLine(i*CELL_SIZE, 0, i*CELL_SIZE, Game.HEIGHT);
+			g.drawLine(i*CELL_SIZE, 0, i*CELL_SIZE+1, Game.HEIGHT+1);
 		}
 		for (int i = 0; i <= ROWS; i++) {
-			g.drawLine(0, i*CELL_SIZE, Game.WIDTH, i*CELL_SIZE);
+			g.drawLine(1, i*CELL_SIZE, Game.WIDTH, i*CELL_SIZE+1);
 		}
 	}
 
@@ -645,6 +646,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
                 this.updateStats();
 
                 this.info.updateMoney(this.money);
+                this.info.update(this.base.getLevel(), this.state);
 
                 LinkedList<Turret> deadTurrets = new LinkedList<>();
                 for(Turret t : this.turrets) {
@@ -845,4 +847,12 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		}
 	}
 
+	public void setDebugPaint(boolean x) {
+		this.debugPaint = x;
+	}
+	
+	public boolean getDebugPaint() {
+		return this.debugPaint;
+	}
+	
 }
