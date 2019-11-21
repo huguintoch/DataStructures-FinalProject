@@ -22,6 +22,7 @@ public class InfoPanel extends JPanel {
 	private JButton btnCollector;
 	private JButton btnTurrets;
 	private JButton btnConstructors;
+	private JButton btnDebug;
 	
 	private List<Collector> listCollectors;
 	private List<Turret> listTurrets;
@@ -29,6 +30,8 @@ public class InfoPanel extends JPanel {
 	private Cola queueConstructors;
 	
 	private SpriteManager spriteManager;
+	
+	private Game game;
 	
 	public InfoPanel() {
 		super();
@@ -91,7 +94,10 @@ public class InfoPanel extends JPanel {
 		structures.setBackground(Color.DARK_GRAY);
 		structures.setLayout(new GridLayout(2,2));
 		
-		this.btnCollector = new JButton("C");
+		this.btnCollector = new JButton(new ImageIcon("btnCollector.png"));
+		this.btnCollector.setBackground(Color.DARK_GRAY);
+		this.btnCollector.setBorderPainted(false);
+		this.btnCollector.setRolloverIcon(new ImageIcon("btnCollectorS.png"));
 		this.btnCollector.addActionListener(new ActionListener() {
 
 			@Override
@@ -101,7 +107,10 @@ public class InfoPanel extends JPanel {
 			
 		} );
 		
-		this.btnTurrets = new JButton("T");
+		this.btnTurrets = new JButton(new ImageIcon("btnTurrets.png"));
+		this.btnTurrets.setBackground(Color.DARK_GRAY);
+		this.btnTurrets.setBorderPainted(false);
+		this.btnTurrets.setRolloverIcon(new ImageIcon("btnTurretsS.png"));
 		this.btnTurrets.addActionListener(new ActionListener() {
 
 			@Override
@@ -111,7 +120,10 @@ public class InfoPanel extends JPanel {
 			
 		} );
 		
-		this.btnConstructors = new JButton("C");
+		this.btnConstructors = new JButton(new ImageIcon("btnConstructor.png"));
+		this.btnConstructors.setBackground(Color.DARK_GRAY);
+		this.btnConstructors.setBorderPainted(false);
+		this.btnConstructors.setRolloverIcon(new ImageIcon("btnConstructorS.png"));
 		this.btnConstructors.addActionListener(new ActionListener() {
 
 			@Override
@@ -120,10 +132,24 @@ public class InfoPanel extends JPanel {
 			}
 			
 		} );
+		
+		this.btnDebug = new JButton(new ImageIcon("btnDebug.png"));
+		this.btnDebug.setBackground(Color.DARK_GRAY);
+		this.btnDebug.setBorderPainted(false);
+		this.btnDebug.setRolloverIcon(new ImageIcon("btnDebugS.png"));
+		this.btnDebug.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				game.setDebugPaint(!game.getDebugPaint());
+			}
+			
+		} );
 
 		structures.add(this.btnCollector);
 		structures.add(this.btnTurrets);
 		structures.add(this.btnConstructors);
+		structures.add(this.btnDebug);
 		
 		this.add(structures);
 		
@@ -260,6 +286,10 @@ public class InfoPanel extends JPanel {
 	
 	public Cola getQueue() {
 		return this.queueConstructors;
-	}  
+	}
+	
+	public void setGame(Game game) {
+		this.game = game;
+	}
 
 }

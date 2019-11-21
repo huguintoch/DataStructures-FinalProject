@@ -88,6 +88,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		this.generateTerrain(25);
 		
 		this.info = info;
+		this.info.setGame(this);
 
 		this.walls = new Hashtable<>();
 
@@ -834,4 +835,12 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		}
 	}
 
+	public void setDebugPaint(boolean x) {
+		this.debugPaint = x;
+	}
+	
+	public boolean getDebugPaint() {
+		return this.debugPaint;
+	}
+	
 }
