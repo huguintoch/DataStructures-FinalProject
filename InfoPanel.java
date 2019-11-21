@@ -3,20 +3,24 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
+import java.util.Queue;
 
 public class InfoPanel extends JPanel {
 
-	public static final int WIDTH = 183,
-							HEIGHT = 600;
+	public static final int WIDTH = 200,
+							HEIGHT = 680;
 	
 	private JLabel money,
 			       level;
 	
 	private JButton btnCollector;
 	private JButton btnTurrets;
+	private JButton btnConstructors;
 	
 	private List<Collector> listCollectors;
 	private List<Turret> listTurrets;
+	
+	private Cola queueConstructors;
 	
 	public InfoPanel() {
 		super();
@@ -54,6 +58,17 @@ public class InfoPanel extends JPanel {
 		} );
 		this.add(this.btnTurrets);
 		
+		this.btnConstructors = new JButton("C");
+		this.btnConstructors.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				queueConstructors.setVisible(true);
+			}
+			
+		} );
+		this.add(this.btnConstructors);
+		
 		
 	}
 	
@@ -80,5 +95,25 @@ public class InfoPanel extends JPanel {
 	public void sendDeadTurret(Turret e) {
 		this.listTurrets.sendDead(e);
 	}
+	
+	public void sendConstructors(Queue<Constructor> constructors) {
+		this.queueConstructors = new Cola(constructors);
+	}
+	
+	public void sendType(int type) {
+		this.queueConstructors.sendType(type);
+	}
+	
+	public List<Collector> getCollectorList() {
+		return this.listCollectors;
+	}  
+	
+	public List<Turret> getTurretList() {
+		return this.listTurrets;
+	}  
+	
+	public Cola getQueue() {
+		return this.queueConstructors;
+	}  
 
 }
