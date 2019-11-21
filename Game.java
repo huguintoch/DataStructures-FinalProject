@@ -102,9 +102,6 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		this.addMouseMotionListener(this);;
 		
 		//Key Input
-		this.addKeyBinding(this, KeyEvent.VK_0, "DELETE", (e) -> {
-			state = 0;
-		});
 		this.addKeyBinding(this, KeyEvent.VK_1, "WALL", (e) -> {
 			state = 1;
 		});
@@ -255,7 +252,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 				g.fillRect(this.mousePos[0], this.mousePos[1], CELL_SIZE, CELL_SIZE);
 			}
 		} else if(this.state == 3) {
-			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && this.money >= TURRET_PRICE && (this.turrets.size() < this.maxTurrets)) {
+			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && this.money >= TURRET_PRICE && (this.turrets.size()+this.constructors.size() < this.maxTurrets)) {
 				g.setColor(Color.ORANGE);
 				g.drawRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
 				g.drawRect(this.mousePos[0], this.mousePos[1], CELL_SIZE, CELL_SIZE);
@@ -595,13 +592,13 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		//Base stats adjustment
 		if(this.base.getLevel() == 2) {
 			this.maxConstructors = 3;
-			this.maxCollectors = 4;
-			this.maxTurrets = 3;
+			this.maxCollectors = 3;
+			this.maxTurrets = 4;
 			this.baseUpdateCost = 1000;
 		}else if(this.base.getLevel() == 3) {
 			this.maxConstructors = 4;
 			this.maxCollectors = 6;
-			this.maxTurrets = 5;
+			this.maxTurrets = 6;
 		}
 
 	}
@@ -750,9 +747,9 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	public void mouseActions(MouseEvent e) {
 		int x = e.getX()/CELL_SIZE;
 		int y = e.getY()/CELL_SIZE;
-
-		switch (this.state) {
-		case 0:
+		
+		if(e.getButton() == MouseEvent.BUTTON3) {
+			this.state = 0;
 			if(grid[x][y] == -3) {
 				Collector dead = null;
 				int[] current = {x, y};
@@ -783,53 +780,57 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 				this.walls.remove(grid[x][y]);
 				this.grid[x][y] = 0;
 			}
-			break;
-		case 1:
-			if(x < COLS && y < ROWS) {
-				if(this.money >= WALL_PRICE) {
-					if(grid[x][y] == 0) {
-						this.walls.put(Integer.valueOf(this.wallCounter), new Wall(this.wallCounter, x, y, this));
-						this.wallCounter++;
-						this.money -= WALL_PRICE;
+		} else {
+			switch (this.state) {
+			case 0:
+				break;
+			case 1:
+				if(x < COLS && y < ROWS) {
+					if(this.money >= WALL_PRICE) {
+						if(grid[x][y] == 0) {
+							this.walls.put(Integer.valueOf(this.wallCounter), new Wall(this.wallCounter, x, y, this));
+							this.wallCounter++;
+							this.money -= WALL_PRICE;
+						}
 					}
-				}
 
-			}
-			break;
-		case 2:
-			if(x < COLS && y < ROWS) {
-				if(this.collectors.size() == 0 && this.constructors.size() == 0) {
-					if(grid[x][y] == 0) {
-						if(this.constructors.size() < this.maxConstructors) {
-							this.constructors.add(new Constructor(x, y, 1, this, true));
-							this.info.sendType(1);
+				}
+				break;
+			case 2:
+				if(x < COLS && y < ROWS) {
+					if(this.collectors.size() == 0 && this.constructors.size() == 0) {
+						if(grid[x][y] == 0) {
+							if(this.constructors.size() < this.maxConstructors) {
+								this.constructors.add(new Constructor(x, y, 1, this, true));
+								this.info.sendType(1);
+							}
+						}
+					} else if(this.money >= COLLECTOR_PRICE && this.collectors.size()+this.constructors.size() < this.maxCollectors){
+						if(grid[x][y] == 0) {
+							if(this.constructors.size() < this.maxConstructors) {
+								this.constructors.add(new Constructor(x, y, 1, this, true));
+								this.info.sendType(1);
+								this.money -= COLLECTOR_PRICE;
+							}
 						}
 					}
-				} else if(this.money >= COLLECTOR_PRICE && this.collectors.size()+this.constructors.size() < this.maxCollectors){
+					
+				}
+				break;
+			case 3:
+				if(this.money >= TURRET_PRICE && this.turrets.size()+this.constructors.size() < this.maxTurrets) {
 					if(grid[x][y] == 0) {
 						if(this.constructors.size() < this.maxConstructors) {
-							this.constructors.add(new Constructor(x, y, 1, this, true));
-							this.info.sendType(1);
-							this.money -= COLLECTOR_PRICE;
-						}
+							this.constructors.add(new Constructor(x, y, 2, this, true));
+							this.info.sendType(2);
+							this.money -= TURRET_PRICE;
+						}		
 					}
 				}
-				
+				break;	
+			default:
+				break;
 			}
-			break;
-		case 3:
-			if(this.money >= TURRET_PRICE && this.turrets.size()+this.constructors.size() < this.maxTurrets) {
-				if(grid[x][y] == 0) {
-					if(this.constructors.size() < this.maxConstructors) {
-						this.constructors.add(new Constructor(x, y, 2, this, true));
-						this.info.sendType(2);
-						this.money -= TURRET_PRICE;
-					}		
-				}
-			}
-			break;	
-		default:
-			break;
 		}
 	}
 
