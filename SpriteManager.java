@@ -19,7 +19,19 @@ public class SpriteManager {
 			        		 new ImageIcon("virus2.png").getImage(),
 			        		 new ImageIcon("virus3.png").getImage(),
 			        		 new ImageIcon("virus4.png").getImage(),
-			        		 new ImageIcon("virus5.png").getImage()};
+			        		 new ImageIcon("virus5.png").getImage()},
+			        wallPanel = {new ImageIcon("wall_panel.png").getImage()},
+			        collectorPanel = {new ImageIcon("collector_panel_1.png").getImage(),
+			        		  		  new ImageIcon("collector_panel_2.png").getImage(),
+			        		  		  new ImageIcon("collector_panel_3.png").getImage()},
+			        turretPanel = {new ImageIcon("turret_panel_1.png").getImage(),
+			        		  	   new ImageIcon("turret_panel_2.png").getImage(),
+			        		  	   new ImageIcon("turret_panel_3.png").getImage()},
+			        basePanel = {new ImageIcon("base_panel_1.png").getImage(),
+				        		 new ImageIcon("base_panel_2.png").getImage()},
+			        curePanel = {new ImageIcon("cure_panel_1.png").getImage(),
+				        		 new ImageIcon("cure_panel_s.png").getImage()};
+			        
 
 	private Image resource,
 				  terrain,
@@ -67,5 +79,45 @@ public class SpriteManager {
 	
 	public Image[] getGridSprite() {
 		return this.grid;
+	}
+
+	public Image[] getWallPanel() {
+		return wallPanel;
+	}
+
+	public void setWallPanel(Image[] wallPanel) {
+		this.wallPanel = wallPanel;
+	}
+
+	public Image[] getCollectorPanel() {
+		return collectorPanel;
+	}
+
+	public void setCollectorPanel(Image[] collectorPanel) {
+		this.collectorPanel = collectorPanel;
+	}
+
+	public Image[] getTurretPanel() {
+		return turretPanel;
+	}
+
+	public void setTurretPanel(Image[] turretPanel) {
+		this.turretPanel = turretPanel;
+	}
+
+	public Image[] getBasePanel() {
+		return basePanel;
+	}
+
+	public void setBasePanel(Image[] basePanel) {
+		this.basePanel = basePanel;
+	}
+
+	public Image[] getCurePanel() {
+		return curePanel;
+	}
+
+	public void setCurePanel(Image[] curePanel) {
+		this.curePanel = curePanel;
 	}
 }
