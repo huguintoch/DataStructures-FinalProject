@@ -747,6 +747,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	public void mouseActions(MouseEvent e) {
 		int x = e.getX()/CELL_SIZE;
 		int y = e.getY()/CELL_SIZE;
+		int constructorNum = 0;
 		
 		if(e.getButton() == MouseEvent.BUTTON3) {
 			this.state = 0;
@@ -797,6 +798,11 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 				}
 				break;
 			case 2:
+				for(Constructor c : this.constructors) {
+					if(c.getType() == 1) {
+						constructorNum++;
+					}
+				}
 				if(x < COLS && y < ROWS) {
 					if(this.collectors.size() == 0 && this.constructors.size() == 0) {
 						if(grid[x][y] == 0) {
@@ -805,7 +811,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 								this.info.sendType(1);
 							}
 						}
-					} else if(this.money >= COLLECTOR_PRICE && this.collectors.size()+this.constructors.size() < this.maxCollectors){
+					} else if(this.money >= COLLECTOR_PRICE && this.collectors.size()+constructorNum < this.maxCollectors){
 						if(grid[x][y] == 0) {
 							if(this.constructors.size() < this.maxConstructors) {
 								this.constructors.add(new Constructor(x, y, 1, this, true));
@@ -818,7 +824,12 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 				}
 				break;
 			case 3:
-				if(this.money >= TURRET_PRICE && this.turrets.size()+this.constructors.size() < this.maxTurrets) {
+				for(Constructor c : this.constructors) {
+					if(c.getType() != 1) {
+						constructorNum++;
+					}
+				}
+				if(this.money >= TURRET_PRICE && this.turrets.size()+constructorNum < this.maxTurrets) {
 					if(grid[x][y] == 0) {
 						if(this.constructors.size() < this.maxConstructors) {
 							this.constructors.add(new Constructor(x, y, 2, this, true));
