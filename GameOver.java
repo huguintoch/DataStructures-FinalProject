@@ -24,14 +24,14 @@ private JButton btnStart;
 		super("Moon Defender");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
+		this.audio = new Sound("EndSound.wav");
+		
 		this.add(new GameOverPanel(this), BorderLayout.CENTER);
 		
 		this.pack();
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		this.setResizable(false);
-		
-		this.audio = new Sound("EndSound.wav");
 	}
 	
 	public Sound getAudio() {

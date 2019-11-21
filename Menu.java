@@ -16,6 +16,7 @@ public class Menu extends JFrame {
 		super("Moon Defender");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
+		this.audio = new Sound("MenuSound.wav");
 
 		this.add(new MenuPanel(this), BorderLayout.CENTER);
 		
@@ -23,8 +24,6 @@ public class Menu extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		this.setResizable(false);
-		
-		this.audio = new Sound("MenuSound.wav");
 	}
 	
 	public Sound getAudio() {

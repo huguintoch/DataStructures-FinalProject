@@ -66,6 +66,8 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		super();
 		this.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
 		this.DELAY = 50;
+		
+		this.audio = new Sound("GameSound.wav");
 
 		this.maxConstructors = 2;
 		this.maxTurrets = 3;
@@ -133,8 +135,6 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	    
 	    this.spriteManager = new SpriteManager();
 	    this.debugPaint = false;
-	    
-	    this.audio = new Sound("GameSound.wav");
 	}
 	
 	private void addKeyBinding(JComponent comp, int keyCode, String id, ActionListener act) {
@@ -451,40 +451,43 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	}
 	
 	private void paintContour(Graphics g) {
-		if(this.state == 1) {
-			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && this.money >= WALL_PRICE) {
-				g.drawImage(this.spriteManager.getWallSprite()[1],this.mousePos[0], this.mousePos[1], this);
-			} else {
-				g.drawImage(this.spriteManager.getWallSprite()[2],this.mousePos[0], this.mousePos[1], this);
+		try {
+			if(this.state == 1) {
+				if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && this.money >= WALL_PRICE) {
+					g.drawImage(this.spriteManager.getWallSprite()[1],this.mousePos[0], this.mousePos[1], this);
+				} else {
+					g.drawImage(this.spriteManager.getWallSprite()[2],this.mousePos[0], this.mousePos[1], this);
+				}
+			} else if(this.state == 2) {
+				if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && (this.money >= COLLECTOR_PRICE || this.collectors.size() == 0 && this.constructors.size() == 0) && (this.collectors.size()+this.constructors.size() < this.maxCollectors)) {
+					g.setColor(Color.GREEN);
+					g.drawRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
+					g.setColor(new Color(0,255,0,50));
+					g.fillRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
+					g.drawImage(this.spriteManager.getCollectorSprite()[0],this.mousePos[0], this.mousePos[1], this);
+				} else {
+					g.setColor(Color.RED);
+					g.drawRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
+					g.setColor(new Color(255,0,0,50));
+					g.fillRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
+					g.drawImage(this.spriteManager.getCollectorSprite()[2],this.mousePos[0], this.mousePos[1], this);
+				}
+			} else if(this.state == 3) {
+				if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && this.money >= TURRET_PRICE && (this.turrets.size() < this.maxTurrets)) {
+					g.setColor(Color.GREEN);
+					g.drawRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
+					g.setColor(new Color(0,255,0,50));
+					g.fillRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
+					g.drawImage(this.spriteManager.getTurretSprite()[1],this.mousePos[0], this.mousePos[1], this);
+				} else {
+					g.setColor(Color.RED);
+					g.drawRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
+					g.setColor(new Color(255,0,0,50));
+					g.fillRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
+					g.drawImage(this.spriteManager.getTurretSprite()[2],this.mousePos[0], this.mousePos[1], this);
+				}
 			}
-		} else if(this.state == 2) {
-			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && (this.money >= COLLECTOR_PRICE || this.collectors.size() == 0 && this.constructors.size() == 0) && (this.collectors.size()+this.constructors.size() < this.maxCollectors)) {
-				g.setColor(Color.GREEN);
-				g.drawRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
-				g.setColor(new Color(0,255,0,50));
-				g.fillRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
-				g.drawImage(this.spriteManager.getCollectorSprite()[0],this.mousePos[0], this.mousePos[1], this);
-			} else {
-				g.setColor(Color.RED);
-				g.drawRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
-				g.setColor(new Color(255,0,0,50));
-				g.fillRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
-				g.drawImage(this.spriteManager.getCollectorSprite()[2],this.mousePos[0], this.mousePos[1], this);
-			}
-		} else if(this.state == 3) {
-			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && this.money >= TURRET_PRICE && (this.turrets.size() < this.maxTurrets)) {
-				g.setColor(Color.GREEN);
-				g.drawRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
-				g.setColor(new Color(0,255,0,50));
-				g.fillRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
-				g.drawImage(this.spriteManager.getTurretSprite()[1],this.mousePos[0], this.mousePos[1], this);
-			} else {
-				g.setColor(Color.RED);
-				g.drawRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
-				g.setColor(new Color(255,0,0,50));
-				g.fillRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
-				g.drawImage(this.spriteManager.getTurretSprite()[2],this.mousePos[0], this.mousePos[1], this);
-			}
+		} catch (ArrayIndexOutOfBoundsException e) {
 		}
 	}
 	
