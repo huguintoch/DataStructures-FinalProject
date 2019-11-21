@@ -93,11 +93,11 @@ public class Constructor implements Runnable {
 					animIndex = 0;
 				}
 				
-				if(cont%10 == 0) {
+				if(cont%30 == 0) {
 					this.progressBar+=2;
 				}
 				
-				if(cont%100 == 0 && !this.done) {
+				if(cont%300 == 0 && !this.done) {
 					this.done = true;
 					if(type == 1) {
 						this.game.addCollector(new Collector(this.x, this.y, game));
