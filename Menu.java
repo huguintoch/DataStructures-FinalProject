@@ -10,10 +10,13 @@ public class Menu extends JFrame {
 	
 	private JPanel panel;
 	
+	private Sound audio;
+	
 	public Menu() {
 		super("Moon Defender");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
+		this.audio = new Sound("MenuSound.wav");
 
 		this.add(new MenuPanel(this), BorderLayout.CENTER);
 		
@@ -21,6 +24,10 @@ public class Menu extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		this.setResizable(false);
+	}
+	
+	public Sound getAudio() {
+		return this.audio;
 	}
 	
 	public static void main(String[] args) {
@@ -48,6 +55,7 @@ class MenuPanel extends JPanel {
 		 this.start.addMouseListener(new MouseAdapter() {
 			 @Override
 			 public void mouseClicked(MouseEvent e) {
+				 menu.getAudio().endSound();
 				 Window w = new Window();
 				 w.setLocation(menu.getLocationOnScreen().x, menu.getLocationOnScreen().y);
 				 menu.dispose();
