@@ -40,7 +40,15 @@ public class SpriteManager {
 				        		 new ImageIcon("base_panel_2_s.png").getImage(),
 				        		 new ImageIcon("base_panel_3.png").getImage()},
 			        curePanel = {new ImageIcon("cure_panel_1.png").getImage(),
-				        		 new ImageIcon("cure_panel_1s.png").getImage()};
+				        		 new ImageIcon("cure_panel_1s.png").getImage()},
+			        btnCollectors = {new ImageIcon("btnCollector.png").getImage(), 
+			                		new ImageIcon("btnCollectorS.png").getImage()},
+			        btnTurrets = {new ImageIcon("btnTurrets.png").getImage(), 
+			                		new ImageIcon("btnTurretsS.png").getImage()},
+			        btnConstructor = {new ImageIcon("btnConstructor.png").getImage(), 
+					                new ImageIcon("btnConstructorS.png").getImage()},
+			        btnDebug = {new ImageIcon("btnDebug.png").getImage(), 
+			    			        new ImageIcon("btnDebugS.png").getImage()};
 			        
 
 	private Image resource,
@@ -95,39 +103,36 @@ public class SpriteManager {
 		return wallPanel;
 	}
 
-	public void setWallPanel(Image[] wallPanel) {
-		this.wallPanel = wallPanel;
-	}
-
 	public Image[] getCollectorPanel() {
 		return collectorPanel;
-	}
-
-	public void setCollectorPanel(Image[] collectorPanel) {
-		this.collectorPanel = collectorPanel;
 	}
 
 	public Image[] getTurretPanel() {
 		return turretPanel;
 	}
 
-	public void setTurretPanel(Image[] turretPanel) {
-		this.turretPanel = turretPanel;
-	}
-
 	public Image[] getBasePanel() {
 		return basePanel;
-	}
-
-	public void setBasePanel(Image[] basePanel) {
-		this.basePanel = basePanel;
 	}
 
 	public Image[] getCurePanel() {
 		return curePanel;
 	}
 
-	public void setCurePanel(Image[] curePanel) {
-		this.curePanel = curePanel;
+	public Image[] getBtnCollectors() {
+		return btnCollectors;
 	}
+
+	public Image[] getBtnTurrets() {
+		return btnTurrets;
+	}
+
+	public Image[] getBtnConstructor() {
+		return btnConstructor;
+	}
+
+	public Image[] getBtnDebug() {
+		return btnDebug;
+	}
+
 }
