@@ -638,6 +638,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
                 this.updateStats();
 
                 this.info.updateMoney(this.money);
+                this.info.update(this.base.getLevel(), this.state);
 
                 LinkedList<Turret> deadTurrets = new LinkedList<>();
                 for(Turret t : this.turrets) {

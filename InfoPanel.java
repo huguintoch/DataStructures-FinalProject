@@ -1,10 +1,7 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -75,10 +72,10 @@ public class InfoPanel extends JPanel {
 		this.add(info);
 		
 		//Item labels
-		this.wallLabel = new JLabel(new ImageIcon(this.spriteManager.getWallPanel()[0]));
+		this.wallLabel = new JLabel(new ImageIcon(this.spriteManager.getWallPanel()[1]));
 		this.collectorLabel = new JLabel(new ImageIcon(this.spriteManager.getCollectorPanel()[0]));
-		this.turretLabel = new JLabel(new ImageIcon(this.spriteManager.getTurretPanel()[0]));
-		this.baseLabel = new JLabel(new ImageIcon(this.spriteManager.getBasePanel()[0]));
+		this.turretLabel = new JLabel(new ImageIcon(this.spriteManager.getTurretPanel()[1]));
+		this.baseLabel = new JLabel(new ImageIcon(this.spriteManager.getBasePanel()[1]));
 		this.cureLabel = new JLabel(new ImageIcon(this.spriteManager.getCurePanel()[0]));
 		
 		this.add(wallLabel);
@@ -130,6 +127,95 @@ public class InfoPanel extends JPanel {
 		
 		this.add(structures);
 		
+	}
+	
+	public void update(int level, int state) {
+		if(level == 1){
+			switch (state) {
+			case 1:
+				this.wallLabel.setIcon(new ImageIcon(spriteManager.getWallPanel()[1]));
+				this.collectorLabel.setIcon(new ImageIcon(spriteManager.getCollectorPanel()[0]));
+				this.turretLabel.setIcon(new ImageIcon(spriteManager.getTurretPanel()[0]));
+				this.baseLabel.setIcon(new ImageIcon(spriteManager.getBasePanel()[0]));
+				break;
+			case 2:
+				this.wallLabel.setIcon(new ImageIcon(spriteManager.getWallPanel()[0]));
+				this.collectorLabel.setIcon(new ImageIcon(spriteManager.getCollectorPanel()[1]));
+				this.turretLabel.setIcon(new ImageIcon(spriteManager.getTurretPanel()[0]));
+				this.baseLabel.setIcon(new ImageIcon(spriteManager.getBasePanel()[0]));
+				break;
+			case 3:
+				this.wallLabel.setIcon(new ImageIcon(spriteManager.getWallPanel()[0]));
+				this.collectorLabel.setIcon(new ImageIcon(spriteManager.getCollectorPanel()[0]));
+				this.turretLabel.setIcon(new ImageIcon(spriteManager.getTurretPanel()[1]));
+				this.baseLabel.setIcon(new ImageIcon(spriteManager.getBasePanel()[0]));
+				break;
+			case 4:
+				this.wallLabel.setIcon(new ImageIcon(spriteManager.getWallPanel()[0]));
+				this.collectorLabel.setIcon(new ImageIcon(spriteManager.getCollectorPanel()[0]));
+				this.turretLabel.setIcon(new ImageIcon(spriteManager.getTurretPanel()[0]));
+				this.baseLabel.setIcon(new ImageIcon(spriteManager.getBasePanel()[1]));
+				break;
+			default:
+				break;
+			}
+		}else if(level == 2) {
+			switch (state) {
+			case 1:
+				this.wallLabel.setIcon(new ImageIcon(spriteManager.getWallPanel()[1]));
+				this.collectorLabel.setIcon(new ImageIcon(spriteManager.getCollectorPanel()[2]));
+				this.turretLabel.setIcon(new ImageIcon(spriteManager.getTurretPanel()[2]));
+				this.baseLabel.setIcon(new ImageIcon(spriteManager.getBasePanel()[2]));
+				break;
+			case 2:
+				this.wallLabel.setIcon(new ImageIcon(spriteManager.getWallPanel()[0]));
+				this.collectorLabel.setIcon(new ImageIcon(spriteManager.getCollectorPanel()[3]));
+				this.turretLabel.setIcon(new ImageIcon(spriteManager.getTurretPanel()[2]));
+				this.baseLabel.setIcon(new ImageIcon(spriteManager.getBasePanel()[2]));
+				break;
+			case 3:
+				this.wallLabel.setIcon(new ImageIcon(spriteManager.getWallPanel()[0]));
+				this.collectorLabel.setIcon(new ImageIcon(spriteManager.getCollectorPanel()[2]));
+				this.turretLabel.setIcon(new ImageIcon(spriteManager.getTurretPanel()[3]));
+				this.baseLabel.setIcon(new ImageIcon(spriteManager.getBasePanel()[2]));
+				break;
+			case 4:
+				this.wallLabel.setIcon(new ImageIcon(spriteManager.getWallPanel()[0]));
+				this.collectorLabel.setIcon(new ImageIcon(spriteManager.getCollectorPanel()[2]));
+				this.turretLabel.setIcon(new ImageIcon(spriteManager.getTurretPanel()[2]));
+				this.baseLabel.setIcon(new ImageIcon(spriteManager.getBasePanel()[3]));
+				break;
+			default:
+				break;
+			}
+		}else {
+			this.cureLabel.setIcon(new ImageIcon(spriteManager.getCurePanel()[1]));
+			this.baseLabel.setIcon(new ImageIcon(spriteManager.getBasePanel()[4]));
+			switch (state) {
+			case 1:
+				this.wallLabel.setIcon(new ImageIcon(spriteManager.getWallPanel()[1]));
+				this.collectorLabel.setIcon(new ImageIcon(spriteManager.getCollectorPanel()[4]));
+				this.turretLabel.setIcon(new ImageIcon(spriteManager.getTurretPanel()[4]));
+				break;
+			case 2:
+				this.wallLabel.setIcon(new ImageIcon(spriteManager.getWallPanel()[0]));
+				this.collectorLabel.setIcon(new ImageIcon(spriteManager.getCollectorPanel()[5]));
+				this.turretLabel.setIcon(new ImageIcon(spriteManager.getTurretPanel()[4]));
+				break;
+			case 3:
+				this.wallLabel.setIcon(new ImageIcon(spriteManager.getWallPanel()[0]));
+				this.collectorLabel.setIcon(new ImageIcon(spriteManager.getCollectorPanel()[4]));
+				this.turretLabel.setIcon(new ImageIcon(spriteManager.getTurretPanel()[5]));
+				break;
+			case 4:
+				this.wallLabel.setIcon(new ImageIcon(spriteManager.getWallPanel()[0]));
+				this.collectorLabel.setIcon(new ImageIcon(spriteManager.getCollectorPanel()[4]));
+				this.turretLabel.setIcon(new ImageIcon(spriteManager.getTurretPanel()[4]));
+				break;
+			default:
+				break;
+			}
+		}
 	}
 	
 	public void updateMoney(int money) {
