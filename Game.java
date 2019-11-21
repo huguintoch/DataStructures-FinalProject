@@ -75,7 +75,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		this.baseUpdateCost = 500;
 
 		this.state = 2;
-		this.money = 1000;
+		this.money = 0;
 		this.wallCounter = 1;
 
 		this.mousePos = new int[2];
@@ -355,7 +355,6 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	private void paintTurretsDebug(Graphics g) {
 		int x, y;
 		int[] pos;
-
 		for(Turret t : this.turrets) {
 			t.paintCollectorArea(g);
 			pos = t.getPos();
