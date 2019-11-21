@@ -60,6 +60,8 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	
 	private Window window;
 	
+	private Sound audio;
+	
 	public Game(InfoPanel info, Window window) {
 		super();
 		this.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
@@ -71,7 +73,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		this.baseUpdateCost = 500;
 
 		this.state = 2;
-		this.money = 1000;
+		this.money = 0;
 		this.wallCounter = 1;
 
 		this.mousePos = new int[2];
@@ -118,8 +120,10 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 				this.info.updateLevel(this.base.getLevel());
 			}
 		});
-		this.addKeyBinding(this, KeyEvent.VK_5, "DEBUG", (e) -> {
-			this.virusSpawner.setLife(-100);
+		this.addKeyBinding(this, KeyEvent.VK_5, "WIN", (e) -> {
+			if(this.money >= 2000) {
+				this.virusSpawner.setLife(-100);
+			}
 		});
 		
 		this.window = window;
@@ -129,6 +133,8 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	    
 	    this.spriteManager = new SpriteManager();
 	    this.debugPaint = false;
+	    
+	    this.audio = new Sound("GameSound.wav");
 	}
 	
 	private void addKeyBinding(JComponent comp, int keyCode, String id, ActionListener act) {
@@ -575,6 +581,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		if(this.virusSpawner.getLife() <= 0) {
 			FinalScreen fs = new FinalScreen();
 			fs.setLocation(this.window.getLocationOnScreen().x, this.window.getLocationOnScreen().y);
+			this.audio.endSound();
 			this.window.dispose();
 			this.info.getCollectorList().dispose();
 			this.info.getTurretList().dispose();
@@ -690,6 +697,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 				if(this.gameOver) {
 					GameOver gm = new GameOver();
 					gm.setLocation(this.window.getLocationOnScreen().x, this.window.getLocationOnScreen().y);
+					this.audio.endSound();
 					this.window.dispose();
 					this.info.getCollectorList().dispose();
 					this.info.getTurretList().dispose();
