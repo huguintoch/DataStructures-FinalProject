@@ -18,9 +18,13 @@ private JButton btnStart;
 	
 	private JPanel panel;
 	
+	private Sound audio;
+	
 	public GameOver() {
 		super("Moon Defender");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		this.audio = new Sound("EndSound.wav");
 		
 		this.add(new GameOverPanel(this), BorderLayout.CENTER);
 		
@@ -30,8 +34,8 @@ private JButton btnStart;
 		this.setResizable(false);
 	}
 	
-	public static void main(String[] args) {
-		Menu m = new Menu();
+	public Sound getAudio() {
+		return this.audio;
 	}
 
 }
@@ -56,6 +60,7 @@ class GameOverPanel extends JPanel {
 			 @Override
 			 public void mouseClicked(MouseEvent e) {
 				 Window w = new Window();
+				 gm.getAudio().endSound();
 				 w.setLocation(gm.getLocationOnScreen().x, gm.getLocationOnScreen().y);
 				 gm.dispose();
 			 }

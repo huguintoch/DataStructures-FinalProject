@@ -205,7 +205,7 @@ public class Turret implements Runnable {
 				Thread.sleep(sleep);
 				cont++;
 				int[] cell = {this.x, this.y};
-				if(cont%30 == 0) {
+				if(cont%20 == 0) {
 					cont = 0;
 					if(game.getGrid(cell) == -5) {
 						this.shoot(this.game);

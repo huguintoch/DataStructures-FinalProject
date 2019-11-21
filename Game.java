@@ -60,10 +60,14 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	
 	private Window window;
 	
+	private Sound audio;
+	
 	public Game(InfoPanel info, Window window) {
 		super();
 		this.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
 		this.DELAY = 50;
+		
+		this.audio = new Sound("GameSound.wav");
 
 		this.maxConstructors = 2;
 		this.maxTurrets = 3;
@@ -71,7 +75,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		this.baseUpdateCost = 500;
 
 		this.state = 2;
-		this.money = 1000;
+		this.money = 0;
 		this.wallCounter = 1;
 
 		this.mousePos = new int[2];
@@ -118,8 +122,10 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 				this.info.updateLevel(this.base.getLevel());
 			}
 		});
-		this.addKeyBinding(this, KeyEvent.VK_5, "DEBUG", (e) -> {
-			this.virusSpawner.setLife(-100);
+		this.addKeyBinding(this, KeyEvent.VK_5, "WIN", (e) -> {
+			if(this.money >= 2000) {
+				this.virusSpawner.setLife(-100);
+			}
 		});
 		
 		this.window = window;
@@ -445,40 +451,43 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 	}
 	
 	private void paintContour(Graphics g) {
-		if(this.state == 1) {
-			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && this.money >= WALL_PRICE) {
-				g.drawImage(this.spriteManager.getWallSprite()[1],this.mousePos[0], this.mousePos[1], this);
-			} else {
-				g.drawImage(this.spriteManager.getWallSprite()[2],this.mousePos[0], this.mousePos[1], this);
+		try {
+			if(this.state == 1) {
+				if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && this.money >= WALL_PRICE) {
+					g.drawImage(this.spriteManager.getWallSprite()[1],this.mousePos[0], this.mousePos[1], this);
+				} else {
+					g.drawImage(this.spriteManager.getWallSprite()[2],this.mousePos[0], this.mousePos[1], this);
+				}
+			} else if(this.state == 2) {
+				if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && (this.money >= COLLECTOR_PRICE || this.collectors.size() == 0 && this.constructors.size() == 0) && (this.collectors.size()+this.constructors.size() < this.maxCollectors)) {
+					g.setColor(Color.GREEN);
+					g.drawRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
+					g.setColor(new Color(0,255,0,50));
+					g.fillRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
+					g.drawImage(this.spriteManager.getCollectorSprite()[0],this.mousePos[0], this.mousePos[1], this);
+				} else {
+					g.setColor(Color.RED);
+					g.drawRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
+					g.setColor(new Color(255,0,0,50));
+					g.fillRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
+					g.drawImage(this.spriteManager.getCollectorSprite()[2],this.mousePos[0], this.mousePos[1], this);
+				}
+			} else if(this.state == 3) {
+				if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && this.money >= TURRET_PRICE && (this.turrets.size() < this.maxTurrets)) {
+					g.setColor(Color.GREEN);
+					g.drawRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
+					g.setColor(new Color(0,255,0,50));
+					g.fillRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
+					g.drawImage(this.spriteManager.getTurretSprite()[1],this.mousePos[0], this.mousePos[1], this);
+				} else {
+					g.setColor(Color.RED);
+					g.drawRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
+					g.setColor(new Color(255,0,0,50));
+					g.fillRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
+					g.drawImage(this.spriteManager.getTurretSprite()[2],this.mousePos[0], this.mousePos[1], this);
+				}
 			}
-		} else if(this.state == 2) {
-			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && (this.money >= COLLECTOR_PRICE || this.collectors.size() == 0 && this.constructors.size() == 0) && (this.collectors.size()+this.constructors.size() < this.maxCollectors)) {
-				g.setColor(Color.GREEN);
-				g.drawRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
-				g.setColor(new Color(0,255,0,50));
-				g.fillRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
-				g.drawImage(this.spriteManager.getCollectorSprite()[0],this.mousePos[0], this.mousePos[1], this);
-			} else {
-				g.setColor(Color.RED);
-				g.drawRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
-				g.setColor(new Color(255,0,0,50));
-				g.fillRect(this.mousePos[0]-2*CELL_SIZE, this.mousePos[1]-2*CELL_SIZE, CELL_SIZE*5, CELL_SIZE*5);
-				g.drawImage(this.spriteManager.getCollectorSprite()[2],this.mousePos[0], this.mousePos[1], this);
-			}
-		} else if(this.state == 3) {
-			if(grid[this.mousePos[0]/20][this.mousePos[1]/20] == 0 && this.money >= TURRET_PRICE && (this.turrets.size() < this.maxTurrets)) {
-				g.setColor(Color.GREEN);
-				g.drawRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
-				g.setColor(new Color(0,255,0,50));
-				g.fillRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
-				g.drawImage(this.spriteManager.getTurretSprite()[1],this.mousePos[0], this.mousePos[1], this);
-			} else {
-				g.setColor(Color.RED);
-				g.drawRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
-				g.setColor(new Color(255,0,0,50));
-				g.fillRect(this.mousePos[0]-3*CELL_SIZE, this.mousePos[1]-3*CELL_SIZE, CELL_SIZE*7, CELL_SIZE*7);
-				g.drawImage(this.spriteManager.getTurretSprite()[2],this.mousePos[0], this.mousePos[1], this);
-			}
+		} catch (ArrayIndexOutOfBoundsException e) {
 		}
 	}
 	
@@ -575,6 +584,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		if(this.virusSpawner.getLife() <= 0) {
 			FinalScreen fs = new FinalScreen();
 			fs.setLocation(this.window.getLocationOnScreen().x, this.window.getLocationOnScreen().y);
+			this.audio.endSound();
 			this.window.dispose();
 			this.info.getCollectorList().dispose();
 			this.info.getTurretList().dispose();
@@ -690,6 +700,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 				if(this.gameOver) {
 					GameOver gm = new GameOver();
 					gm.setLocation(this.window.getLocationOnScreen().x, this.window.getLocationOnScreen().y);
+					this.audio.endSound();
 					this.window.dispose();
 					this.info.getCollectorList().dispose();
 					this.info.getTurretList().dispose();
