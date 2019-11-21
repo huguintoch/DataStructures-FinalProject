@@ -591,12 +591,12 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 
 		//Base stats adjustment
 		if(this.base.getLevel() == 2) {
-			//this.maxConstructors = 3;
+			this.maxConstructors = 3;
 			this.maxCollectors = 5;
 			this.maxTurrets = 6;
 			this.baseUpdateCost = 1000;
 		}else if(this.base.getLevel() == 3) {
-			//this.maxConstructors = 4;
+			this.maxConstructors = 4;
 			this.maxCollectors = 7;
 			this.maxTurrets = 9;
 		}
