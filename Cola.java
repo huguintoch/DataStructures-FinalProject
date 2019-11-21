@@ -31,19 +31,23 @@ public class Cola extends JFrame implements Runnable {
 	}
 	
 	public void paint(Graphics g) {
-		super.paint(g);
-		g.drawLine(150, 150, 250, 150);
-		g.drawLine(150, 150, 150, 50);
-		g.drawLine(250, 150, 250, 50);
-		for(QueueElement e : this.elements) {
-			e.paintElement(g);
+		try {
+			super.paint(g);
+			g.drawLine(150, 150, 250, 150);
+			g.drawLine(150, 150, 150, 50);
+			g.drawLine(250, 150, 250, 50);
+			for(QueueElement e : this.elements) {
+				e.paintElement(g);
+			}
+			for(QueueElement e : this.endElements) {
+				e.paintElement(g);
+			}
+			g.setColor(Color.black);
+			g.drawString("Added to collectors", 50, 250);
+			g.drawString("Added to turrets", 250, 250);
+		} catch (ConcurrentModificationException e) {
 		}
-		for(QueueElement e : this.endElements) {
-			e.paintElement(g);
-		}
-		g.setColor(Color.black);
-		g.drawString("Added to collectors", 50, 250);
-		g.drawString("Added to turrets", 250, 250);
+		
 	}
 	
 	public void update() {
