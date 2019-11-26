@@ -78,7 +78,7 @@ public class Game extends JPanel implements Runnable, MouseListener, MouseMotion
 		this.baseUpdateCost = 500;
 
 		this.state = 2;
-		this.money = 1000;
+		this.money = 0;
 		this.wallCounter = 1;
 
 		this.mousePos = new int[2];
