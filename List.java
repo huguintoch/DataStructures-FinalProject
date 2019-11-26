@@ -1,3 +1,6 @@
+//Autores: Guillermo Tanamachi A01631327 & Hugo Valdez A01631301
+//Fecha: 25/11/2019
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedList;
@@ -120,7 +123,7 @@ public class List <E> extends JFrame implements Runnable {
 			timeDiff = System.currentTimeMillis() - beforeTime;
             sleep = this.DELAY - timeDiff;
             if (sleep < 0) {
-                sleep = 2;
+                sleep = 10;
             }
 
             try {

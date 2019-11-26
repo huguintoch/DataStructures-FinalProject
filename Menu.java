@@ -1,3 +1,6 @@
+//Autores: Guillermo Tanamachi A01631327 & Hugo Valdez A01631301
+//Fecha: 25/11/2019
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.*;
@@ -37,7 +40,7 @@ public class Menu extends JFrame {
 }
 
 class MenuPanel extends JPanel {
-	 private MyButton start;
+	 private JButton start;
 	 private Image background = new ImageIcon("Menu.png").getImage();
 	 private Image btnImage = new ImageIcon("btn_start.png").getImage();
 	 private Image btnImageIn = new ImageIcon("btn_start_0.png").getImage();
@@ -49,9 +52,11 @@ class MenuPanel extends JPanel {
 		 this.setPreferredSize(new Dimension(1000,680));
 		 this.setLayout(null);
 		 
-		 this.start = new MyButton(this.btnImage, this.width, this.height);
+		 this.start = new JButton(new ImageIcon("btn_start.png"));
 		 this.start.setBounds(220, 420, this.width, this.height);
-		 
+		 this.start.setBackground(new Color(6,13,14));
+		 this.start.setBorderPainted(false);
+		 this.start.setRolloverIcon(new ImageIcon("btn_start_0.png"));
 		 this.start.addMouseListener(new MouseAdapter() {
 			 @Override
 			 public void mouseClicked(MouseEvent e) {
@@ -59,16 +64,6 @@ class MenuPanel extends JPanel {
 				 Window w = new Window();
 				 w.setLocation(menu.getLocationOnScreen().x, menu.getLocationOnScreen().y);
 				 menu.dispose();
-			 }
-
-			 @Override
-			 public void mouseEntered(MouseEvent e) {
-				 start.setImage(btnImageIn);
-			 }
-
-			 @Override
-			 public void mouseExited(MouseEvent e) {
-				 start.setImage(btnImage);
 			 }
 		 });
 		 

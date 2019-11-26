@@ -1,3 +1,6 @@
+//Autores: Guillermo Tanamachi A01631327 & Hugo Valdez A01631301
+//Fecha: 25/11/2019
+
 public class Cure {
 	
 	private int size;
