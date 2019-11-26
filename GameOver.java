@@ -2,6 +2,7 @@
 //Fecha: 25/11/2019
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -44,7 +45,7 @@ private JButton btnStart;
 }
 
 class GameOverPanel extends JPanel {
-	 private MyButton start;
+	 private JButton start;
 	 private Image background = new ImageIcon("GameOver.png").getImage();
 	 private Image btnImage = new ImageIcon("btn_retry.png").getImage();
 	 private Image btnImageIn = new ImageIcon("btn_retry_0.png").getImage();
@@ -56,8 +57,11 @@ class GameOverPanel extends JPanel {
 		 this.setPreferredSize(new Dimension(1000,680));
 		 this.setLayout(null);
 		 
-		 this.start = new MyButton(this.btnImage, this.width, this.height);
+		 this.start = new JButton(new ImageIcon("btn_retry.png"));
 		 this.start.setBounds(220, 420, this.width, this.height);
+		 this.start.setBackground(new Color(6,13,14));
+		 this.start.setBorderPainted(false);
+		 this.start.setRolloverIcon(new ImageIcon("btn_retry_0.png"));
 		 
 		 this.start.addMouseListener(new MouseAdapter() {
 			 @Override
@@ -66,16 +70,6 @@ class GameOverPanel extends JPanel {
 				 gm.getAudio().endSound();
 				 w.setLocation(gm.getLocationOnScreen().x, gm.getLocationOnScreen().y);
 				 gm.dispose();
-			 }
-
-			 @Override
-			 public void mouseEntered(MouseEvent e) {
-				 start.setImage(btnImageIn);
-			 }
-
-			 @Override
-			 public void mouseExited(MouseEvent e) {
-				 start.setImage(btnImage);
 			 }
 		 });
 		 
